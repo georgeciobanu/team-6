@@ -14,7 +14,6 @@ package snetworking;
  * @author GLL
  */
 public class EndUserParser {
-    
     /** Creates a new instance of EndUserParser */
     public EndUserParser() {
         
@@ -22,6 +21,39 @@ public class EndUserParser {
     
     // Parse a string command sent by an end-user
     public boolean parseCommand(String command) {
+        String[] args;
+        
+        args = command.split(" ");
+        
+        if(args.length <= 0) {
+            return false;
+        } else if(args[0].equals("getcurrencies")) {
+            
+        } else if(args[0].equals("placemarketorder")) {
+            
+        } else if(args[0].equals("editmarketorder")) {
+            
+        } else if(args[0].equals("placelimitorder")) {
+            
+        } else if(args[0].equals("editlimitorder")) {
+            
+        } else if(args[0].equals("placestoporder")) {
+            
+        } else if(args[0].equals("editstoporder")) {
+            
+        } else if(args[0].equals("placetrailingstoporder")) {
+            
+        } else if(args[0].equals("edittrailingstoporder")) {
+            
+        } else if(args[0].equals("pricehistory")) {
+            
+        } else if(args[0].equals("pendingorder")) {
+            
+        } else if(args[0].equals("marketprice")) {
+            
+        }
+        
+        // Invalid command
         return false;
     }
 }

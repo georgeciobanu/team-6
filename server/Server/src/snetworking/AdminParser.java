@@ -19,6 +19,39 @@ public class AdminParser {
     
     // Parse a string command sent by an admin user
     public boolean parseCommand(String command) {
+        String[] args;
+        
+        args = command.split(" ");
+        
+        if(args.length <= 0) {
+            return false;
+        } else if(args[0].equals("getcurrencies")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        } else if(args[0].equals("")) {
+            
+        }
+        
+        // Invalid command
         return false;
     }
 }
