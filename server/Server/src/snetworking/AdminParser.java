@@ -18,15 +18,15 @@ public class AdminParser {
     }
     
     // Parse a string command sent by an admin user
-    public boolean parseCommand(String command) {
+    public String parseCommand(String command) {
         String[] args;
         
         args = command.split(" ");
         
         if(args.length <= 0) {
-            return false;
+            return "error" + (char) 13;
         } else if(args[0].equals("getcurrencies")) {
-            
+            return "ok " + args[0] + "USD CAN YEN" + (char) 13;
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {
@@ -52,6 +52,6 @@ public class AdminParser {
         }
         
         // Invalid command
-        return false;
+        return "error " + args[0] + (char) 13;
     }
 }

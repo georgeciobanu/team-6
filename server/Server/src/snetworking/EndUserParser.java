@@ -20,13 +20,13 @@ public class EndUserParser {
     }
     
     // Parse a string command sent by an end-user
-    public boolean parseCommand(String command) {
+    public String parseCommand(String command) {
         String[] args;
         
         args = command.split(" ");
         
         if(args.length <= 0) {
-            return false;
+            return "error" + (char) 13;
         } else if(args[0].equals("getcurrencies")) {
             
         } else if(args[0].equals("placemarketorder")) {
@@ -54,6 +54,6 @@ public class EndUserParser {
         }
         
         // Invalid command
-        return false;
+        return "error " + args[0] + (char) 13;
     }
 }

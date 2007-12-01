@@ -14,8 +14,8 @@ import snetworking.*;
  * @author Alex Ciobanu
  */
 public class ACEServer {
-    DBConnection db;
-    ServerNetworkInterface sni;
+    DBConnection m_db;
+    ServerNetworkInterface m_sni;
     
     // constructor
     public ACEServer() {
@@ -33,6 +33,8 @@ public class ACEServer {
         // TODO
         //    - here wait for any threads to finish...
         
+        
+        System.out.println("System is shutting down...");
         s.shutdown();
         
     }
@@ -44,21 +46,21 @@ public class ACEServer {
      */
     public boolean startup() {
 
+        
+        m_sni = new ServerNetworkInterface(m_db);
+        
         // TODO:
         //    - in a separate thread run the part that 
         //      listens to the sockets
         
         
         // Connect to the database
-        db.connect("sdkjsdfkjlsdf",5432);
+        m_db.connect("localhost",5432);
 
         // Start listening to connections
-        sni.asyncListen(1234); // This function creates a new thread and returns when it is started.
-        
-        
+        m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
         
         System.out.println("ACEServer is up!");
-        
         return true;
     }
     
@@ -70,6 +72,15 @@ public class ACEServer {
      */
     public void shutdown() {
 
+        // Close all client connections
+        if(m_sni != null) {
+            m_sni.stopListening();
+        }
+        
+        // Stop listening
+        
+        // Close connections to DB
+        
         System.out.println("ACEServer is now down!");
                 
     }    

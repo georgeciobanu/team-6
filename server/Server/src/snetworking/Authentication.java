@@ -7,6 +7,8 @@
 
 package snetworking;
 
+import database.*;
+
 /**
  *
  * @author GLL
@@ -18,18 +20,23 @@ public class Authentication {
         ENDUSER
     }
     
+    DBConnection m_db;
+    int m_userID = -1;
+    
     USERSTATUS m_userstatus;
     EndUserParser eup = new EndUserParser();
     AdminParser ap = new AdminParser();
     
     /** Creates a new instance of Authentication */
-    public Authentication() {
+    public Authentication(DBConnection db) {
         m_userstatus = USERSTATUS.NOTAUTHENTICATED;
+        m_db = db;
     }
     
     // Preparse a command received from the network
-    public boolean parseCommand(String command) {
+    public String parseCommand(String command) {
         String[] args;
+        
         args = command.split(" ");
 
         if(args.length > 0) {
@@ -39,29 +46,46 @@ public class Authentication {
                 if(args[0].equals("login")) {
                     
                     // Query the database for this user's data
+                    String usertype = m_db.query("select usertype from user where username=" + args[1] + " and password= " + args[2]);
+                    String userID = m_db.query("select id from user where username=" + args[1] + " and password= " + args[2]);
                     
                     // Authenticate
+                    if(usertype.length() == 0) {
+                        return "error login";
+                    }
                     
                     // Get user type
+                    if(usertype.equals("administrator")) {
+                        m_userID = Integer.parseInt(userID);
+                        m_userstatus = USERSTATUS.ADMINISTRATOR;
+                        return "ok login";
+                    } else if(usertype.equals("enduser")) {
+                        m_userID = Integer.parseInt(userID);
+                        m_userstatus = USERSTATUS.ENDUSER;
+                        return "ok login";
+                    }
                 }
-                return false;
+                return "error login";
             }
             
             // Check if user wants to log out
             if(args[0].equals("logout")) {
+                m_userID = -1;
                 m_userstatus = USERSTATUS.NOTAUTHENTICATED;
+                // Close connection
+                // [Not implemented yet]
             }
             
             if(m_userstatus == USERSTATUS.ADMINISTRATOR) {
                 // Redirect parsing to the end-user's parser
-                ap.parseCommand(command);
+                return ap.parseCommand(command);
             } else if(m_userstatus == USERSTATUS.ENDUSER) {
                 // Redirect parsing to the administrator's parser
-                eup.parseCommand(command);
+                return eup.parseCommand(command);
             }
         }
         
         // Invalid command
-        return false;
+        return "error";
     }
 }

@@ -8,6 +8,8 @@
 
 package snetworking;
 
+import database.*;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -17,10 +19,12 @@ public class MultipleSocketServer implements Runnable {
   private Socket connection;
   private String TimeStamp;
   private int ID;
+  private DBConnection m_db;
 
-  MultipleSocketServer(Socket s, int i) {
+  MultipleSocketServer(DBConnection db,Socket s, int i) {
       this.connection = s;
       this.ID = i;
+      this.m_db = db;
   }
   
   public void run() {
@@ -33,7 +37,7 @@ public class MultipleSocketServer implements Runnable {
           BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
           OutputStreamWriter osw = new OutputStreamWriter(os, "US-ASCII");
           
-          Authentication user = new Authentication();
+          Authentication authUser = new Authentication(m_db);
           
           int character;
           StringBuffer process = new StringBuffer();
@@ -42,21 +46,30 @@ public class MultipleSocketServer implements Runnable {
           while(true) {
               // Wait for a complete message sent by the client application
               while((character = isr.read()) != 13) {
-                  process.append((char)character);
+                  if(character != -1)
+                  {
+                      process.append((char)character);
+                      System.out.println("BufferLength: " + process.length() + " with character: " + character + (char) 13);
+                  }
               }
               
               // Log the command (print it out to the console)
               System.out.println(process);
               
-              // Process command
-              user.parseCommand(process.toString());
+              // Preparse command
+              String command = process.toString();
+              if(command.endsWith("" + (char) 13)) {
+                  command = command.substring(0, command.length() - 1);
+              }
               
-              // Create a return message
-              TimeStamp = new java.util.Date().toString();
-              String returnMessage = "MultipleSocketServer repsonded at "+ TimeStamp + (char) 13;
+              // Process command
+              String returnMessage = authUser.parseCommand(process.toString());
+              
+              // Clear buffer
+              process.delete(0, process.length());
               
               // Output the message back to the client application
-              osw.write(returnMessage);
+              osw.write(returnMessage + (char) 13);
               osw.flush();
           }
           
@@ -64,6 +77,7 @@ public class MultipleSocketServer implements Runnable {
           System.out.println(e);
       } finally {
           try {
+              System.out.println("MultipleSocketServer finally");
               connection.close();
           } catch (IOException e){}
       }
