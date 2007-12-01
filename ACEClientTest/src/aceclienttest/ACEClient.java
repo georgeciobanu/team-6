@@ -53,7 +53,7 @@ public class ACEClient {
             String message = "login michael player";
             
             /** Write across the socket connection and flush the buffer */
-            osw.write(message) + (char) 13;
+            osw.write(message + (char)13);
             osw.flush();
             
             
