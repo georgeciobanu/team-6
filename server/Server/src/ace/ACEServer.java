@@ -1,4 +1,7 @@
 package ace;
+
+import database.*;
+import snetworking.*;
 /*
  * ACEServer.java
  *
@@ -11,6 +14,8 @@ package ace;
  * @author Alex Ciobanu
  */
 public class ACEServer {
+    DBConnection db;
+    ServerNetworkInterface sni;
     
     // constructor
     public ACEServer() {
@@ -42,6 +47,15 @@ public class ACEServer {
         // TODO:
         //    - in a separate thread run the part that 
         //      listens to the sockets
+        
+        
+        // Connect to the database
+        db.connect("sdkjsdfkjlsdf",5432);
+
+        // Start listening to connections
+        sni.asyncListen(1234); // This function creates a new thread and returns when it is started.
+        
+        
         
         System.out.println("ACEServer is up!");
         
