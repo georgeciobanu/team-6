@@ -65,7 +65,7 @@ public class DBConnection {
             try{
                 String queryString =
                         "SELECT username, password " +
-                        "FROM users" +
+                        "FROM users" +    
                         "WHERE username =" + username + " AND password = " + password;
                 
                 ResultSet rs = query(queryString);
