@@ -50,11 +50,10 @@ public class ACEClient {
             
             
             TimeStamp = new java.util.Date().toString();
-            String process = "Calling the Socket Server on "+ host + " port " + port +
-                    " at " + TimeStamp +  (char) 13;
+            String message = "login michael player";
             
             /** Write across the socket connection and flush the buffer */
-            osw.write(process);
+            osw.write(message) + (char) 13;
             osw.flush();
             
             

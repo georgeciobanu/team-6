@@ -42,13 +42,14 @@ public class ServerListener implements Runnable {
                 Runnable runnable = new ClientConnection(m_db, connection, ++count);
                 Thread thread = new Thread(runnable);
                 thread.start();
+                this.wait(1000);
             }
       } catch (Exception e) {
           System.out.println("Exception: " + e.getMessage());
       } finally {
           try {
               System.out.println("ClientConnection finally");
-              if(connection.equals(null)) {
+              if(connection == null) {
                   connection.close();
               }
           } catch (IOException e){}
