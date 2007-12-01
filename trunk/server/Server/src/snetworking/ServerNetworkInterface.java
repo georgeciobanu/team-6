@@ -48,7 +48,7 @@ public class ServerNetworkInterface {
             return false;
         }
     }
-    
+    /*
     // Get the accepting connection port
     public int getPort() {
         return m_port;
@@ -71,5 +71,6 @@ public class ServerNetworkInterface {
     public boolean asyncReceive(String buffer) {
         return false;
     }
+     */
 }
 
