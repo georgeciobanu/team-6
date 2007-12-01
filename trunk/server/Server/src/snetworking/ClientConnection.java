@@ -21,7 +21,7 @@ public class ClientConnection implements Runnable {
   private int ID;
   private DBConnection m_db;
 
-  ClientConnection(DBConnection db,Socket s, int i) {
+  ClientConnection(DBConnection db, Socket s, int i) {
       this.connection = s;
       this.ID = i;
       this.m_db = db;
