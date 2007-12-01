@@ -14,7 +14,7 @@ import database.*;
  * @author GLL
  */
 public class Authentication {
-    private enum USERSTATUS {
+    public static enum USERSTATUS {
         NOTAUTHENTICATED,
         ADMINISTRATOR,
         ENDUSER
@@ -36,6 +36,8 @@ public class Authentication {
     // Preparse a command received from the network
     public String parseCommand(String command) {
         String[] args;
+        int userID = -1;
+        USERSTATUS usertype = USERSTATUS.NOTAUTHENTICATED;
         
         args = command.split(" ");
 
@@ -46,21 +48,21 @@ public class Authentication {
                 if(args[0].equals("login")) {
                     
                     // Query the database for this user's data
-                    String usertype = m_db.query("select usertype from user where username=" + args[1] + " and password= " + args[2]);
-                    String userID = m_db.query("select id from user where username=" + args[1] + " and password= " + args[2]);
+                    //userID = m_db.query("select id from user where username=" + args[1] + " and password= " + args[2]);
+                    //usertype = m_db.query("select usertype from user where username=" + args[1] + " and password= " + args[2]);
                     
                     // Authenticate
-                    if(usertype.length() == 0) {
+                    if(usertype == USERSTATUS.NOTAUTHENTICATED) {
                         return "error login";
                     }
                     
                     // Get user type
                     if(usertype.equals("administrator")) {
-                        m_userID = Integer.parseInt(userID);
+                        //m_userID = Integer.parseInt(userID);
                         m_userstatus = USERSTATUS.ADMINISTRATOR;
                         return "ok login";
                     } else if(usertype.equals("enduser")) {
-                        m_userID = Integer.parseInt(userID);
+                        //m_userID = Integer.parseInt(userID);
                         m_userstatus = USERSTATUS.ENDUSER;
                         return "ok login";
                     }

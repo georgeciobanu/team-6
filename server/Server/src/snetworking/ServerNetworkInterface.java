@@ -14,10 +14,6 @@ package snetworking;
 
 import database.*;
 
-import java.net.*;
-import java.io.*;
-import java.util.*;
-
 public class ServerNetworkInterface {
     boolean m_isAccepting;
     int m_port;
@@ -37,12 +33,12 @@ public class ServerNetworkInterface {
     public boolean startListening(int port) {
             int count = 0;
             m_port = port;
-            ServerSocket socket1 = new ServerSocket(port);
             m_isAccepting = true;
 
-            Runnable runnable = new ClientConnection(m_db, connection, ++count);
-            Thread thread = new Thread(runnable);
+            Runnable listener = new ServerListener(m_db, port);
+            Thread thread = new Thread(listener);
             thread.start();
+            return true;
     }
     
     public boolean closeAllClientConnections() {
