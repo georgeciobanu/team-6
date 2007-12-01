@@ -12,24 +12,29 @@
 
 package snetworking;
 
+import database.*;
+
 import java.net.*;
 import java.io.*;
 import java.util.*;
 
 public class ServerNetworkInterface {
     boolean m_isAccepting;
-    int m_port = 12345;
+    int m_port;
+    int m_numberOfClientConnections = 0;
+    DBConnection m_db;
     
     /** Creates a new instance of ServerNetworkInterface */
-    public ServerNetworkInterface() {
+    public ServerNetworkInterface(DBConnection db) {
         m_isAccepting = false;
+        m_db = db;
     }
     // Accept new end-user connections
     /*
      * TODO: Make this function asynchronous
      *
      */
-    public boolean asyncListen(int port) {
+    public boolean startListening(int port) {
         int count = 0;
         m_port = port;
         
@@ -39,38 +44,25 @@ public class ServerNetworkInterface {
             System.out.println("ServerNetworkInterface Initialized");
             while (true) {
                 Socket connection = socket1.accept();
-                Runnable runnable = new MultipleSocketServer(connection, ++count);
+                Runnable runnable = new MultipleSocketServer(m_db, connection, ++count);
                 Thread thread = new Thread(runnable);
                 thread.start();
             }
             //return true;
         } catch (Exception e) {
+            System.out.println("ServerNetworkInterface Exception: " + e.getMessage());
             return false;
         }
     }
-    /*
-    // Get the accepting connection port
-    public int getPort() {
-        return m_port;
+    
+    // Set the accepting connection port
+    public boolean stopListening() {
+        return false;
     }
     
     // Set the accepting connection port
-    public boolean setPort(int port) {
-        if (m_isAccepting) {
-            m_port = port;
-        }
-        return false;
+    public int getNumberOfClientConnections() {
+        return m_numberOfClientConnections;
     }
-    
-    // Send a message to a client application
-    public boolean asyncSend(int userID, String message) {
-        return false;
-    }
-    
-    // Receive messages from a client application
-    public boolean asyncReceive(String buffer) {
-        return false;
-    }
-     */
 }
 

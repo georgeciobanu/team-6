@@ -67,6 +67,6 @@ public class Market {
     }
     
     public boolean removeCurrency(int id) {
-        return -1;
+        return false;
     }
 }
