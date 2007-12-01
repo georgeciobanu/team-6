@@ -25,10 +25,16 @@ public class ServerNetworkInterface {
         m_isAccepting = false;
     }
     // Accept new end-user connections
-    public boolean start() {
+    /*
+     * TODO: Make this function asynchronous
+     *
+     */
+    public boolean asyncListen(int port) {
         int count = 0;
+        m_port = port;
+        
         try{
-            ServerSocket socket1 = new ServerSocket(m_port);
+            ServerSocket socket1 = new ServerSocket(port);
             m_isAccepting = true;
             System.out.println("ServerNetworkInterface Initialized");
             while (true) {

@@ -2,7 +2,7 @@
  * MultipleSocketServer.java
  *
  * Created on November 30, 2007, 2:47 PM
- *
+ * @author Gabriel Lemonde-Labrecque
  * A part of this code was taken from http://dn.codegear.com/article/31995
  */
 
@@ -12,10 +12,6 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-/**
- *
- * @author Gabriel Lemonde-Labrecque
- */
 public class MultipleSocketServer implements Runnable {
 
   private Socket connection;
@@ -29,24 +25,41 @@ public class MultipleSocketServer implements Runnable {
   
   public void run() {
       try {
+          // Instanciate the client output stream
           BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
           InputStreamReader isr = new InputStreamReader(is);
-          int character;
-          StringBuffer process = new StringBuffer();
-          while((character = isr.read()) != 13) {
-              process.append((char)character);
-          }
-          System.out.println(process);
-          //need to wait 10 seconds to pretend that we're processing something
-          try {
-              Thread.sleep(10000);
-          } catch (Exception e){}
-          TimeStamp = new java.util.Date().toString();
-          String returnCode = "MultipleSocketServer repsonded at "+ TimeStamp + (char) 13;
+          
+          // Instanciate the network output stream
           BufferedOutputStream os = new BufferedOutputStream(connection.getOutputStream());
           OutputStreamWriter osw = new OutputStreamWriter(os, "US-ASCII");
-          osw.write(returnCode);
-          osw.flush();
+          
+          Authentication user = new Authentication();
+          
+          int character;
+          StringBuffer process = new StringBuffer();
+          
+          // Keep receiving messages until logout or lost connection
+          while(true) {
+              // Wait for a complete message sent by the client application
+              while((character = isr.read()) != 13) {
+                  process.append((char)character);
+              }
+              
+              // Log the command (print it out to the console)
+              System.out.println(process);
+              
+              // Process command
+              user.parseCommand(process.toString());
+              
+              // Create a return message
+              TimeStamp = new java.util.Date().toString();
+              String returnMessage = "MultipleSocketServer repsonded at "+ TimeStamp + (char) 13;
+              
+              // Output the message back to the client application
+              osw.write(returnMessage);
+              osw.flush();
+          }
+          
       } catch (Exception e) {
           System.out.println(e);
       } finally {
