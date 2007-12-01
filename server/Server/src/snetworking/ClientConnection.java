@@ -14,14 +14,14 @@ import java.net.*;
 import java.io.*;
 import java.util.*;
 
-public class MultipleSocketServer implements Runnable {
+public class ClientConnection implements Runnable {
 
   private Socket connection;
   private String TimeStamp;
   private int ID;
   private DBConnection m_db;
 
-  MultipleSocketServer(DBConnection db,Socket s, int i) {
+  ClientConnection(DBConnection db,Socket s, int i) {
       this.connection = s;
       this.ID = i;
       this.m_db = db;
@@ -77,7 +77,7 @@ public class MultipleSocketServer implements Runnable {
           System.out.println(e);
       } finally {
           try {
-              System.out.println("MultipleSocketServer finally");
+              System.out.println("ClientConnection finally");
               connection.close();
           } catch (IOException e){}
       }

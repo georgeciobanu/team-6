@@ -35,24 +35,20 @@ public class ServerNetworkInterface {
      *
      */
     public boolean startListening(int port) {
-        int count = 0;
-        m_port = port;
-        
-        try{
+            int count = 0;
+            m_port = port;
             ServerSocket socket1 = new ServerSocket(port);
             m_isAccepting = true;
-            System.out.println("ServerNetworkInterface Initialized");
-            while (true) {
-                Socket connection = socket1.accept();
-                Runnable runnable = new MultipleSocketServer(m_db, connection, ++count);
-                Thread thread = new Thread(runnable);
-                thread.start();
-            }
-            //return true;
-        } catch (Exception e) {
-            System.out.println("ServerNetworkInterface Exception: " + e.getMessage());
-            return false;
-        }
+
+            Runnable runnable = new ClientConnection(m_db, connection, ++count);
+            Thread thread = new Thread(runnable);
+            thread.start();
+    }
+    
+    public boolean closeAllClientConnections() {
+        // Wait for all client connections to be closed
+        //while(m_sni.getNumberOfClientConnections() > 0){}
+        return false;
     }
     
     // Set the accepting connection port

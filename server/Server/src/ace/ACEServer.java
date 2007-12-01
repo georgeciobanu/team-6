@@ -30,13 +30,11 @@ public class ACEServer {
             System.out.println("All systems ok!");
         }
         
-        // TODO
-        //    - here wait for any threads to finish...
+
         
         
         System.out.println("System is shutting down...");
         s.shutdown();
-        
     }
     
     /**
@@ -71,15 +69,17 @@ public class ACEServer {
      * Returns true when successful and false otherwise
      */
     public void shutdown() {
-
-        // Close all client connections
         if(m_sni != null) {
+            // Close all client connections
+            m_sni.closeAllClientConnections();
+            // Stop listening
             m_sni.stopListening();
         }
         
-        // Stop listening
-        
         // Close connections to DB
+        if(m_db != null) {
+            m_db.disconnect();
+        }
         
         System.out.println("ACEServer is now down!");
                 
