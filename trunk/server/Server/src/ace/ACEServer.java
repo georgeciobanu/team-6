@@ -58,6 +58,10 @@ public class ACEServer {
         // Start listening to connections
         m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
         
+        boolean doshutdown = false;
+        
+        while(!doshutdown) {}
+        
         System.out.println("ACEServer is up!");
         return true;
     }
