@@ -13,6 +13,8 @@ package database;
  */
 public class DBConnection {
     public DBConnection() {
+        
+        //whatevers
     }
     
     static public boolean connect(String server, int port) {
