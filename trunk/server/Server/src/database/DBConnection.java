@@ -7,25 +7,112 @@
 
 package database;
 
+
+import java.sql.*;
+
 /**
  *
  * @author GLL
  */
 public class DBConnection {
-    public DBConnection() {
+    private boolean connected;
+    private Connection con;
+    public DBConnection() { //this needs to be called on startup
         
-        //whatevers
+        connected = false;
     }
     
-    static public boolean connect(String server, int port) {
+    
+    
+    public boolean connect(String server, int port) {
+        if (! connected) {
+            try {
+                //Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                
+                //we need this to be a class member
+                con = DriverManager.getConnection("jdbc:odbc:acedb", "admin","admin");
+                
+            } catch (Exception ex) {
+                //ex.printStackTrace();
+                return false;
+            }
+        } else return true;
+        
         return false;
+        
     }
     
-    public String query(String message){
-        return "";
+    private ResultSet query(String message){
+        ResultSet rs = null;
+        try{
+            if (con.isValid(10)) {
+                
+                Statement stm = con.createStatement();
+                rs = stm.executeQuery(message);
+                stm.close();
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        
+        
+        return rs;
+        
     }
     
-    public boolean disconnect() {
-        return false;
+    public int getUserID(String username, String password) {
+        if (username.length() > 0 && password.length() > 0) {
+            try{
+                String queryString =
+                        "SELECT username, password " +
+                        "FROM users" +
+                        "WHERE username =" + username + " AND password = " + password;
+                
+                ResultSet rs = query(queryString);
+                if (rs.getFetchSize() > 0) {
+                    return rs.getInt("type");
+                    
+                }
+                rs.close();
+            } catch (Exception ex){
+                
+                ex.printStackTrace();
+                return -1;
+            }
+        } else return -1;
+        
+        return -1;
+    }
+    
+    
+    public int getUserType(int userID) {
+        if (userID > 0) {
+            try{
+                String queryString =
+                        "SELECT type" +
+                        "FROM users" +
+                        "WHERE userid =" + String.valueOf(userID);
+                
+                ResultSet rs = query(queryString);
+                
+                if (rs.getFetchSize() > 0) {
+                    return rs.getInt("username");                                        
+                }
+                rs.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+                return -1;
+            }
+        } else return -1;
+        
+        return -1;
+    }
+    
+    public void disconnect() {
+        try {
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }
