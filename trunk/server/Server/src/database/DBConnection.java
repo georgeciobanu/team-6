@@ -21,7 +21,7 @@ public class DBConnection {
     public static enum USERSTATUS {
         NOTAUTHENTICATED,
         ADMINISTRATOR,
-        ENDUSER 
+        ENDUSER
     }
     
     public DBConnection() { //this needs to be called on startup
@@ -65,7 +65,7 @@ public class DBConnection {
         return rs;
     }
     
-    public USERSTATUS getUserID(String username, String password) {
+    public int getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
@@ -77,35 +77,20 @@ public class DBConnection {
                 if (rs.next()) {
                     int userid = rs.getInt("userid");
                     rs.close();
-                    switch (userid)
-                    {
-                        case 1:
-                        {
-                            return USERSTATUS.ENDUSER; 
-                        }
-                        case 0:
-                        {
-                            return USERSTATUS.ADMINISTRATOR;
-                        }
-                        default:
-                        {
-                            return USERSTATUS.NOTAUTHENTICATED;
-                        }
-                        
-                    }                    
+                    return userid;
                 }
                 rs.close();
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
-                return USERSTATUS.NOTAUTHENTICATED;
+                return -1;
             }
-        } 
+        } else return -1;
         
-        return USERSTATUS.NOTAUTHENTICATED;
+        return -1;
     }
     
     
-    public int getUserType(int userID) {
+    public USERSTATUS getUserType(int userID) {
         if (userID > 0) {
             try{
                 String queryString =
@@ -118,16 +103,30 @@ public class DBConnection {
                 if (rs.next()) {
                     int userType = rs.getInt("type");
                     rs.close();
-                    return userType;
+                    switch (userType) {
+                        case 1:
+                        {
+                            return USERSTATUS.ENDUSER;
+                        }
+                        case 0:
+                        {
+                            return USERSTATUS.ADMINISTRATOR;
+                        }
+                        default:
+                        {
+                            return USERSTATUS.NOTAUTHENTICATED;
+                        }
+                        
+                    }
                 }
                 rs.close();
             } catch (Exception ex){//TODO: treat exceptions nice
                 ex.printStackTrace();
-                return -1;
+                return USERSTATUS.NOTAUTHENTICATED;
             }
-        } else return -1;
+        } 
         
-        return -1;
+        return USERSTATUS.NOTAUTHENTICATED;
     }
     
     public void disconnect() {
