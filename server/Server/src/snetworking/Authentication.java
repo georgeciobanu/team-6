@@ -45,10 +45,15 @@ public class Authentication {
             // Check if user has proper rights to access the server
             if(m_userstatus == USERSTATUS.NOTAUTHENTICATED) {
                 // Check if the received command is a login command
+                System.out.println("Command: " + args[0] + (char) 13);
+                System.out.println("Arg1: " + args[1] + (char) 13);
+                System.out.println("Arg2: " + args[2] + (char) 13);
+                
                 if(args[0].equals("login")) {
                     
                     // Query the database for this user's data
-                    userID = m_db.getUserID(args[1],args[2]);
+                    //userID = m_db.getUserID(args[1],args[2]);
+                    userID = -1;
                     
                     if(userID != -1) {
                         // Authenticate

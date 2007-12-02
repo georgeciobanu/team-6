@@ -42,25 +42,19 @@ public class ACEServer {
      *
      * Returns true when successful and false otherwise
      */
-    public boolean startup() {
-
+    public boolean startup() {        
+        boolean doshutdown = false;
         
         m_sni = new ServerNetworkInterface(m_db);
         
-        // TODO:
-        //    - in a separate thread run the part that 
-        //      listens to the sockets
-        
-        m_db = new DBConnection();
-        
         // Connect to the database
+        m_db = new DBConnection();
         m_db.connect("localhost",5432);
 
         // Start listening to connections
         m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
-        
-        boolean doshutdown = false;
-        
+
+        // Wait till we want to shutdown
         while(!doshutdown) {}
         
         System.out.println("ACEServer is up!");
