@@ -8,6 +8,7 @@
 package database;
 
 
+
 import java.sql.*;
 
 /**
@@ -17,6 +18,12 @@ import java.sql.*;
 public class DBConnection {
     private boolean connected;
     private Connection con;
+    public static enum USERSTATUS {
+        NOTAUTHENTICATED,
+        ADMINISTRATOR,
+        ENDUSER
+    }
+    
     public DBConnection() { //this needs to be called on startup
         
         connected = false;
@@ -67,13 +74,13 @@ public class DBConnection {
                         "WHERE username ='" + username + "' AND password = '" + password+ "' ";
                 
                 ResultSet rs = query(queryString);
-                if (rs.next()) {                    
+                if (rs.next()) {
                     int userid = rs.getInt("userid");
                     rs.close();
-                    return userid;                    
+                    return userid;
                 }
                 rs.close();
-            } catch (Exception ex){ //TODO: treat exceptions nice                
+            } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
                 return -1;
             }
@@ -93,7 +100,7 @@ public class DBConnection {
                 
                 ResultSet rs = query(queryString);
                 
-                if (rs.next()) {                    
+                if (rs.next()) {
                     int userType = rs.getInt("type");
                     rs.close();
                     return userType;
