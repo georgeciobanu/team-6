@@ -15,7 +15,7 @@ public class EditEndUser extends javax.swing.JPanel {
      JFrame owner;
      JPanel admin;
     /** Creates new form EditEndUser */
-    public EditEndUser(JFrame owner, JPanel admin) {
+    public EditEndUser(JFrame owner, JPanel admin, String username) {
         this.admin=admin;
         this.owner=owner;
         initComponents();
@@ -136,8 +136,8 @@ public class EditEndUser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
- 
-      this.setVisible(false);
+ owner.remove(this);
+      //this.setVisible(false);
       admin.setVisible(true);
       owner.setContentPane(admin);
      
