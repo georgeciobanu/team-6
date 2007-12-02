@@ -1,4 +1,4 @@
-package go_with_the_flow;
+package gui;
 /*
  * ModifyFunds.java
  *
