@@ -51,6 +51,7 @@ public class ACEServer {
         //    - in a separate thread run the part that 
         //      listens to the sockets
         
+        m_db = new DBConnection();
         
         // Connect to the database
         m_db.connect("localhost",5432);

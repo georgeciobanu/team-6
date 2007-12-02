@@ -48,25 +48,31 @@ public class Authentication {
                 if(args[0].equals("login")) {
                     
                     // Query the database for this user's data
+                    userID = m_db.getUserID(args[1],args[2]);
+                    
+                    if(userID != -1) {
+                        // Authenticate
+                        if(usertype == USERSTATUS.NOTAUTHENTICATED) {
+                            return "error login";
+                        }
+                        
+                        // Get user type
+                        if(usertype.equals("administrator")) {
+                            //m_userID = Integer.parseInt(userID);
+                            m_userstatus = USERSTATUS.ADMINISTRATOR;
+                            return "ok login";
+                        } else if(usertype.equals("enduser")) {
+                            //m_userID = Integer.parseInt(userID);
+                            m_userstatus = USERSTATUS.ENDUSER;
+                            return "ok login";
+                        }
+                    }
+                }
+
                     //userID = m_db.query("select id from user where username=" + args[1] + " and password= " + args[2]);
                     //usertype = m_db.query("select usertype from user where username=" + args[1] + " and password= " + args[2]);
                     
-                    // Authenticate
-                    if(usertype == USERSTATUS.NOTAUTHENTICATED) {
-                        return "error login";
-                    }
-                    
-                    // Get user type
-                    if(usertype.equals("administrator")) {
-                        //m_userID = Integer.parseInt(userID);
-                        m_userstatus = USERSTATUS.ADMINISTRATOR;
-                        return "ok login";
-                    } else if(usertype.equals("enduser")) {
-                        //m_userID = Integer.parseInt(userID);
-                        m_userstatus = USERSTATUS.ENDUSER;
-                        return "ok login";
-                    }
-                }
+
                 return "error login";
             }
             
