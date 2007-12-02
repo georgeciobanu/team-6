@@ -31,9 +31,10 @@ public class DBConnection {
                 
                 //we need this to be a class member
                 con = DriverManager.getConnection("jdbc:odbc:acedb", "admin","admin");
+                connected = true;
                 
             } catch (Exception ex) {
-                //ex.printStackTrace();
+                ex.printStackTrace();
                 return false;
             }
         } else return true;
@@ -45,33 +46,31 @@ public class DBConnection {
     private ResultSet query(String message){
         ResultSet rs = null;
         try{
-            if (con.isValid(10)) {
+            if (connected) {
                 
                 Statement stm = con.createStatement();
                 rs = stm.executeQuery(message);
-                stm.close();
+                //stm.close();
             }
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        
-        
         return rs;
-        
     }
     
     public int getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
-                        "SELECT username, password " +
-                        "FROM users" +    
-                        "WHERE username =" + username + " AND password = " + password;
+                        "SELECT userid " +
+                        "FROM users " +
+                        "WHERE username ='" + username + "' AND password = '" + password+ "' ";
                 
                 ResultSet rs = query(queryString);
-                if (rs.getFetchSize() > 0) {
-                    return rs.getInt("type");
-                    
+                if (rs.next()) {                    
+                    int userid = rs.getInt("userid");
+                    rs.close();
+                    return userid;                    
                 }
                 rs.close();
             } catch (Exception ex){
@@ -89,14 +88,16 @@ public class DBConnection {
         if (userID > 0) {
             try{
                 String queryString =
-                        "SELECT type" +
-                        "FROM users" +
-                        "WHERE userid =" + String.valueOf(userID);
+                        "SELECT type " +
+                        "FROM users " +
+                        "WHERE userid =" + String.valueOf(userID) + " ";
                 
                 ResultSet rs = query(queryString);
                 
-                if (rs.getFetchSize() > 0) {
-                    return rs.getInt("username");                                        
+                if (rs.next()) {                    
+                    int userType = rs.getInt("type");
+                    rs.close();
+                    return userType;
                 }
                 rs.close();
             } catch (Exception ex){
