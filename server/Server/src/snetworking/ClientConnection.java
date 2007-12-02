@@ -22,9 +22,9 @@ public class ClientConnection implements Runnable {
   private DBConnection m_db;
 
   ClientConnection(DBConnection db, Socket s, int i) {
-      this.connection = s;
-      this.ID = i;
-      this.m_db = db;
+      connection = s;
+      ID = i;
+      m_db = db;
   }
   
   public void run() {
@@ -74,7 +74,7 @@ public class ClientConnection implements Runnable {
           }
           
       } catch (Exception e) {
-          System.out.println(e);
+          e.printStackTrace();
       } finally {
           try {
               System.out.println("ClientConnection finally");
