@@ -24,9 +24,9 @@ public class AdminParser {
         args = command.split(" ");
         
         if(args.length <= 0) {
-            return "error" + (char) 13;
+            return "error";
         } else if(args[0].equals("getcurrencies")) {
-            return "ok " + args[0] + "USD CAN YEN" + (char) 13;
+            return "ok " + args[0] + " USD CAN YEN";
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {
@@ -52,6 +52,6 @@ public class AdminParser {
         }
         
         // Invalid command
-        return "error " + args[0] + (char) 13;
+        return "error " + args[0];
     }
 }
