@@ -20,6 +20,7 @@ public class AdminMenu extends javax.swing.JPanel {
         this.owner=owner;
         this.Login=Login;
         initComponents();
+        
         choice1.addItem("1");
         choice1.addItem("2");
         
@@ -62,6 +63,8 @@ public class AdminMenu extends javax.swing.JPanel {
         jButton12 = new javax.swing.JButton();
         choice1 = new java.awt.Choice();
         jLabel7 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -120,7 +123,7 @@ public class AdminMenu extends javax.swing.JPanel {
                     .add(jLabel4)
                     .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jButton9))
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addContainerGap(246, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("FeeManagement", jPanel2);
 
@@ -172,7 +175,7 @@ public class AdminMenu extends javax.swing.JPanel {
                 .add(jButton5)
                 .add(18, 18, 18)
                 .add(jButton3)
-                .add(100, 100, 100))
+                .add(149, 149, 149))
         );
         jTabbedPane1.addTab("CurrencyManagement", jPanel1);
 
@@ -181,11 +184,6 @@ public class AdminMenu extends javax.swing.JPanel {
         jButton10.setText("Submit");
 
         jButton11.setText("editUser");
-        jButton11.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton11ActionPerformed(evt);
-            }
-        });
 
         jButton13.setText("deleteUser");
 
@@ -198,6 +196,50 @@ public class AdminMenu extends javax.swing.JPanel {
 
         jLabel7.setText("userTypeDisplay");
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null},
+                {null}
+            },
+            new String [] {
+                "Username"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(jTable1);
+
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -207,44 +249,49 @@ public class AdminMenu extends javax.swing.JPanel {
                     .add(jPanel3Layout.createSequentialGroup()
                         .add(58, 58, 58)
                         .add(jLabel5)
-                        .add(19, 19, 19)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 58, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(78, 78, 78)
+                        .add(104, 104, 104)
                         .add(jLabel7)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 89, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(jPanel3Layout.createSequentialGroup()
-                        .add(157, 157, 157)
+                        .add(161, 161, 161)
                         .add(jButton10)
-                        .add(20, 20, 20)
+                        .add(21, 21, 21)
                         .add(jButton11)
-                        .add(16, 16, 16)
+                        .add(18, 18, 18)
                         .add(jButton13)
-                        .add(27, 27, 27)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(jButton12)))
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(89, Short.MAX_VALUE))
+            .add(jPanel3Layout.createSequentialGroup()
+                .add(205, 205, 205)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 187, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jPanel3Layout.createSequentialGroup()
-                        .add(82, 82, 82)
+                        .add(52, 52, 52)
                         .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(jLabel7)
                             .add(jLabel5)
-                            .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(74, 74, 74))
-                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(74, 74, 74)))
+                            .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .add(jLabel7)))
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(47, 47, 47)
+                        .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                .add(28, 28, 28)
                 .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jButton12)
-                    .add(jButton13)
                     .add(jButton10)
-                    .add(jButton11))
-                .addContainerGap(113, Short.MAX_VALUE))
+                    .add(jButton11)
+                    .add(jButton13)
+                    .add(jButton12))
+                .add(24, 24, 24)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 176, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(38, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("AccountManagement", jPanel3);
 
@@ -269,26 +316,36 @@ public class AdminMenu extends javax.swing.JPanel {
             .add(layout.createSequentialGroup()
                 .add(26, 26, 26)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 618, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(layout.createSequentialGroup()
-                        .add(10, 10, 10)
                         .add(jButton1)
-                        .add(52, 52, 52)
-                        .add(jButton2))
-                    .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 618, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(45, 45, 45)
+                        .add(jButton2)))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(106, 106, 106)
-                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 337, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(40, Short.MAX_VALUE)
+                .add(jTabbedPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 386, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(22, 22, 22)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jButton1)
                     .add(jButton2))
-                .add(113, 113, 113))
+                .add(47, 47, 47))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+System.out.println("hello");
+        jTable1.getSelectedRow();
+       String username = (String)jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+        this.setVisible(false);
+      EditEndUser edit=new EditEndUser(owner, this, username);       
+         owner.setContentPane(edit);
+         edit.setVisible(true);
+        
+    }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
    
@@ -297,16 +354,6 @@ public class AdminMenu extends javax.swing.JPanel {
         
          owner.setContentPane(change);
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
-         EditEndUser edit=new EditEndUser(owner, this);
-         
-         this.setVisible(false);
-        
-         owner.setContentPane(edit);
-
-
-    }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
          this.setVisible(false);
@@ -355,7 +402,9 @@ public class AdminMenu extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
