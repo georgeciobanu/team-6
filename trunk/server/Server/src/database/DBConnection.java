@@ -73,8 +73,7 @@ public class DBConnection {
                     return userid;                    
                 }
                 rs.close();
-            } catch (Exception ex){
-                
+            } catch (Exception ex){ //TODO: treat exceptions nice                
                 ex.printStackTrace();
                 return -1;
             }
@@ -100,7 +99,7 @@ public class DBConnection {
                     return userType;
                 }
                 rs.close();
-            } catch (Exception ex){
+            } catch (Exception ex){//TODO: treat exceptions nice
                 ex.printStackTrace();
                 return -1;
             }
