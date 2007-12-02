@@ -14,36 +14,32 @@ import database.*;
  * @author GLL
  */
 public class Authentication {
-    public static enum USERSTATUS {
-        NOTAUTHENTICATED,
-        ADMINISTRATOR,
-        ENDUSER
-    }
+
     
     DBConnection m_db;
     int m_userID = -1;
     
-    USERSTATUS m_userstatus;
+    DBConnection.USERSTATUS m_userstatus;
     EndUserParser eup = new EndUserParser();
     AdminParser ap = new AdminParser();
     
     /** Creates a new instance of Authentication */
     public Authentication(DBConnection db) {
-        m_userstatus = USERSTATUS.NOTAUTHENTICATED;
+        m_userstatus = DBConnection.USERSTATUS.NOTAUTHENTICATED;
         m_db = db;
     }
     
     // Preparse a command received from the network
     public String parseCommand(String command) {
-        String[] args;
+        String[] args ;
         int userID = -1;
-        USERSTATUS usertype = USERSTATUS.NOTAUTHENTICATED;
+        DBConnection.USERSTATUS usertype = DBConnection.USERSTATUS.NOTAUTHENTICATED;
         
         args = command.split(" ");
 
         if(args.length > 0) {
             // Check if user has proper rights to access the server
-            if(m_userstatus == USERSTATUS.NOTAUTHENTICATED) {
+            if(m_userstatus == DBConnection.USERSTATUS.NOTAUTHENTICATED) {
                 // Check if the received command is a login command
                 System.out.println("Command: " + args[0] + (char) 13);
                 System.out.println("Arg1: " + args[1] + (char) 13);
@@ -52,23 +48,23 @@ public class Authentication {
                 if(args[0].equals("login")) {
                     
                     // Query the database for this user's data
-                    //userID = m_db.getUserID(args[1],args[2]);
-                    userID = -1;
+                    userID = m_db.getUserID(args[1],args[2]);
+                    //userID = -1;
                     
                     if(userID != -1) {
                         // Authenticate
-                        if(usertype == USERSTATUS.NOTAUTHENTICATED) {
+                        if(usertype == DBConnection.USERSTATUS.NOTAUTHENTICATED) {
                             return "error login";
                         }
                         
                         // Get user type
                         if(usertype.equals("administrator")) {
                             //m_userID = Integer.parseInt(userID);
-                            m_userstatus = USERSTATUS.ADMINISTRATOR;
+                            m_userstatus = DBConnection.USERSTATUS.ADMINISTRATOR;
                             return "ok login";
                         } else if(usertype.equals("enduser")) {
                             //m_userID = Integer.parseInt(userID);
-                            m_userstatus = USERSTATUS.ENDUSER;
+                            m_userstatus = DBConnection.USERSTATUS.ENDUSER;
                             return "ok login";
                         }
                     }
@@ -84,15 +80,15 @@ public class Authentication {
             // Check if user wants to log out
             if(args[0].equals("logout")) {
                 m_userID = -1;
-                m_userstatus = USERSTATUS.NOTAUTHENTICATED;
+                m_userstatus = DBConnection.USERSTATUS.NOTAUTHENTICATED;
                 // Close connection
                 // [Not implemented yet]
             }
             
-            if(m_userstatus == USERSTATUS.ADMINISTRATOR) {
+            if(m_userstatus == DBConnection.USERSTATUS.ADMINISTRATOR) {
                 // Redirect parsing to the end-user's parser
                 return ap.parseCommand(command);
-            } else if(m_userstatus == USERSTATUS.ENDUSER) {
+            } else if(m_userstatus == DBConnection.USERSTATUS.ENDUSER) {
                 // Redirect parsing to the administrator's parser
                 return eup.parseCommand(command);
             }
