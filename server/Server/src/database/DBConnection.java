@@ -65,6 +65,29 @@ public class DBConnection {
         return rs;
     }
     
+    public boolean setUserPassword(int userid, String newPassword) {
+            if (newPassword.length() > 1) {
+            try{
+                String queryString =
+                        "UPDATE users " +
+                        "SET password = '" + newPassword + "' " +
+                        "WHERE userid=" + String.valueOf(userid);
+                
+                ResultSet rs = query(queryString);
+                if (rs.next()) { //all went ok                    
+                    rs.close();
+                    return true;
+                }
+                rs.close();
+            } catch (Exception ex){ //TODO: treat exceptions nice
+                ex.printStackTrace();
+                return false;
+            }
+        }        
+        return false;
+    }
+    
+    
     public int getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
@@ -84,7 +107,7 @@ public class DBConnection {
                 ex.printStackTrace();
                 return -1;
             }
-        } else return -1;
+        }
         
         return -1;
     }
@@ -124,7 +147,7 @@ public class DBConnection {
                 ex.printStackTrace();
                 return USERSTATUS.NOTAUTHENTICATED;
             }
-        } 
+        }
         
         return USERSTATUS.NOTAUTHENTICATED;
     }
