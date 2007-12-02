@@ -9,23 +9,27 @@
 
 package fundamentals;
 
+import database.*;
+
 /**
  *
  * @author GLL
  */
 public class EndUser {
     int m_userID;
+    DBConnection m_db;
     LeverageAccount[] m_leverageAccounts;
     BalanceAccount[] m_balanceAccounts;
     Order[] m_pendingOrders;
     Order[] m_orderHistory;
     
     /** Creates a new instance of EndUser */
-    public EndUser() {
+    public EndUser(DBConnection db) {
+        m_db = db;
     }
     
     public boolean setPassword(String newPassword) {
-        return false;
+        return m_db.setUserPassword(m_userID, newPassword);
     }
     
     public boolean setPriceRange(double p1, double p2) {
