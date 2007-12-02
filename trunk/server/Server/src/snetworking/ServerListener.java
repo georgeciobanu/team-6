@@ -33,17 +33,21 @@ public class ServerListener implements Runnable {
       Socket connection = null;
       
       try {
-            int count = 0;
-            ServerSocket socket1 = new ServerSocket(m_port);
-
-            System.out.println("Server started listening...");
-            while (true) {
-                connection = socket1.accept();
-                Runnable runnable = new ClientConnection(m_db, connection, ++count);
-                Thread thread = new Thread(runnable);
-                thread.start();
-                this.wait(1000);
-            }
+          int count = 0;
+          ServerSocket socket1 = new ServerSocket(m_port);
+          
+          System.out.println("Server started listening...");
+          while (true) {
+              connection = socket1.accept();
+              Runnable runnable = new ClientConnection(m_db, connection, ++count);
+              Thread thread = new Thread(runnable);
+              thread.start();
+              
+              //need to wait 10 seconds to pretend that we're processing something
+              try {
+                  Thread.sleep(500);
+              } catch (Exception e){}
+          }
       } catch (Exception e) {
           System.out.println("Exception: " + e.getMessage());
       } finally {
