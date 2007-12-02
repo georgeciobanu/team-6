@@ -1,4 +1,4 @@
-package go_with_the_flow;
+package gui;
 /*
  * AdminMenu.java
  *
@@ -123,7 +123,7 @@ public class AdminMenu extends javax.swing.JPanel {
                     .add(jLabel4)
                     .add(jTextField4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(jButton9))
-                .addContainerGap(246, Short.MAX_VALUE))
+                .addContainerGap(243, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("FeeManagement", jPanel2);
 
@@ -156,7 +156,7 @@ public class AdminMenu extends javax.swing.JPanel {
                         .add(jLabel9)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(choice2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(401, Short.MAX_VALUE))
+                .addContainerGap(402, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -254,21 +254,20 @@ public class AdminMenu extends javax.swing.JPanel {
                         .add(104, 104, 104)
                         .add(jLabel7)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 89, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(choice1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE))
                     .add(jPanel3Layout.createSequentialGroup()
                         .add(161, 161, 161)
-                        .add(jButton10)
-                        .add(21, 21, 21)
-                        .add(jButton11)
-                        .add(18, 18, 18)
-                        .add(jButton13)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(jButton12)))
-                .addContainerGap(89, Short.MAX_VALUE))
-            .add(jPanel3Layout.createSequentialGroup()
-                .add(205, 205, 205)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 187, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(221, Short.MAX_VALUE))
+                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+                            .add(jPanel3Layout.createSequentialGroup()
+                                .add(jButton10)
+                                .add(21, 21, 21)
+                                .add(jButton11)
+                                .add(18, 18, 18)
+                                .add(jButton13)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 10, Short.MAX_VALUE)
+                                .add(jButton12)))))
+                .add(93, 93, 93))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -289,9 +288,9 @@ public class AdminMenu extends javax.swing.JPanel {
                     .add(jButton11)
                     .add(jButton13)
                     .add(jButton12))
-                .add(24, 24, 24)
+                .add(23, 23, 23)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 176, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("AccountManagement", jPanel3);
 
