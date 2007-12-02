@@ -21,7 +21,7 @@ public class DBConnection {
     public static enum USERSTATUS {
         NOTAUTHENTICATED,
         ADMINISTRATOR,
-        ENDUSER
+        ENDUSER 
     }
     
     public DBConnection() { //this needs to be called on startup
@@ -65,7 +65,7 @@ public class DBConnection {
         return rs;
     }
     
-    public int getUserID(String username, String password) {
+    public USERSTATUS getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
@@ -77,16 +77,31 @@ public class DBConnection {
                 if (rs.next()) {
                     int userid = rs.getInt("userid");
                     rs.close();
-                    return userid;
+                    switch (userid)
+                    {
+                        case 1:
+                        {
+                            return USERSTATUS.ENDUSER; 
+                        }
+                        case 0:
+                        {
+                            return USERSTATUS.ADMINISTRATOR;
+                        }
+                        default:
+                        {
+                            return USERSTATUS.NOTAUTHENTICATED;
+                        }
+                        
+                    }                    
                 }
                 rs.close();
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
-                return -1;
+                return USERSTATUS.NOTAUTHENTICATED;
             }
-        } else return -1;
+        } 
         
-        return -1;
+        return USERSTATUS.NOTAUTHENTICATED;
     }
     
     
