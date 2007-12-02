@@ -1,3 +1,4 @@
+package gui;
 /*
  * TabbedPane1.java
  *

@@ -1,3 +1,4 @@
+package gui;
 /*
  * ChangePassword.java
  *
