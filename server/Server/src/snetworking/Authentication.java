@@ -41,31 +41,32 @@ public class Authentication {
             // Check if user has proper rights to access the server
             if(m_userstatus == DBConnection.USERSTATUS.NOTAUTHENTICATED) {
                 // Check if the received command is a login command
-                System.out.println("Command: " + args[0] + (char) 13);
+                /*System.out.println("Command: " + args[0] + (char) 13);
                 System.out.println("Arg1: " + args[1] + (char) 13);
-                System.out.println("Arg2: " + args[2] + (char) 13);
+                System.out.println("Arg2: " + args[2] + (char) 13);*/
                 
                 if(args[0].equals("login")) {
-                    
-                    // Query the database for this user's data
-                    userID = m_db.getUserID(args[1],args[2]);
-                    //userID = -1;
-                    
-                    if(userID != -1) {
-                        // Authenticate
-                        if(usertype == DBConnection.USERSTATUS.NOTAUTHENTICATED) {
-                            return "error login";
-                        }
+                    // Get User ID
+                    if(args.length == 3) {
+                        userID = m_db.getUserID(args[1],args[2]);
                         
-                        // Get user type
-                        if(usertype.equals("administrator")) {
-                            //m_userID = Integer.parseInt(userID);
-                            m_userstatus = DBConnection.USERSTATUS.ADMINISTRATOR;
-                            return "ok login";
-                        } else if(usertype.equals("enduser")) {
-                            //m_userID = Integer.parseInt(userID);
-                            m_userstatus = DBConnection.USERSTATUS.ENDUSER;
-                            return "ok login";
+                        if(userID != -1) {
+                            // Get User Type
+                            usertype = m_db.getUserType(userID);
+                            
+                            // Authenticate
+                            if(usertype == DBConnection.USERSTATUS.NOTAUTHENTICATED) {
+                                return "error login";
+                            }
+                            
+                            // Get user type
+                            if(usertype == DBConnection.USERSTATUS.ADMINISTRATOR) {
+                                m_userstatus = usertype;
+                                return "ok login";
+                            } else if(usertype == DBConnection.USERSTATUS.ENDUSER) {
+                                m_userstatus = usertype;
+                                return "ok login";
+                            }
                         }
                     }
                 }
