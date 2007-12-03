@@ -29,6 +29,16 @@ public class EndUser {
         m_userID = userID;
     }
     
+    // Creates a new instance of EndUser
+    public EndUser(DBConnection db, String username, String password) {
+        try {
+            m_db = db;
+            m_userID = m_db.createAccount(username, password);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
     // Change password of a user
     public boolean setPassword(String newPassword) {
         System.out.println("Changing password for userid=" + m_userID);
@@ -114,10 +124,6 @@ public class EndUser {
     // This function won't be implemented
     public Order[] getOrderHistory() {
         return null;
-    }
-    
-    public boolean createAccount(String username, String password) {
-        return false;
     }
     
     public boolean enableAccount() {

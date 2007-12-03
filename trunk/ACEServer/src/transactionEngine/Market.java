@@ -40,7 +40,7 @@ public class Market {
         return false;
     }
     
-    public double getBuyPrice() {
+    public double getBuyPrice(String currencyName) {
         return 0.0;
     }
     
