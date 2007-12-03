@@ -1,4 +1,5 @@
 package gui;
+
 /*
  * UserMenu.java
  *
@@ -11,14 +12,16 @@ package gui;
  */
 
 import javax.swing.*;
+import clientnetworking.*;
 public class UserMenu extends javax.swing.JPanel {
+    ClientNetworkInterface m_cni;
     JFrame owner;
     JPanel Login;
     /** Creates new form UserMenu */
-    public UserMenu(JFrame owner, JPanel Login) {
-        
+    public UserMenu(JFrame owner, JPanel Login, ClientNetworkInterface cni) {
         this.owner=owner;
         this.Login=Login;
+        m_cni = cni;
         initComponents();
     }
     
@@ -88,7 +91,7 @@ public class UserMenu extends javax.swing.JPanel {
         choice11 = new java.awt.Choice();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
-        Logout = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         UserInfo = new javax.swing.JButton();
         Orders = new javax.swing.JButton();
@@ -118,7 +121,7 @@ public class UserMenu extends javax.swing.JPanel {
                 .addGap(46, 46, 46)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(choice4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
@@ -136,7 +139,7 @@ public class UserMenu extends javax.swing.JPanel {
                                 .addComponent(jLabel3)
                                 .addGap(13, 13, 13)
                                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jButton3)
@@ -179,7 +182,7 @@ public class UserMenu extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4)
                     .addComponent(jButton3))
@@ -375,7 +378,7 @@ public class UserMenu extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton10)
                     .addComponent(jButton9))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(98, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("LimitOrder", jPanel2);
 
@@ -452,7 +455,7 @@ public class UserMenu extends javax.swing.JPanel {
                             .addComponent(jLabel11)
                             .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(choice11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton7)
                     .addComponent(jButton8))
@@ -460,10 +463,10 @@ public class UserMenu extends javax.swing.JPanel {
         );
         jTabbedPane1.addTab("TrailingStop", TrailingStop);
 
-        Logout.setText("Logout");
-        Logout.addActionListener(new java.awt.event.ActionListener() {
+        btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LogoutActionPerformed(evt);
+                btnLogoutActionPerformed(evt);
             }
         });
 
@@ -480,8 +483,6 @@ public class UserMenu extends javax.swing.JPanel {
                 UserInfoActionPerformed(evt);
             }
         });
-
-        UserInfo.getAccessibleContext().setAccessibleName("UserInfo");
 
         Orders.setLabel("Orders");
         Orders.addActionListener(new java.awt.event.ActionListener() {
@@ -505,7 +506,7 @@ public class UserMenu extends javax.swing.JPanel {
                         .addGap(44, 44, 44)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(Logout)
+                                .addComponent(btnLogout)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton2)
                                 .addGap(44, 44, 44)
@@ -524,7 +525,7 @@ public class UserMenu extends javax.swing.JPanel {
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Logout)
+                    .addComponent(btnLogout)
                     .addComponent(Orders)
                     .addComponent(UserInfo)
                     .addComponent(jButton2))
@@ -558,21 +559,26 @@ public class UserMenu extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void LogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LogoutActionPerformed
-
-         this.setVisible(false);
-      owner.setContentPane(Login);
-      Login.setVisible(true);
-              
-    }//GEN-LAST:event_LogoutActionPerformed
     
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        try {
+            if(m_cni.isConnected()) {
+                m_cni.SendMessage("logout");
+            }
+            this.setVisible(false);
+            Login .setVisible(true);
+            owner.setContentPane(Login);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnLogoutActionPerformed
     
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton Logout;
     private javax.swing.JButton Orders;
     private javax.swing.JPanel TrailingStop;
     private javax.swing.JButton UserInfo;
+    private javax.swing.JButton btnLogout;
     private java.awt.Choice choice1;
     private java.awt.Choice choice10;
     private java.awt.Choice choice11;
