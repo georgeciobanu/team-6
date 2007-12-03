@@ -35,6 +35,7 @@ public class LoginPanel extends javax.swing.JFrame {
         pwdPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         lblErrorMessage = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jLabel1.setText("username");
@@ -50,26 +51,34 @@ public class LoginPanel extends javax.swing.JFrame {
 
         lblErrorMessage.setText("ERROR MESSAGE");
 
+        jButton1.setText("jButton1");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout LoginLayout = new javax.swing.GroupLayout(Login);
         Login.setLayout(LoginLayout);
         LoginLayout.setHorizontalGroup(
             LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginLayout.createSequentialGroup()
+                .addGap(132, 132, 132)
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(LoginLayout.createSequentialGroup()
-                        .addGap(132, 132, 132)
-                        .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2))
-                        .addGap(12, 12, 12)
-                        .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnLogin)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
-                            .addComponent(pwdPassword)))
-                    .addGroup(LoginLayout.createSequentialGroup()
-                        .addGap(101, 101, 101)
-                        .addComponent(lblErrorMessage)))
-                .addContainerGap(118, Short.MAX_VALUE))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addGap(12, 12, 12)
+                .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnLogin)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                    .addComponent(pwdPassword))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(23, 23, 23))
+            .addGroup(LoginLayout.createSequentialGroup()
+                .addGap(101, 101, 101)
+                .addComponent(lblErrorMessage)
+                .addContainerGap(210, Short.MAX_VALUE))
         );
         LoginLayout.setVerticalGroup(
             LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,6 +96,10 @@ public class LoginPanel extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(lblErrorMessage)
                 .addContainerGap(66, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginLayout.createSequentialGroup()
+                .addContainerGap(179, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(101, 101, 101))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -108,6 +121,12 @@ public class LoginPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        //System.out.println("Connection to server is connected : " + m_cni.isClosed());
+        System.out.println("Connection to server is connected : " + m_cni.isConnected());
+        
+    }//GEN-LAST:event_jButton1MouseClicked
+
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         
         String message;
@@ -119,7 +138,7 @@ public class LoginPanel extends javax.swing.JFrame {
             String password = pwdPassword.getText();
             if(password.length() > 0 && password.indexOf(" ") < 0) {
                 
-                // Connect
+                // Connect                    
                 if(m_cni.connect("localhost",1234)) {
                     // Login
                     m_cni.SendMessage("login " + username + " " + password);
@@ -135,6 +154,7 @@ public class LoginPanel extends javax.swing.JFrame {
                         // Failed to login
                         lblErrorMessage.setText("You cannot login as an administrator using the end-user's client application!");
                         m_cni.SendMessage("logout");
+                        m_cni.disconnect();
                     } else {
                         lblErrorMessage.setText("Login failed! Verify that you have the proper username and password");
                     }
@@ -167,6 +187,7 @@ public class LoginPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Login;
     private javax.swing.JButton btnLogin;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblErrorMessage;

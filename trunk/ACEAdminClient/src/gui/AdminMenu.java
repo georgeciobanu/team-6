@@ -367,6 +367,7 @@ public class AdminMenu extends javax.swing.JPanel {
         try {
             if(m_cni.isConnected()) {
                 m_cni.SendMessage("logout");
+                m_cni.disconnect();
             }
             this.setVisible(false);
             Login .setVisible(true);

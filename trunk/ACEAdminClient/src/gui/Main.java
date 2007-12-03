@@ -140,6 +140,7 @@ public class Main extends javax.swing.JFrame {
                         // Failed to login
                         lblErrorMessage.setText("You cannot login as an end-user using the administrator's client application!");
                         m_cni.SendMessage("logout");
+                        m_cni.disconnect();
                     } else {
                         lblErrorMessage.setText("Login failed! Verify that you have the proper username and password");
                     }
