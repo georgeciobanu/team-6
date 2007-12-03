@@ -2,6 +2,9 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/C:/programming/java/ecse321e/ACEAdminClient/src/clientnetworking/ClientNetworkInterface.java</file>
+        <file>file:/C:/programming/java/ecse321f/ACEAdminClient/src/gui/AdminChangePassword.java</file>
+        <file>file:/C:/programming/java/ecse321f/ACEAdminClient/src/gui/AdminMenu.java</file>
+        <file>file:/C:/programming/java/ecse321f/ACEAdminClient/src/gui/Main.java</file>
+        <file>file:/C:/programming/java/ecse321f/ACEAdminClient/src/gui/UserCreation.java</file>
     </open-files>
 </project-private>
