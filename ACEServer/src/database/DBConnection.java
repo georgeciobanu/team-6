@@ -7,8 +7,6 @@
 
 package database;
 
-
-
 import java.sql.*;
 
 /**
@@ -95,7 +93,7 @@ public class DBConnection {
         return false;
     }
     
-    public String[] getCurrencies() {
+    public String[] getCurrencyPairs() {
         String cpairs = "";
         
         try{
@@ -109,13 +107,34 @@ public class DBConnection {
                 cpairs = cpairs +  rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") + "\n";
             }
             rs.close();
-            
-            String[] s = cpairs.split("\n");
-            return cpairs.split("\n");            
+                        
+            return cpairs.split("\n");
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return null;
-        }        
+        }
+    }
+    
+        public String[] getCurrencies() {
+        String c = "";
+        
+        try{
+            String queryString =
+                    "SELECT symbol " +
+                    "FROM currencies ";
+            
+            ResultSet rs = query(queryString);
+            
+            while (rs.next() ) { //all went ok
+                c = c +  rs.getString("symbol") + "\n";
+            }
+            rs.close();
+            
+            return c.split("\n");
+        } catch (Exception ex){ //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     public int getUserID(String username, String password) {
@@ -146,6 +165,24 @@ public class DBConnection {
     // Input: username, password
     // Output: user ID, or -1 if error
     public int createAccount(String username, String password) {
+        if (username.length() > 0 && password.length() > 0) {
+            try{
+                String queryString =
+                        "INSERT  INTO users (username, password) " +
+                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "')" ;
+                
+                ResultSet rs = query(queryString);
+                
+                int id = getUserID(username, password);
+                
+                rs.close();
+                return id;
+            } catch (Exception ex){ //TODO: treat exceptions nice
+                ex.printStackTrace();
+                return -1;
+            }
+        }
+        
         return -1;
     }
     
