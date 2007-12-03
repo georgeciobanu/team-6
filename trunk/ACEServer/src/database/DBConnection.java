@@ -66,7 +66,7 @@ public class DBConnection {
     }
     
     public boolean setUserPassword(int userid, String newPassword) {
-            if (newPassword.length() > 1) {
+        if (newPassword.length() > 1) {
             try{
                 String queryString =
                         "UPDATE users " +
@@ -76,13 +76,13 @@ public class DBConnection {
                 ResultSet rs = query(queryString);
                 
                 //check if the value was saved
-                queryString = 
+                queryString =
                         "SELECT password " +
                         "FROM users " +
                         "WHERE userid =" + String.valueOf(userid);
                 rs = query(queryString);
-                String setPassword; 
-                if (rs.next() && (newPassword.equals(rs.getString("password"))) ) { //all went ok                    
+                String setPassword;
+                if (rs.next() && (newPassword.equals(rs.getString("password"))) ) { //all went ok
                     rs.close();
                     return true;
                 }
@@ -91,10 +91,32 @@ public class DBConnection {
                 ex.printStackTrace();
                 return false;
             }
-        }        
+        }
         return false;
     }
     
+    public String[] getCurrencies() {
+        String cpairs = "";
+        
+        try{
+            String queryString =
+                    "SELECT baseCurrency, relativeCurrency " +
+                    "FROM currencyPairs ";
+            
+            ResultSet rs = query(queryString);
+            
+            while (rs.next() ) { //all went ok
+                cpairs = cpairs +  rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") + "\n";
+            }
+            rs.close();
+            
+            String[] s = cpairs.split("\n");
+            return cpairs.split("\n");            
+        } catch (Exception ex){ //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return null;
+        }        
+    }
     
     public int getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
