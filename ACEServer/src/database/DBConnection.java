@@ -31,7 +31,7 @@ public class DBConnection {
     
     
     
-    public boolean connect(String server, int port) {
+    public boolean connect(String ODBCname, int port) {
         if (! connected) {
             try {
                 //Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
@@ -74,7 +74,15 @@ public class DBConnection {
                         "WHERE userid=" + String.valueOf(userid);
                 
                 ResultSet rs = query(queryString);
-                if (rs.next()) { //all went ok                    
+                
+                //check if the value was saved
+                queryString = 
+                        "SELECT password " +
+                        "FROM users " +
+                        "WHERE userid =" + String.valueOf(userid);
+                rs = query(queryString);
+                String setPassword; 
+                if (rs.next() && (newPassword.equals(rs.getString("password"))) ) { //all went ok                    
                     rs.close();
                     return true;
                 }
