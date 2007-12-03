@@ -53,7 +53,11 @@ public class AdminParser {
             user.setPassword(args[1]);
             return "ok changepassword";
         } else if(args[0].equals("createaccount") && args.length == 3) {
-            user = new EndUser(m_db, args[1], args[2]);
+            user = new EndUser(m_db, -1);
+            if(user.createAccount(args[1], args[2]) != -1) {
+                return "ok createaccount " + args[1];
+            }
+            return "error createaccount " + args[1];
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {
