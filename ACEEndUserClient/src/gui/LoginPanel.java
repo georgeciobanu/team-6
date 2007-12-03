@@ -125,31 +125,11 @@ public class LoginPanel extends javax.swing.JFrame {
                     while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
                     
                     if(message.equals("ok login enduser")) {
-                        String args[];
-                        // Get the available traiding currencies from the ACE system
-                        m_cni.SendMessage("getcurrencies");
-                        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
-                        
-                        args = message.split(" ");
-                        
-                        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getcurrencies")) {
-                            String[] currenciesList = new String[args.length - 2];
-                            for(int i = 0; i < args.length - 2; i++) {
-                                currenciesList[i] = args[i + 2];
-                                System.out.println(currenciesList[i]);
-                            }
-                            
                             // Load the Administrator's GUI menu
                             UserMenu menu = new UserMenu(this,Login,m_cni);
                             Login.setVisible(false);
                             this.setContentPane(menu);
                             menu.setVisible(true);
-                        } else {
-                            // Failed to login
-                            lblErrorMessage.setText("An error occured while fetching the available currencies from the server.");
-                            m_cni.SendMessage("logout");
-                            m_cni.disconnect();
-                        }
                     } else if(message.equals("ok login administrator")) {
                         // Failed to login
                         lblErrorMessage.setText("You cannot login as an administrator using the end-user's client application!");

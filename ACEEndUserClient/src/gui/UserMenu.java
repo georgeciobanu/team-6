@@ -15,16 +15,47 @@ import javax.swing.*;
 import clientnetworking.*;
 public class UserMenu extends javax.swing.JPanel {
     ClientNetworkInterface m_cni;
+    String[] m_currenciesList;
     JFrame owner;
     JPanel Login;
+    
+    // Get the available traiding currencies from the ACE system
+    private void getCurrencies() {
+        String message;
+        String args[];
+        m_cni.SendMessage("getcurrencies");
+        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+        args = message.split(" ");
+        
+        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getcurrencies")) {
+            m_currenciesList = new String[args.length - 2];
+            for(int i = 0; i < args.length - 2; i++) {
+                m_currenciesList[i] = args[i + 2];
+                System.out.println(m_currenciesList[i]);
+            }
+        } else {
+            // Failed to login
+            m_cni.SendMessage("logout");
+            m_cni.disconnect();
+            
+            // Go back to LoginPanel
+            this.setVisible(false);
+            Login.setVisible(true);
+            owner.setContentPane(Login);
+        }
+    }
+    
+    
     /** Creates new form UserMenu */
     public UserMenu(JFrame owner, JPanel Login, ClientNetworkInterface cni) {
         this.owner=owner;
         this.Login=Login;
         m_cni = cni;
         initComponents();
+        
+        getCurrencies();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -561,7 +592,7 @@ public class UserMenu extends javax.swing.JPanel {
                 m_cni.disconnect();
             }
             this.setVisible(false);
-            Login .setVisible(true);
+            Login.setVisible(true);
             owner.setContentPane(Login);
         } catch (Exception e) {
             e.printStackTrace();
