@@ -8,6 +8,7 @@
 package database;
 
 import java.sql.*;
+import java.util.Vector;
 
 /**
  *
@@ -96,22 +97,24 @@ public class DBConnection {
         return false;
     }
     
-    public String[] getCurrencyPairs() {
-        String cpairs = "";
-        
+    public String[] getCurrencyPairs() {                
         try{
             String queryString =
                     "SELECT baseCurrency, relativeCurrency " +
                     "FROM currencyPairs ";
             
             ResultSet rs = query(queryString);
+                                    
+            Vector<String> list = new Vector();
             
-            while (rs.next() ) { //all went ok
-                cpairs = cpairs +  rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") + "\n";
+            while (rs.next() ) { //all went o                                
+                list.add(rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") );                
             }
             rs.close();
             
-            return cpairs.split("\n");
+            String s [] = list.toArray(new String[0]);
+            
+            return s;
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return null;
@@ -128,12 +131,15 @@ public class DBConnection {
             
             ResultSet rs = query(queryString);
             
-            while (rs.next() ) { //all went ok
-                c = c +  rs.getString("symbol") + "\n";
+            Vector<String> list = new Vector();
+            
+            while (rs.next() ) { //all went o                                
+                list.add(rs.getString("symbol"));
             }
             rs.close();
             
-            return c.split("\n");
+            String s [] = list.toArray(new String[0]);
+            return s;
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return null;
