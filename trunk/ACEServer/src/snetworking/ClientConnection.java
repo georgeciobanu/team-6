@@ -9,7 +9,6 @@
 package snetworking;
 
 import database.*;
-
 import java.net.*;
 import java.io.*;
 import java.util.*;
@@ -79,7 +78,7 @@ public class ClientConnection implements Runnable {
               }
           }
       } catch (IOException e) {
-          System.out.println("User prematurely disconnected before loggin off");
+          System.out.println("Client on threadid=" + String.valueOf(ID) + " disconnected.");
       } catch (Exception e) {
           e.printStackTrace();
       }

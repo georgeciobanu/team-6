@@ -29,10 +29,7 @@ public class ACEServer {
         if (s.startup()) {
             System.out.println("All systems ok!");
         }
-        
 
-        
-        
         System.out.println("System is shutting down...");
         s.shutdown();
     }
@@ -44,17 +41,13 @@ public class ACEServer {
      */
     public boolean startup() {        
         boolean doshutdown = false;
+        
+        // Connect to the database
         m_db = new DBConnection();
         m_db.connect("localhost",5432);
         
-        m_sni = new ServerNetworkInterface(m_db);
-        
-        // Connect to the database
-        
-        
-           
-        
         // Start listening to connections
+        m_sni = new ServerNetworkInterface(m_db);
         m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
 
         // Wait till we want to shutdown

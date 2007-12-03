@@ -14,12 +14,12 @@ import clientnetworking.*;
  */
 public class Main extends javax.swing.JFrame {
     
-    ClientNetworkInterface cni;
+    ClientNetworkInterface m_cni;
     
     /** Creates new form Main */
     public Main() {
         initComponents();
-        cni = new ClientNetworkInterface();
+        m_cni = new ClientNetworkInterface();
     }
     
     /** This method is called from within the constructor to
@@ -125,21 +125,21 @@ public class Main extends javax.swing.JFrame {
             if(password.length() > 0 && password.indexOf(" ") < 0) {
 
                 // Connect
-                if(cni.connect("localhost",1234)) {
+                if(m_cni.connect("localhost",1234)) {
                     // Login
-                    cni.SendMessage("login " + username + " " + password);
-                    while((message = cni.ReceiveMessage()).equals("") && cni.isConnected());
+                    m_cni.SendMessage("login " + username + " " + password);
+                    while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
                     
                     if(message.equals("ok login administrator")) {
                         // Load the Administrator's GUI menu
-                        AdminMenu menu = new AdminMenu(this,Login);
+                        AdminMenu menu = new AdminMenu(this,Login,m_cni);
                         Login.setVisible(false);
                         this.setContentPane(menu);
                         menu.setVisible(true);
                     } else if(message.equals("ok login enduser")) {
                         // Failed to login
                         lblErrorMessage.setText("You cannot login as an end-user using the administrator's client application!");
-                        cni.SendMessage("logout");
+                        m_cni.SendMessage("logout");
                     } else {
                         lblErrorMessage.setText("Login failed! Verify that you have the proper username and password");
                     }
