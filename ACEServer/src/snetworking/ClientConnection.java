@@ -75,19 +75,9 @@ public class ClientConnection implements Runnable {
                   osw.flush();
               } else {
                   System.out.println("The user requested to logout.");
-                  //connection.shutdownInput();
-                  //connection.shutdownOutput();
-                  //isr.close();
                   os.close();
                   is.close();
-                  //osw.close();
-
                   connection.close();
-                  
-                  
-                  
-                  System.out.println("Connection closed is " + connection.isClosed());
-                  System.out.println("Connection connected is " + connection.isConnected());
               }
           }
       } catch (IOException e) {
