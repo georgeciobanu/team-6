@@ -9,6 +9,7 @@ package snetworking;
 
 import fundamentals.*;
 import database.*;
+import transactionEngine.*;
 
 /**
  *
@@ -28,13 +29,25 @@ public class AdminParser {
     public String parseCommand(String command) {
         String[] args;
         EndUser user;
+        Market market;
         
         args = command.split(" ");
         
         if(args.length <= 0) {
             return "error";
         } else if(args[0].equals("getcurrencies") && args.length == 1) {
-            return "ok " + args[0] + " USD CAN YEN";
+            String ret = "";
+            market = new Market(m_db);
+            String[] currenciesList = market.getCurrencies();
+            if(currenciesList.length < 1) {
+                return "error getcurrencies";
+            } else if(currenciesList[0].equals("")) {
+                return "error getcurrencies";
+            }
+            for(int i = 0; i < currenciesList.length; i++) {
+                ret += currenciesList[i] + " ";
+            }
+            return "ok getcurrencies " + ret.trim();
         } else if(args[0].equals("changepassword") && args.length == 2) {
             user = new EndUser(m_db, m_userID);
             user.setPassword(args[1]);
