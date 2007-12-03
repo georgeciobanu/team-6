@@ -136,6 +136,7 @@ public class LoginPanel extends javax.swing.JFrame {
                             String[] currenciesList = new String[args.length - 2];
                             for(int i = 0; i < args.length - 2; i++) {
                                 currenciesList[i] = args[i + 2];
+                                System.out.println(currenciesList[i]);
                             }
                             
                             // Load the Administrator's GUI menu
