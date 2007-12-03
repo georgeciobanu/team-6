@@ -70,7 +70,7 @@ public class ClientNetworkInterface {
             }
         }
         
-        return false;
+        return true;
     }
     
     public boolean SendMessage(String message) {

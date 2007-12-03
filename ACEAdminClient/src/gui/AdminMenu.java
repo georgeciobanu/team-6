@@ -367,11 +367,10 @@ public class AdminMenu extends javax.swing.JPanel {
         try {
             if(m_cni.isConnected()) {
                 m_cni.SendMessage("logout");
-                
-                this.setVisible(false);
-                Login .setVisible(true);
-                owner.setContentPane(Login);
             }
+            this.setVisible(false);
+            Login .setVisible(true);
+            owner.setContentPane(Login);
         } catch (Exception e) {
             e.printStackTrace();
         }

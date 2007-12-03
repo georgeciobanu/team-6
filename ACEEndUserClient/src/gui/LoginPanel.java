@@ -1,4 +1,7 @@
 package gui;
+
+import clientnetworking.*;
+
 /*
  * LoginPanel.java
  *
@@ -10,9 +13,11 @@ package gui;
  * @author  jeo
  */
 public class LoginPanel extends javax.swing.JFrame {
+    ClientNetworkInterface m_cni;
     
     /** Creates new form LoginPanel */
     public LoginPanel() {
+        m_cni = new ClientNetworkInterface();
         initComponents();
     }
     
@@ -26,36 +31,44 @@ public class LoginPanel extends javax.swing.JFrame {
         Login = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
+        txtUsername = new javax.swing.JTextField();
+        pwdPassword = new javax.swing.JPasswordField();
+        btnLogin = new javax.swing.JButton();
+        lblErrorMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jLabel1.setText("username");
 
         jLabel2.setText("password");
 
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnLogin.setText("Login");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnLoginActionPerformed(evt);
             }
         });
+
+        lblErrorMessage.setText("ERROR MESSAGE");
 
         javax.swing.GroupLayout LoginLayout = new javax.swing.GroupLayout(Login);
         Login.setLayout(LoginLayout);
         LoginLayout.setHorizontalGroup(
             LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginLayout.createSequentialGroup()
-                .addGap(132, 132, 132)
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addGap(12, 12, 12)
-                .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jButton1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
-                    .addComponent(jPasswordField1))
+                    .addGroup(LoginLayout.createSequentialGroup()
+                        .addGap(132, 132, 132)
+                        .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addGap(12, 12, 12)
+                        .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnLogin)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                            .addComponent(pwdPassword)))
+                    .addGroup(LoginLayout.createSequentialGroup()
+                        .addGap(101, 101, 101)
+                        .addComponent(lblErrorMessage)))
                 .addContainerGap(118, Short.MAX_VALUE))
         );
         LoginLayout.setVerticalGroup(
@@ -64,14 +77,16 @@ public class LoginPanel extends javax.swing.JFrame {
                 .addGap(103, 103, 103)
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pwdPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(19, 19, 19)
-                .addComponent(jButton1)
-                .addContainerGap(112, Short.MAX_VALUE))
+                .addComponent(btnLogin)
+                .addGap(32, 32, 32)
+                .addComponent(lblErrorMessage)
+                .addContainerGap(66, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -93,17 +108,51 @@ public class LoginPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        
+        String message;
+        
+        // Validate username and password
+        String username = txtUsername.getText();
+        if(username.length() > 0 && username.indexOf(" ") < 0) {
+            
+            String password = pwdPassword.getText();
+            if(password.length() > 0 && password.indexOf(" ") < 0) {
+                
+                // Connect
+                if(m_cni.connect("localhost",1234)) {
+                    // Login
+                    m_cni.SendMessage("login " + username + " " + password);
+                    while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+                    
+                    if(message.equals("ok login enduser")) {
+                        // Load the Administrator's GUI menu
+                        UserMenu menu = new UserMenu(this,Login,m_cni);
+                        Login.setVisible(false);
+                        this.setContentPane(menu);
+                        menu.setVisible(true);
+                    } else if(message.equals("ok login administrator")) {
+                        // Failed to login
+                        lblErrorMessage.setText("You cannot login as an administrator using the end-user's client application!");
+                        m_cni.SendMessage("logout");
+                    } else {
+                        lblErrorMessage.setText("Login failed! Verify that you have the proper username and password");
+                    }
+                } else {
+                    // Display error message if couln't connect or login to the server
+                    lblErrorMessage.setText("Could not connect to the server. Verify that your firewall is not blocking the connection.");
+                }
+            } else {
+                // Invalid password
+                lblErrorMessage.setText("Invalid password");
+            }
+        } else {
+            // Invalid username
+            lblErrorMessage.setText("Invalid Username");
+        }
+        
+    }//GEN-LAST:event_btnLoginActionPerformed
 
-        UserMenu menu = new UserMenu(this,Login);
-      Login.setVisible(false);
-      this.setContentPane(menu);
-      menu.setVisible(true);
-        
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
-    
     /**
      * @param args the command line arguments
      */
@@ -117,11 +166,12 @@ public class LoginPanel extends javax.swing.JFrame {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Login;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblErrorMessage;
+    private javax.swing.JPasswordField pwdPassword;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
     
 }
