@@ -54,7 +54,10 @@ public class DBConnection {
             if (connected) {
                 
                 Statement stm = con.createStatement();
-                rs = stm.executeQuery(message);
+                if (! message.startsWith("INSERT") && ! message.startsWith("UPDATE"))
+                    rs = stm.executeQuery(message);
+                else stm.executeUpdate(message);
+                
                 //stm.close();
             }
         }catch (Exception ex){
@@ -107,7 +110,7 @@ public class DBConnection {
                 cpairs = cpairs +  rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") + "\n";
             }
             rs.close();
-                        
+            
             return cpairs.split("\n");
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
@@ -115,7 +118,7 @@ public class DBConnection {
         }
     }
     
-        public String[] getCurrencies() {
+    public String[] getCurrencies() {
         String c = "";
         
         try{
@@ -175,7 +178,35 @@ public class DBConnection {
                 
                 int id = getUserID(username, password);
                 
-                rs.close();
+                //rs.close();
+                return id;
+            } catch (Exception ex){ //TODO: treat exceptions nice
+                ex.printStackTrace();
+                return -1;
+            }
+        }
+        return -1;
+    }
+    
+    public int createAccount(String username, String password, int type, String contactInfo,
+            String email, float transactionFee, float interestRate, float leverageRatio) {
+        if (username.length() > 0 && password.length() > 0) {
+            try{
+                String queryString =
+                        "INSERT  INTO users (username, password, type, " +
+                        "contactInfo, email, transactionFee, interestRate, leverageRatio) " +
+                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "' ," + String.valueOf(type) + " , '" + contactInfo + "' ," +
+                        "'" + email + "'" + ", " +
+                        String.valueOf(transactionFee)  + "," +
+                        String.valueOf(interestRate) + "," +
+                        String.valueOf(leverageRatio) +
+                        ")" ;
+                
+                ResultSet rs = query(queryString);
+                
+                int id = getUserID(username, password);
+                
+                // rs.close();
                 return id;
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
