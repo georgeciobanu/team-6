@@ -20,8 +20,7 @@ public class AdminChangePassword extends javax.swing.JPanel {
         ClientNetworkInterface m_cni;
     
     /** Creates new form AdminChangePassword */
-    public AdminChangePassword(JFrame owner, JPanel admin, ClientNetworkInterface cni ) {
-        
+    public AdminChangePassword(JFrame owner, JPanel admin, ClientNetworkInterface cni) {
         this.owner=owner;
         this.admin=admin;
         m_cni = cni;

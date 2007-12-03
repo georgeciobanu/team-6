@@ -11,12 +11,14 @@ package gui;
  */
 
 import javax.swing.*;
+import clientnetworking.*;
 public class TabbedPane1 extends javax.swing.JPanel {
     JPanel menu;
     JFrame owner;
+    ClientNetworkInterface m_cni;
     /** Creates new form TabbedPane1 */
-    public TabbedPane1(JPanel menu,JFrame owner) {
-        
+    public TabbedPane1(JPanel menu,JFrame owner, ClientNetworkInterface cni) {
+        m_cni = cni;
         this.menu=menu;
         this.owner=owner;
         initComponents();
@@ -210,7 +212,7 @@ public class TabbedPane1 extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
-     ChangePassword pas = new ChangePassword(this, owner);
+      ChangePassword pas = new ChangePassword(this, owner, m_cni);
       this.setVisible(false);
       owner.setContentPane(pas);
       pas.setVisible(true);

@@ -35,7 +35,6 @@ public class LoginPanel extends javax.swing.JFrame {
         pwdPassword = new javax.swing.JPasswordField();
         btnLogin = new javax.swing.JButton();
         lblErrorMessage = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         jLabel1.setText("username");
@@ -51,13 +50,6 @@ public class LoginPanel extends javax.swing.JFrame {
 
         lblErrorMessage.setText("ERROR MESSAGE");
 
-        jButton1.setText("jButton1");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout LoginLayout = new javax.swing.GroupLayout(Login);
         Login.setLayout(LoginLayout);
         LoginLayout.setHorizontalGroup(
@@ -72,9 +64,7 @@ public class LoginPanel extends javax.swing.JFrame {
                     .addComponent(btnLogin)
                     .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
                     .addComponent(pwdPassword))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(23, 23, 23))
+                .addContainerGap(118, Short.MAX_VALUE))
             .addGroup(LoginLayout.createSequentialGroup()
                 .addGap(101, 101, 101)
                 .addComponent(lblErrorMessage)
@@ -96,10 +86,6 @@ public class LoginPanel extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(lblErrorMessage)
                 .addContainerGap(66, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginLayout.createSequentialGroup()
-                .addContainerGap(179, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(101, 101, 101))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -121,12 +107,6 @@ public class LoginPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        //System.out.println("Connection to server is connected : " + m_cni.isClosed());
-        System.out.println("Connection to server is connected : " + m_cni.isConnected());
-        
-    }//GEN-LAST:event_jButton1MouseClicked
-
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         
         String message;
@@ -145,11 +125,30 @@ public class LoginPanel extends javax.swing.JFrame {
                     while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
                     
                     if(message.equals("ok login enduser")) {
-                        // Load the Administrator's GUI menu
-                        UserMenu menu = new UserMenu(this,Login,m_cni);
-                        Login.setVisible(false);
-                        this.setContentPane(menu);
-                        menu.setVisible(true);
+                        String args[];
+                        // Get the available traiding currencies from the ACE system
+                        m_cni.SendMessage("getcurrencies");
+                        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+                        
+                        args = message.split(" ");
+                        
+                        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getcurrencies")) {
+                            String[] currenciesList = new String[args.length - 2];
+                            for(int i = 0; i < args.length - 2; i++) {
+                                currenciesList[i] = args[i + 2];
+                            }
+                            
+                            // Load the Administrator's GUI menu
+                            UserMenu menu = new UserMenu(this,Login,m_cni);
+                            Login.setVisible(false);
+                            this.setContentPane(menu);
+                            menu.setVisible(true);
+                        } else {
+                            // Failed to login
+                            lblErrorMessage.setText("An error occured while fetching the available currencies from the server.");
+                            m_cni.SendMessage("logout");
+                            m_cni.disconnect();
+                        }
                     } else if(message.equals("ok login administrator")) {
                         // Failed to login
                         lblErrorMessage.setText("You cannot login as an administrator using the end-user's client application!");
@@ -187,7 +186,6 @@ public class LoginPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Login;
     private javax.swing.JButton btnLogin;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lblErrorMessage;
