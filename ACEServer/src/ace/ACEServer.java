@@ -1,6 +1,7 @@
 package ace;
 
 import database.*;
+import javax.swing.Timer;
 import snetworking.*;
 /*
  * ACEServer.java
@@ -16,6 +17,7 @@ import snetworking.*;
 public class ACEServer {
     DBConnection m_db;
     ServerNetworkInterface m_sni;
+    Timer serverProcessor = new Timer();
     
     // constructor
     public ACEServer() {
@@ -41,6 +43,8 @@ public class ACEServer {
      */
     public boolean startup() {        
         boolean doshutdown = false;
+        
+        
         
         // Connect to the database
         m_db = new DBConnection();
