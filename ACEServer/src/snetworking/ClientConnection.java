@@ -43,7 +43,7 @@ public class ClientConnection implements Runnable {
           StringBuffer process = new StringBuffer();
           
           // Keep receiving messages until logout or lost connection
-          while(connection.isConnected()) {
+          while(!connection.isClosed()) {
               // Wait for a complete message sent by the client application
               while((character = isr.read()) != 13) {
                   if(character != -1)
@@ -54,7 +54,7 @@ public class ClientConnection implements Runnable {
               }
               
               // Log the command (print it out to the console)
-              System.out.println(process);
+              System.out.println("User on threadid=" + String.valueOf(ID) + " requested command: " + process);
               
               // Preparse command
               // TODO: Remove all ending return carriage, not just one
@@ -74,13 +74,28 @@ public class ClientConnection implements Runnable {
                   osw.write(returnMessage + (char) 13);
                   osw.flush();
               } else {
+                  System.out.println("The user requested to logout.");
+                  //connection.shutdownInput();
+                  //connection.shutdownOutput();
+                  //isr.close();
+                  os.close();
+                  is.close();
+                  //osw.close();
+
                   connection.close();
+                  
+                  
+                  
+                  System.out.println("Connection closed is " + connection.isClosed());
+                  System.out.println("Connection connected is " + connection.isConnected());
               }
           }
       } catch (IOException e) {
-          System.out.println("Client on threadid=" + String.valueOf(ID) + " disconnected.");
+          e.printStackTrace();
       } catch (Exception e) {
           e.printStackTrace();
+      } finally {
+          System.out.println("threadid=" + String.valueOf(ID) + " is now ended.");
       }
   }
 }

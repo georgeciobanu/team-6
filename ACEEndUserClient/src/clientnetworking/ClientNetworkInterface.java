@@ -40,7 +40,7 @@ public class ClientNetworkInterface {
     }
     
     public boolean connect(String server, int port) {
-        if(!m_connected) {
+        if(!isConnected()) {
             System.out.println("ClientNetworkInterface initialized");
             
             try {
@@ -63,6 +63,7 @@ public class ClientNetworkInterface {
                 return true;
             } catch (IOException f) {
                 System.out.println("Connection to the server failed!");
+                m_connected = false;
                 return false;
             } catch (Exception g) {
                 System.out.println("Exception: " + g);
@@ -117,7 +118,7 @@ public class ClientNetworkInterface {
         } catch (IOException f) {
             System.out.println("IOException: " + f);
             disconnect();
-            return returnMessage;
+            return "";
         } catch (Exception g) {
             System.out.println("here:");
             System.out.println("Exception: " + g);
@@ -131,16 +132,33 @@ public class ClientNetworkInterface {
     }*/
     
     public boolean isConnected() {
-        return m_connected;
+        try {
+            if(m_connection == null) {
+                m_connected = false;
+            } else {
+                m_connected = m_connection.isConnected() && !m_connection.isClosed();
+            }
+            return m_connected;
+            
+        } catch(Exception e) {
+            e.printStackTrace();
+            return m_connected = false;
+        }
     }
     
     public boolean disconnect() {
         try {
-            if(!m_connected)
+            if(isConnected())
+            {
                 /** Close the socket connection. */
+                //m_osw.close();
+                m_bos.close();
+                //m_isr.close();
+                m_bis.close();
                 m_connection.close();
-                m_connected = false;
-                System.out.println("The client is now disconnected.");
+                System.out.println("The client is now disconnected.=" + isConnected());
+            }
+            m_connected = false;
         } catch (IOException f) {
             System.out.println("IOException: " + f);
             m_connected = false;
