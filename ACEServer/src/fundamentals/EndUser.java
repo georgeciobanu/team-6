@@ -23,28 +23,34 @@ public class EndUser {
     Order[] m_pendingOrders;
     Order[] m_orderHistory;
     
-    /** Creates a new instance of EndUser */
+    // Creates a new instance of EndUser
     public EndUser(DBConnection db, int userID) {
         m_db = db;
         m_userID = userID;
     }
     
+    // Change password of a user
     public boolean setPassword(String newPassword) {
+        System.out.println("Changing password for userid=" + m_userID);
         return m_db.setUserPassword(m_userID, newPassword);
     }
     
+    //This function won't be implemented
     public boolean setPriceRange(double p1, double p2) {
         return false;
     }
     
+    //This function won't be implemented
     public double[] getPriceRange() {
         return null;
     }
     
+    //Place an order
     public boolean placeOrder(Order order) {
         return false;
     }
     
+    // This function won't be implemented
     public boolean editOrder(Order order) {
         return false;
     }
@@ -54,10 +60,12 @@ public class EndUser {
         return false;
     }
     
+    // Get a list of pending orders
     public Order[] getPendingOrders() {
         return null;
     }
     
+    // Get all current balances
     public double[] getCurrentBalances() {
         return null;
     }

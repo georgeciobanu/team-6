@@ -38,8 +38,9 @@ public class AdminParser {
         } else if(args[0].equals("changepassword") && args.length == 2) {
             user = new EndUser(m_db, m_userID);
             user.setPassword(args[1]);
+            return "ok changepassword";
         } else if(args[0].equals("createaccount") && args.length == 3) {
-            
+            //user = new EndUser(m_db, args[1], args[2]);
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {
