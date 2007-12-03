@@ -17,9 +17,11 @@ import database.*;
  * @author GLL
  */
 public class Market {
+    DBConnection m_db;
     
     /** Creates a new instance of Market */
-    public Market() {
+    public Market(DBConnection db) {
+        m_db = db;
     }
     
     public boolean placeOrder(Order order) {
@@ -56,6 +58,17 @@ public class Market {
     
     public Order[] getOrderHistory() {
         return null;
+    }
+    
+    // Get the list of available traiding currencies on the ACE server
+    public String[] getCurrencies() {
+        try {
+            return m_db.getCurrencies();
+        } catch(Exception e) {
+            e.printStackTrace();
+            String[] empty = {""};
+            return empty;
+        }
     }
     
     public boolean addCurrency(Currency currency) {
