@@ -33,7 +33,7 @@ public class EndUser {
     public EndUser(DBConnection db, String username, String password) {
         try {
             m_db = db;
-            m_userID = m_db.createAccount(username, password);
+            
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -53,6 +53,12 @@ public class EndUser {
     //This function won't be implemented
     public double[] getPriceRange() {
         return null;
+    }
+    
+    // 
+    public int createAccount(String username, String password) {
+        m_userID = m_db.createAccount(username, password);
+        return m_userID;
     }
     
     //Place an order
