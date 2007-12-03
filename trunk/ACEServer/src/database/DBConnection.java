@@ -112,6 +112,15 @@ public class DBConnection {
         return -1;
     }
     
+    // Create a new end-user account
+    // Input: username, password
+    // Output: user ID, or -1 if error
+    public int createAccount(String username, String password) {
+        return -1;
+    }
+    
+    //
+    
     
     public USERSTATUS getUserType(int userID) {
         if (userID > 0) {
