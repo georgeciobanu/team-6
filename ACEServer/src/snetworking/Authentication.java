@@ -20,8 +20,8 @@ public class Authentication {
     int m_userID = -1;
     
     DBConnection.USERSTATUS m_userstatus;
-    EndUserParser eup = new EndUserParser();
-    AdminParser ap = new AdminParser();
+    EndUserParser eup;
+    AdminParser ap;
     
     /** Creates a new instance of Authentication */
     public Authentication(DBConnection db) {
@@ -62,9 +62,11 @@ public class Authentication {
                             // Get user type
                             if(usertype == DBConnection.USERSTATUS.ADMINISTRATOR) {
                                 m_userstatus = usertype;
+                                ap = new AdminParser(m_db, userID);
                                 return "ok login administrator";
                             } else if(usertype == DBConnection.USERSTATUS.ENDUSER) {
                                 m_userstatus = usertype;
+                                eup = new EndUserParser(m_db, userID);
                                 return "ok login enduser";
                             }
                         }

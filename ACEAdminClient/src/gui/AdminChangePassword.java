@@ -12,16 +12,19 @@ package gui;
 
 
 import javax.swing.*;
+import clientnetworking.*;
+
 public class AdminChangePassword extends javax.swing.JPanel {
-    
         JFrame owner;
         JPanel admin;
+        ClientNetworkInterface m_cni;
     
     /** Creates new form AdminChangePassword */
-    public AdminChangePassword(JFrame owner, JPanel admin  ) {
+    public AdminChangePassword(JFrame owner, JPanel admin, ClientNetworkInterface cni ) {
         
         this.owner=owner;
         this.admin=admin;
+        m_cni = cni;
         initComponents();
     }
     
@@ -32,24 +35,28 @@ public class AdminChangePassword extends javax.swing.JPanel {
      */
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        oldpw = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnSubmit = new javax.swing.JButton();
         newpw1 = new javax.swing.JPasswordField();
         newpw2 = new javax.swing.JPasswordField();
+        btnCancel = new javax.swing.JButton();
 
-        jLabel1.setText("oldPassword");
+        jLabel2.setText("Password:");
 
-        jLabel2.setText("newPassword1");
+        jLabel3.setText("Password again:");
 
-        jLabel3.setText("newPassword2");
+        btnSubmit.setText("Submit");
+        btnSubmit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseClicked(evt);
+            }
+        });
 
-        jButton1.setText("submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        btnCancel.setText("Cancel");
+        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelMouseClicked(evt);
             }
         });
 
@@ -60,27 +67,24 @@ public class AdminChangePassword extends javax.swing.JPanel {
             .add(layout.createSequentialGroup()
                 .add(109, 109, 109)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jButton1)
+                    .add(layout.createSequentialGroup()
+                        .add(btnCancel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btnSubmit))
                     .add(layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jLabel1)
                             .add(jLabel2)
                             .add(jLabel3))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(oldpw)
                             .add(newpw2)
                             .add(org.jdesktop.layout.GroupLayout.LEADING, newpw1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 110, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(395, Short.MAX_VALUE))
+                .addContainerGap(388, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(87, 87, 87)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(oldpw, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(113, 113, 113)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
                     .add(newpw1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -88,50 +92,60 @@ public class AdminChangePassword extends javax.swing.JPanel {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel3)
                     .add(newpw2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(31, 31, 31)
-                .add(jButton1)
-                .addContainerGap(326, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btnSubmit)
+                    .add(btnCancel))
+                .addContainerGap(351, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    
-         String pw1 = newpw1.getText();
-           String pw2 = newpw2.getText();
-             String old = oldpw.getText();
-             
-             if(pw1.equals(pw2)){
-                 
-      admin.setVisible(true);
-      owner.setContentPane(admin);
-      this.setVisible(false);
-               
-             }
-             else 
-             {
-                JFrame err=new JFrame(); 
-               JOptionPane.showMessageDialog(err, "New passwords do not match.");
+    private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
+            admin.setVisible(true);
+            owner.setContentPane(admin);
+            this.setVisible(false);
+    }//GEN-LAST:event_btnCancelMouseClicked
 
+    private void btnSubmitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseClicked
+        String password1 = newpw1.getText();
+        String password2 = newpw2.getText();
+        
+        if(password1.equals(password2) && password1.indexOf(" ") < 0){
+            String message;
+            
+            // Verify that the admin is still connected
+            if(m_cni.isConnected()) {
+                // Send request
+                m_cni.SendMessage("changepassword " + password1);
+                while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+                
+                if(message.equals("ok changepassword")) {
+                    // Go to AdminMenu
+                    admin.setVisible(true);
+                    owner.setContentPane(admin);
+                    this.setVisible(false);
+                } else {
+                    JOptionPane.showMessageDialog(new JFrame(), "Change password request failed.");
+                }
+            } else {
+                // Error message
+                JOptionPane.showMessageDialog(new JFrame(), "You are not connected to the server.");
+            }
+        } else {
+            // Error message
+            JOptionPane.showMessageDialog(new JFrame(), "The password are not identical. Please enter two identical passwords.");
+        }
 
-                 
-                 
-             }
-             
-        
-        
-        
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnSubmitMouseClicked
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPasswordField newpw1;
     private javax.swing.JPasswordField newpw2;
-    private javax.swing.JTextField oldpw;
     // End of variables declaration//GEN-END:variables
     
 }

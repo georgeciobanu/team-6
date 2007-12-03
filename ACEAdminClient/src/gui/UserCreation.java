@@ -11,13 +11,18 @@ package gui;
  */
 
 import javax.swing.*;
+import clientnetworking.*;
+
 public class UserCreation extends javax.swing.JPanel {
     JFrame owner;
     JPanel admin;
+    ClientNetworkInterface m_cni;
+    
     /** Creates new form UserCreation */
-    public UserCreation(JFrame owner, JPanel admin) {
+    public UserCreation(JFrame owner, JPanel admin, ClientNetworkInterface cni) {
         this.owner=owner;
         this.admin=admin;
+        m_cni = cni;
         initComponents();
     }
     
@@ -30,18 +35,26 @@ public class UserCreation extends javax.swing.JPanel {
     private void initComponents() {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        txtUsername = new javax.swing.JTextField();
+        btnSubmit = new javax.swing.JButton();
+        pwdPassword = new javax.swing.JPasswordField();
+        Cancel = new javax.swing.JButton();
 
         jLabel1.setText("username");
 
         jLabel2.setText("password");
 
-        jButton1.setText("submit");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnSubmit.setText("Submit");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnSubmitActionPerformed(evt);
+            }
+        });
+
+        Cancel.setText("Cancel");
+        Cancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CancelMouseClicked(evt);
             }
         });
 
@@ -50,58 +63,94 @@ public class UserCreation extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(101, 101, 101)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createSequentialGroup()
-                        .add(jLabel2)
-                        .addContainerGap())
-                    .add(layout.createSequentialGroup()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
+                        .add(114, 114, 114)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(jLabel1)
+                            .add(jLabel2))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                                .add(jButton1)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))
-                            .add(layout.createSequentialGroup()
-                                .add(jLabel1)
-                                .add(17, 17, 17)
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jPasswordField1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                                    .add(jTextField1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE))))
-                        .addContainerGap(369, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                            .add(pwdPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                            .add(txtUsername, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)))
+                    .add(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(Cancel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btnSubmit)))
+                .addContainerGap(369, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .add(85, 85, 85)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel1)
-                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(txtUsername, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel1))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel2)
-                    .add(jPasswordField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(39, 39, 39)
-                .add(jButton1)
-                .addContainerGap(372, Short.MAX_VALUE))
+                    .add(pwdPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel2))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btnSubmit)
+                    .add(Cancel))
+                .addContainerGap(405, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+    private void CancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CancelMouseClicked
+      // Go to AdminMenu
       admin.setVisible(true);
       owner.setContentPane(admin);
       this.setVisible(false);
-     
-     
+    }//GEN-LAST:event_CancelMouseClicked
+
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        String message;
         
-    }//GEN-LAST:event_jButton1ActionPerformed
+        // Validate username and password
+        String username = txtUsername.getText();
+        if(username.length() > 0 && username.indexOf(" ") < 0) {
+            
+            String password = pwdPassword.getText();
+            if(password.length() > 0 && password.indexOf(" ") < 0) {
+
+                // Check that admin is still connected
+                if(m_cni.isConnected()) {
+                    // Send the create end-user request
+                    m_cni.SendMessage("createaccount " + username + " " + password);
+                    
+                    while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+                    
+                    // If an error occurs during the creation of the account
+                    if(message.equals("ok createaccount " + username)) {
+                        // Go to AdminMenu
+                        admin.setVisible(true);
+                        owner.setContentPane(admin);
+                        this.setVisible(false);
+                    } else {
+                        JOptionPane.showMessageDialog(new JFrame(), "The new account could not be created.");
+                    }
+                }
+            } else {
+                // Invalid password
+                JOptionPane.showMessageDialog(new JFrame(), "Invalid password.");
+            }
+        } else {
+            // Invalid username
+            JOptionPane.showMessageDialog(new JFrame(), "Invalid username.");
+        }
+    }//GEN-LAST:event_btnSubmitActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton Cancel;
+    private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JPasswordField pwdPassword;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
     
 }

@@ -24,8 +24,9 @@ public class EndUser {
     Order[] m_orderHistory;
     
     /** Creates a new instance of EndUser */
-    public EndUser(DBConnection db) {
+    public EndUser(DBConnection db, int userID) {
         m_db = db;
+        m_userID = userID;
     }
     
     public boolean setPassword(String newPassword) {

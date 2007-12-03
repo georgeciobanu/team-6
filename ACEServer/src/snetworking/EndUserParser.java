@@ -8,15 +8,21 @@
  */
 
 package snetworking;
+import fundamentals.*;
+import database.*;
 
 /**
  *
  * @author GLL
  */
 public class EndUserParser {
+    DBConnection m_db;
+    int m_userID;
+    
     /** Creates a new instance of EndUserParser */
-    public EndUserParser() {
-        
+    public EndUserParser(DBConnection db, int userID) {
+        m_db = db;
+        m_userID = userID;
     }
     
     // Parse a string command sent by an end-user
