@@ -70,10 +70,14 @@ public class ClientConnection implements Runnable {
               // Clear buffer
               process.delete(0, process.length());
               
-              // Output the message back to the client application
-              osw.write(returnMessage + (char) 13);
-              osw.flush();
-          }          
+              if(!returnMessage.equals("logout")) {
+                  // Output the message back to the client application
+                  osw.write(returnMessage + (char) 13);
+                  osw.flush();
+              } else {
+                  connection.close();
+              }
+          }
       } catch (IOException e) {
           System.out.println("User prematurely disconnected before loggin off");
       } catch (Exception e) {
