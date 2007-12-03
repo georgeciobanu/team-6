@@ -25,8 +25,8 @@ public class AdminMenu extends javax.swing.JPanel {
         m_cni = cni;
         initComponents();
         
-        choice1.addItem("1");
-        choice1.addItem("2");
+        choice1.addItem("End-User");
+        choice1.addItem("Administrator");
         
     }
     
