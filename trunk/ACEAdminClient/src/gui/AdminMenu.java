@@ -15,8 +15,55 @@ import clientnetworking.*;
 
 public class AdminMenu extends javax.swing.JPanel {
     ClientNetworkInterface m_cni;
+    String[] m_currenciesList;
+    String[] m_currencyPairsList;
     JFrame owner;
     JPanel Login;
+    
+    // Get the available traiding currencies from the ACE system
+    private void getCurrencies() {
+        String message;
+        String args[];
+        m_cni.SendMessage("getcurrencies");
+        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+        args = message.split(" ");
+        
+        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getcurrencies")) {
+            m_currenciesList = new String[args.length - 2];
+            for(int i = 0; i < args.length - 2; i++) {
+                m_currenciesList[i] = args[i + 2];
+                System.out.println(m_currenciesList[i]);
+            }
+        } else {
+            // Failed to login
+            m_cni.SendMessage("logout");
+            m_cni.disconnect();
+            
+            // Go back to LoginPanel
+            this.setVisible(false);
+            Login.setVisible(true);
+            owner.setContentPane(Login);
+        }
+    }
+    
+    private String[] getCurrencyPairs() {
+        String temp = "";
+        for(int i = 0; i < m_currenciesList.length; i++) {
+            for(int j = 0; j < m_currenciesList.length; j++) {
+                if(i != j) {
+                    temp += m_currenciesList[i] + "/" + m_currenciesList[j] + " ";
+                }
+            }
+        }
+        return temp.trim().split(" ");
+    }
+    
+    private void FillChoice(java.awt.Choice cho, String[] items) {
+        for(int i = 0; i < items.length; i++) {
+            cho.addItem(items[i]);
+        }
+    }
+    
     /** Creates new form AdminMenu */
     public AdminMenu(JFrame owner, JPanel Login, ClientNetworkInterface cni) {
         
@@ -24,6 +71,14 @@ public class AdminMenu extends javax.swing.JPanel {
         this.Login=Login;
         m_cni = cni;
         initComponents();
+        
+        // Download the available currencies
+        getCurrencies();
+        
+        // Build up the list of currency pairs available
+        m_currencyPairsList = getCurrencyPairs();
+        
+        FillChoice(choCurrencyManagement, m_currenciesList);
         
         choice1.addItem("End-User");
         choice1.addItem("Administrator");
@@ -47,7 +102,7 @@ public class AdminMenu extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        choice2 = new java.awt.Choice();
+        choCurrencyManagement = new java.awt.Choice();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
@@ -95,7 +150,7 @@ public class AdminMenu extends javax.swing.JPanel {
                     .add(jPanel1Layout.createSequentialGroup()
                         .add(jLabel9)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(choice2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 105, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(choCurrencyManagement, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 105, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                         .add(jPanel1Layout.createSequentialGroup()
                             .add(jLabel1)
@@ -112,7 +167,7 @@ public class AdminMenu extends javax.swing.JPanel {
                 .addContainerGap()
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jLabel9)
-                    .add(choice2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(choCurrencyManagement, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jPanel1Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
@@ -391,8 +446,8 @@ public class AdminMenu extends javax.swing.JPanel {
     private javax.swing.JButton btnDeleteAccount;
     private javax.swing.JButton btnEditAccount;
     private javax.swing.JButton btnLogout;
+    private java.awt.Choice choCurrencyManagement;
     private java.awt.Choice choice1;
-    private java.awt.Choice choice2;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
