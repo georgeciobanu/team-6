@@ -25,10 +25,10 @@ public class AdminParser {
         
         if(args.length <= 0) {
             return "error";
-        } else if(args[0].equals("getcurrencies")) {
-            return "ok " + args[0] + " USD CAN YEN";
         } else if(args[0].equals("")) {
             
+        } else if(args[0].equals("getcurrencies")) {
+            return "ok " + args[0] + " USD CAN YEN";
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {

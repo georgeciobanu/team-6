@@ -62,10 +62,10 @@ public class Authentication {
                             // Get user type
                             if(usertype == DBConnection.USERSTATUS.ADMINISTRATOR) {
                                 m_userstatus = usertype;
-                                return "ok login";
+                                return "ok login administrator";
                             } else if(usertype == DBConnection.USERSTATUS.ENDUSER) {
                                 m_userstatus = usertype;
-                                return "ok login";
+                                return "ok login enduser";
                             }
                         }
                     }
@@ -83,7 +83,7 @@ public class Authentication {
                 m_userID = -1;
                 m_userstatus = DBConnection.USERSTATUS.NOTAUTHENTICATED;
                 // Close connection
-                // [Not implemented yet]
+                return "logout";
             }
             
             if(m_userstatus == DBConnection.USERSTATUS.ADMINISTRATOR) {

@@ -53,7 +53,7 @@ public class ServerListener implements Runnable {
       } finally {
           try {
               System.out.println("ClientConnection finally");
-              if(connection == null) {
+              if(connection != null) {
                   connection.close();
               }
           } catch (IOException e){}
