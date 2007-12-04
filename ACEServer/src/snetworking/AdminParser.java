@@ -7,7 +7,7 @@
 
 package snetworking;
 
-import fundamentals.*;
+import sFundamentals.*;
 import database.*;
 import transactionEngine.*;
 
@@ -28,7 +28,7 @@ public class AdminParser {
     // Parse a string command sent by an admin user
     public String parseCommand(String command) {
         String[] args;
-        EndUser user;
+        sEndUser user;
         Market market;
         
         args = command.split(" ");
@@ -49,11 +49,11 @@ public class AdminParser {
             }
             return "ok getcurrencies " + ret.trim();
         } else if(args[0].equals("changepassword") && args.length == 2) {
-            user = new EndUser(m_db, m_userID);
+            user = new sEndUser(m_db, m_userID);
             user.setPassword(args[1]);
             return "ok changepassword";
         } else if(args[0].equals("createaccount") && args.length == 3) {
-            user = new EndUser(m_db, -1);
+            user = new sEndUser(m_db, -1);
             if(user.createAccount(args[1], args[2]) != -1) {
                 return "ok createaccount " + args[1];
             }
