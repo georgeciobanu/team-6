@@ -35,19 +35,19 @@ public class ACEServer {
         if (s.startup()) {
             System.out.println("All systems ok!");
             
-            
             // Wait until an operator requests the server to shutdown
-            try{
-                BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+            /*try{
+                BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
                 String str;
-                while (!doshutdown && ((str = in.readLine()) != null) && (str.length() != 0)) {
+                while (!doshutdown && ((str = stdin.readLine()) != null) && (str.length() != 0)) {
                     if(str.equals("shutdown")) {
                         doshutdown = true;
                     }
                 }
             } catch(Exception e) {
                 e.printStackTrace();
-            }
+            }*/
+            while(!doshutdown) {}
             
             System.out.println("System is shutting down...");
             s.shutdown();

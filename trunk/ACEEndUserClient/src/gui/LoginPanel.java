@@ -37,6 +37,7 @@ public class LoginPanel extends javax.swing.JFrame {
         lblErrorMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ACE End-User Client Application");
         jLabel1.setText("Username:");
 
         jLabel2.setText("Password:");
@@ -53,12 +54,10 @@ public class LoginPanel extends javax.swing.JFrame {
         LoginLayout.setHorizontalGroup(
             LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(LoginLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginLayout.createSequentialGroup()
-                        .addContainerGap(366, Short.MAX_VALUE)
-                        .addComponent(btnLogin))
+                    .addComponent(btnLogin, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(LoginLayout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))

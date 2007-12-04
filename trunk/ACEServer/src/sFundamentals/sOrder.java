@@ -32,7 +32,7 @@ public class sOrder extends Order{
      * Creates a new instance of sOrder
      */
     sOrder(int userID) {
-        super (userID);
+        //super (userID);
         m_userID = userID;
     }        
  
