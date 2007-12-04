@@ -36,15 +36,11 @@ public class InterestRateCalculator implements Runnable {
                 // If amount is positive,
                     // Multiply amount * annualized interest rate (in function of last time charged)
                     // Add this to billing account
-                // Update time of last billing charged
-            
+                // Update time of last billing charged            
                 System.out.println("Calculating interest rate...");
-                if(m_db != null)
-                {
-                    System.out.println(m_db.getUserID("Gabriel", "who"));                    
-                }
-
                 
+                System.out.println(m_db.getPendingOrders(1));
+
             // Wait for a bit
             try {
                 m_currentThread.sleep(10000);
