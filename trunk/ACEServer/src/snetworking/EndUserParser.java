@@ -13,6 +13,7 @@ import database.*;
 import transactionEngine.*;
 import java.util.*;
 import java.text.*;
+import java.sql.*;
 
 /**
  *
@@ -70,12 +71,13 @@ public class EndUserParser {
                 sMarketOrder o = new sMarketOrder(m_userID);
 
                 o.setCurrencyPairS(args[2]);
-                o.setAmount(args[3]);
+                o.setAmount(6);
+                
                 Calendar cal = Calendar.getInstance();
                 o.setExpiryDate(new Timestamp(cal.getTimeInMillis() + 86400000));
                 
-                m_db.addMarketOrder(o);
-            }
+                return "ok placemarketorder" + Double.toString( m_db.addMarketOrder(o));
+            }        
             
         } else if(args[0].equals("editmarketorder")) {
             
