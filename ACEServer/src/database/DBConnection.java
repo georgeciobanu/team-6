@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Vector;
 import sFundamentals.sMarketOrder;
+import sFundamentals.sOrder;
 
 
 /**
@@ -270,29 +271,27 @@ public class DBConnection {
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return -1;
-        }                
+        }
         return -1;
     }
     
     
     // Get market price
     
-    public int getMarketPrice(int buysell, String currencyPair) {
+    public double getMarketPrice(int buysell, String currencyPair) {
         try{
             String queryString = //note: check what the timestamp is
                     "SELECT max(price) " +
                     "FROM orderpool " +
-                    "WHERE orderstatus='1' AND buysell =" + String.valueOf(buysell) + " AND  currencypair ='" + currencyPair + "' "; //orderstatus=1 ==> pending order
+                    "WHERE orderstatus=1 AND buysell =" + String.valueOf(buysell) + " AND  currencypair ='" + currencyPair + "' "; //orderstatus=1 ==> pending order
             
             
             ResultSet rs = query(queryString);
             
             //int id = getMarketOrder last
-            if (rs.next())
-            {
-                int price = rs.getInt(1);
-                return price;
-                
+            if (rs.next()) {
+                double price = rs.getDouble(1);
+                return price;                
             }
             
         } catch (Exception ex){ //TODO: treat exceptions nice
@@ -300,11 +299,41 @@ public class DBConnection {
             return -1;
         }
         
-        
         return -1;
     }
     
-    
+    public int getPendingOrders(int userID) {
+        try {
+            String ret = "";
+            
+            String queryString =
+                    "SELECT placed, amount, type, expiry, basis, currencyPair " +
+                    "FROM marketOrders " +
+                    "WHERE userID=" + userID + " AND pending = 1";
+            
+            ResultSet rs = query(queryString);
+            
+            int i = 0;
+            Vector<sOrder> orderV = new Vector();
+            sOrder order = new sOrder(userID);
+            
+            // Fetch a maximum number of 10 pending orders from the database
+            while( rs.next() && i < 10) {
+                order.setAmount(rs.getDouble("amount"));
+                order.setExpiryDate( new Timestamp (rs.getDate("amount").getTime()));
+                //order.set
+                
+            }
+            
+            rs.close();
+            return 0;
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return 0;
+        }
+    }
     
     public USERSTATUS getUserType(int userID) {
         if (userID > 0) {
