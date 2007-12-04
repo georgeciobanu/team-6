@@ -81,6 +81,10 @@ public class UserMenu extends javax.swing.JPanel {
         FillChoice(choLimitOrderCurrencyPair, m_currencyPairsList);
         FillChoice(choStopLossCurrencyPair, m_currencyPairsList);
         FillChoice(choTrailingStopCurrencyPair, m_currencyPairsList);
+        
+        String[] expiry = {"24 hours"};
+        
+        FillChoice(choMarketOrderExpiry, expiry);
     }
 
     /** This method is called from within the constructor to
@@ -91,6 +95,15 @@ public class UserMenu extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel3 = new javax.swing.JPanel();
+        btnMarketOrderBuy = new javax.swing.JButton();
+        btnMarketOrderSell = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txtMarketOrderAmount = new javax.swing.JTextField();
+        choMarketOrderExpiry = new java.awt.Choice();
+        choMarketOrderCurrencyPair = new java.awt.Choice();
         jPanel2 = new javax.swing.JPanel();
         jTextField14 = new javax.swing.JTextField();
         jTextField15 = new javax.swing.JTextField();
@@ -124,19 +137,81 @@ public class UserMenu extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         choTrailingStopCurrencyPair = new java.awt.Choice();
-        jPanel3 = new javax.swing.JPanel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
-        choice2 = new java.awt.Choice();
-        choMarketOrderCurrencyPair = new java.awt.Choice();
         btnLogout = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         UserInfo = new javax.swing.JButton();
         Orders = new javax.swing.JButton();
+
+        btnMarketOrderBuy.setText("Buy");
+        btnMarketOrderBuy.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMarketOrderBuyMouseClicked(evt);
+            }
+        });
+
+        btnMarketOrderSell.setText("Sell");
+        btnMarketOrderSell.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMarketOrderSellMouseClicked(evt);
+            }
+        });
+
+        jLabel6.setText("Currency Pair:");
+
+        jLabel5.setText("Expiry:");
+
+        jLabel19.setText("Amount:");
+
+        txtMarketOrderAmount.setText("100000");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btnMarketOrderBuy)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnMarketOrderSell))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel19))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))))
+                .addGap(10, 10, 10))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(11, 11, 11)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnMarketOrderSell)
+                    .addComponent(btnMarketOrderBuy))
+                .addContainerGap(207, Short.MAX_VALUE))
+        );
+        jTabbedPane1.addTab("Market Order", jPanel3);
 
         jButton9.setText("Buy");
 
@@ -341,65 +416,6 @@ public class UserMenu extends javax.swing.JPanel {
         );
         jTabbedPane1.addTab("Trailing Stop", TrailingStop);
 
-        jButton5.setText("Buy");
-
-        jButton6.setText("Sell");
-
-        jLabel6.setText("Currency Pair:");
-
-        jLabel5.setText("Expiration:");
-
-        jLabel19.setText("Amount:");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jButton5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton6))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel19))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(choice2, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))))
-                .addGap(10, 10, 10))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(choice2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton6)
-                    .addComponent(jButton5))
-                .addContainerGap(207, Short.MAX_VALUE))
-        );
-        jTabbedPane1.addTab("Market Order", jPanel3);
-
         btnLogout.setText("Logout");
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -461,6 +477,42 @@ public class UserMenu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnMarketOrderSellMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMarketOrderSellMouseClicked
+        String message;
+        String args[];
+        try {
+            m_cni.SendMessage("placemarketorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem());
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+            
+            args = message.split(" ");
+            if(args.length >= 1 && args[0].equals("ok")) {
+                JOptionPane.showMessageDialog(new JFrame(), "Your market order has been placed.");
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "The Market Order could not be commited by the server.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnMarketOrderSellMouseClicked
+
+    private void btnMarketOrderBuyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMarketOrderBuyMouseClicked
+        String message;
+        String args[];
+        try {
+            m_cni.SendMessage("placemarketorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem());
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+            
+            args = message.split(" ");
+            if(args.length >= 1 && args[0].equals("ok")) {
+                JOptionPane.showMessageDialog(new JFrame(), "Your market order has been placed.");
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "The Market Order could not be commited by the server.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnMarketOrderBuyMouseClicked
+
     private void OrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrdersActionPerformed
 
       TabbedPane2 order = new TabbedPane2(this, owner);
@@ -502,19 +554,19 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JPanel TrailingStop;
     private javax.swing.JButton UserInfo;
     private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnMarketOrderBuy;
+    private javax.swing.JButton btnMarketOrderSell;
     private java.awt.Choice choLimitOrderCurrencyPair;
     private java.awt.Choice choMarketOrderCurrencyPair;
+    private java.awt.Choice choMarketOrderExpiry;
     private java.awt.Choice choStopLossCurrencyPair;
     private java.awt.Choice choTrailingStopCurrencyPair;
-    private java.awt.Choice choice2;
     private java.awt.Choice choice6;
     private java.awt.Choice expiry;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
@@ -544,7 +596,7 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField txtMarketOrderAmount;
     // End of variables declaration//GEN-END:variables
     
 }

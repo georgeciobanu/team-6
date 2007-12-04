@@ -115,7 +115,6 @@ public class ACEServer {
         }
         
         System.out.println("ACEServer is now down!");
-        
         return;
     }    
     
