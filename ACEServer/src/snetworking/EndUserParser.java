@@ -69,31 +69,10 @@ public class EndUserParser {
             if(args[1].equals("buy")) {
                 sMarketOrder o = new sMarketOrder(m_userID);
 
-                sExchangeRate er = new ExchangeRate(args[2]);
-                
-                o.setCurrencyPair(er);
-                
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-                o.setExpiryDate(sdf);
-                
-                placed, amount, type, expiry, basis, currencyPair 
-                
-                m_cni.SendMessage("placemarketorder " +
-                        "sell "
-                        choMarketOrderCurrencyPair.getSelectedItem()
-                        txtMarketOrderAmount.getText()
-                        choMarketOrderExpiry.getSelectedItem()
-                
-                
-                //java.util.Date date = sdf.parse("2004-07-24 09:45:52.189");
-                //java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-                
-                java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
-                
-                timestamp.
-                
-                o.setAmount();
-                o.setExpiryDate();
+                o.setCurrencyPairS(args[2]);
+                o.setAmount(args[3]);
+                Calendar cal = Calendar.getInstance();
+                o.setExpiryDate(new Timestamp(cal.getTimeInMillis() + 86400000));
                 
                 m_db.addMarketOrder(o);
             }
