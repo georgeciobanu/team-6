@@ -17,6 +17,8 @@ import snetworking.*;
 public class ACEServer {
     DBConnection m_db;
     ServerNetworkInterface m_sni;
+    Thread m_interestRateThread;
+    InterestRateCalculator m_interestRateCalc;
     
     // constructor
     public ACEServer() {
@@ -53,6 +55,10 @@ public class ACEServer {
         m_sni = new ServerNetworkInterface(m_db);
         m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
 
+        Runnable m_interestRateCalc = new InterestRateCalculator(m_db);
+        Thread m_interestRateThread = new Thread(m_interestRateCalc);
+        m_interestRateThread.start();
+        
         // Wait till we want to shutdown
         while(!doshutdown) {}
         
@@ -67,6 +73,8 @@ public class ACEServer {
      * Returns true when successful and false otherwise
      */
     public void shutdown() {
+        m_interestRateCalc.stopMe();
+        
         if(m_sni != null) {
             // Close all client connections
             m_sni.closeAllClientConnections();
