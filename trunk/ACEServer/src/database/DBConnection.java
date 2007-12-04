@@ -325,6 +325,7 @@ public class DBConnection {
                 order.setType(rs.getInt("type"));                
                 
                 orderV.add(order);
+                i++;
             }
             sMarketOrder[] tmp = new sMarketOrder[1];
             return orderV.toArray( tmp );
