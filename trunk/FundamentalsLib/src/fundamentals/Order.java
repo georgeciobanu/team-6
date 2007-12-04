@@ -25,13 +25,29 @@ public class Order {
     Timestamp timestamp = null;
     int type;
     int basis;
-    String currencyPair = null;
+    
     
     /** Creates a new instance of Order */
     public Order(int userID) {
         m_userID = userID;
     }
     
+    public int getType() {
+        return type;
+    }
+    
+    public Timestamp getExpiryDate() {
+        return expiryDate;
+    }
+    
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+    
+    public int getBasis() {
+        return basis;
+    }        
+        
     public void setUserID(int id) {
         m_userID = id;
     }
@@ -67,5 +83,11 @@ public class Order {
     // This function won't be implemented
     public boolean cancel() {
         return false;
+    }
+    
+ 
+
+    public void setType(int type) {
+        this.type = type;
     }
 }
