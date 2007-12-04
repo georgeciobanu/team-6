@@ -17,7 +17,6 @@ import snetworking.*;
 public class ACEServer {
     DBConnection m_db;
     ServerNetworkInterface m_sni;
-    Timer serverProcessor = new Timer();
     
     // constructor
     public ACEServer() {
