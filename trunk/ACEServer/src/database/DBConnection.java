@@ -302,36 +302,37 @@ public class DBConnection {
         return -1;
     }
     
-    public int getPendingOrders(int userID) {
+    public sMarketOrder[] getPendingOrders(int userID) {
         try {
-            String ret = "";
-            
+                        
             String queryString =
                     "SELECT placed, amount, type, expiry, basis, currencyPair " +
                     "FROM marketOrders " +
-                    "WHERE userID=" + userID + " AND pending = 1";
+                    "WHERE userID=" + userID + " " +
+                    "ORDER BY placed";
             
             ResultSet rs = query(queryString);
             
             int i = 0;
-            Vector<sOrder> orderV = new Vector();
-            sOrder order = new sOrder(userID);
+            Vector<sMarketOrder> orderV = new Vector();
+            sMarketOrder order = new sMarketOrder(userID);
             
             // Fetch a maximum number of 10 pending orders from the database
             while( rs.next() && i < 10) {
                 order.setAmount(rs.getDouble("amount"));
-                order.setExpiryDate( new Timestamp (rs.getDate("amount").getTime()));
-                //order.set
+                order.setExpiryDate( new Timestamp (rs.getDate("expiry").getTime()));
+                order.setCurrencyPairS(rs.getString("currencypair"));                
+                order.setType(rs.getInt("type"));                
                 
+                orderV.add(order);
             }
-            
-            rs.close();
-            return 0;
+            sMarketOrder[] tmp = new sMarketOrder[1];
+            return orderV.toArray( tmp );
             
         } catch(Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-            return 0;
+            return null;
         }
     }
     
