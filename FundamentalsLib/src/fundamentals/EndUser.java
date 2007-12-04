@@ -9,40 +9,29 @@
 
 package fundamentals;
 
-import database.*;
+
 
 /**
  *
  * @author GLL
  */
 public class EndUser {
-    int m_userID;
-    DBConnection m_db;
+    int m_userID;    
     LeverageAccount[] m_leverageAccounts;
     BalanceAccount[] m_balanceAccounts;
     Order[] m_pendingOrders;
     Order[] m_orderHistory;
     
     // Creates a new instance of EndUser
-    public EndUser(DBConnection db, int userID) {
-        m_db = db;
-        m_userID = userID;
+    public EndUser() {
+        //to be implemented separately in srv/client
     }
-    
-    // Creates a new instance of EndUser
-    public EndUser(DBConnection db, String username, String password) {
-        try {
-            m_db = db;
-            
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
+       
+   
     
     // Change password of a user
     public boolean setPassword(String newPassword) {
-        System.out.println("Changing password for userid=" + m_userID);
-        return m_db.setUserPassword(m_userID, newPassword);
+      return false;        
     }
     
     //This function won't be implemented
@@ -57,8 +46,7 @@ public class EndUser {
     
     //
     public int createAccount(String username, String password) {
-        m_userID = m_db.createAccount(username, password);
-        return m_userID;
+        return 0;
     }
     
     //Place an order
