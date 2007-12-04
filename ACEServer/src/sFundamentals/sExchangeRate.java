@@ -28,6 +28,19 @@ public class sExchangeRate {
     public sExchangeRate() {
     }
     
+    public sExchangeRate(String currencyPair) {
+        m_fromCurrency = new sCurrency();
+        m_toCurrency = new sCurrency();
+        
+        String[] args = currencyPair.split("/");
+        
+        if(args.length == 2)
+        {
+            m_fromCurrency.setName(args[0]);
+            m_toCurrency.setName(args[1]);
+        }
+    }
+    
     public double getBuyPrice() {
         return 0.0;
     }
