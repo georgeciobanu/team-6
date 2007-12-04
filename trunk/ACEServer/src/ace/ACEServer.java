@@ -1,5 +1,5 @@
 package ace;
-
+import java.io.*;
 import database.*;
 import javax.swing.Timer;
 import snetworking.*;
@@ -23,30 +23,48 @@ public class ACEServer {
     // constructor
     public ACEServer() {
     }
-        
+    
     // OS entry point
     public static void main(String[] args) {
+        boolean doshutdown = false;
+        String command = "";
         
         ACEServer s = new ACEServer();
         
+        // Startup the system
         if (s.startup()) {
             System.out.println("All systems ok!");
+            
+            
+            // Wait until an operator requests the server to shutdown
+            try{
+                BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+                String str;
+                while (!doshutdown && ((str = in.readLine()) != null) && (str.length() != 0)) {
+                    if(str.equals("shutdown")) {
+                        doshutdown = true;
+                    }
+                }
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+            
+            System.out.println("System is shutting down...");
+            s.shutdown();
+            System.exit(0);
+        } else {
+            System.out.println("System could not initialize.");
         }
-
-        System.out.println("System is shutting down...");
-        s.shutdown();
+        
+        System.exit(1);
     }
-    
+
     /**
      * starts the server
      *
      * Returns true when successful and false otherwise
      */
-    public boolean startup() {        
-        boolean doshutdown = false;
-        
-        
-        
+    public boolean startup() {
         // Connect to the database
         m_db = new DBConnection();
         m_db.connect("localhost",5432);
@@ -55,12 +73,9 @@ public class ACEServer {
         m_sni = new ServerNetworkInterface(m_db);
         m_sni.startListening(1234); // This function creates a new thread and returns when it is started.
 
-        Runnable m_interestRateCalc = new InterestRateCalculator(m_db);
-        Thread m_interestRateThread = new Thread(m_interestRateCalc);
+        m_interestRateCalc = new InterestRateCalculator(m_db);
+        m_interestRateThread = new Thread(m_interestRateCalc);
         m_interestRateThread.start();
-        
-        // Wait till we want to shutdown
-        while(!doshutdown) {}
         
         System.out.println("ACEServer is up!");
         return true;
@@ -73,22 +88,35 @@ public class ACEServer {
      * Returns true when successful and false otherwise
      */
     public void shutdown() {
+        System.out.println("Shutting down the Interest Rate Calculator...");
+        if (m_interestRateThread != null) {
+            m_interestRateThread.interrupt();
+        }
         m_interestRateCalc.stopMe();
+        if (m_interestRateThread != null) {
+            m_interestRateThread.run();
+        }
         
         if(m_sni != null) {
+            System.out.println("Closing all client connections...");
             // Close all client connections
             m_sni.closeAllClientConnections();
             // Stop listening
+            System.out.println("Shutting down the network interface...");
             m_sni.stopListening();
+            m_sni = null;
         }
         
         // Close connections to DB
         if(m_db != null) {
+            System.out.println("Closing the connection to the database...");
             m_db.disconnect();
+            m_db = null;
         }
         
         System.out.println("ACEServer is now down!");
-                
+        
+        return;
     }    
     
 }
