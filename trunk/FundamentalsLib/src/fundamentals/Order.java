@@ -24,12 +24,17 @@ public class Order {
     Timestamp expiryDate = null;
     Timestamp timestamp = null;
     int type;
-    int basis;        
+    int basis;      
+    String currencyPair;
+    
+    
     
     
     /** Creates a new instance of Order */
     public Order(int userID) {
-        m_userID = userID;        
+        m_userID = userID;      
+        timestamp = new Timestamp(0);
+        expiryDate = new Timestamp(0);
     }
     
     public int getType() {
@@ -93,5 +98,13 @@ public class Order {
 
     public void setExpiryDate(Timestamp expiryDate) {
         this.expiryDate = expiryDate;
+    }
+
+    public String getCurrencyPairS() {
+        return currencyPair;
+    }
+    public void setCurrencyPairS(String pair)
+    {
+        currencyPair = pair;
     }
 }
