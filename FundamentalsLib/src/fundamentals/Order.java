@@ -24,9 +24,7 @@ public class Order {
     Timestamp expiryDate = null;
     Timestamp timestamp = null;
     int type;
-    int basis;
-    
-    
+    int basis;        
     
     
     /** Creates a new instance of Order */
