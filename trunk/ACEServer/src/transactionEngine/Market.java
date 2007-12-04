@@ -9,7 +9,7 @@
 
 package transactionEngine;
 
-import fundamentals.*;
+import sFundamentals.*;
 import database.*;
 
 /**
@@ -24,11 +24,11 @@ public class Market {
         m_db = db;
     }
     
-    public boolean placeOrder(Order order) {
+    public boolean placeOrder(sOrder order) {
         return false;
     }
     
-    public boolean editOrder(Order order) {
+    public boolean editOrder(sOrder order) {
         return false;
     }
     
@@ -48,7 +48,7 @@ public class Market {
         return 0.0;
     }
     
-    public Order[] getPendingOrders() {
+    public sOrder[] getPendingOrders() {
         return null;
     }
     
@@ -56,7 +56,7 @@ public class Market {
         return null;
     }
     
-    public Order[] getOrderHistory() {
+    public sOrder[] getOrderHistory() {
         return null;
     }
     
@@ -71,11 +71,11 @@ public class Market {
         }
     }
     
-    public boolean addCurrency(Currency currency) {
+    public boolean addCurrency(sCurrency currency) {
         return false;
     }
     
-    public boolean editCurrency(Currency currency) {
+    public boolean editCurrency(sCurrency currency) {
         return false;
     }
     
