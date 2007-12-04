@@ -20,6 +20,11 @@ public class MarketOrder extends Order {
         return false;
     }
     
+    public MarketOrder(int userID)
+    {
+        super(userID);
+    }
+    
     // Edit a market order
     public boolean edit() {
         return false;

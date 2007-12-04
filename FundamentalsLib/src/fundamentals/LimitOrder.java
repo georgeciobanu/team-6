@@ -18,6 +18,11 @@ public class LimitOrder extends Order {
     double m_limit;
     double stopLoss;
     
+    public LimitOrder(int userid)
+    {
+        super (userid);
+    }
+    
     // Place a market order
     public boolean place() {
         return false;
