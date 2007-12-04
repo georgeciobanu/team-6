@@ -288,15 +288,20 @@ public class DBConnection {
             ResultSet rs = query(queryString);
             
             //int id = getMarketOrder last
+            if (rs.next())
+            {
+                int price = rs.getInt(1);
+                return price;
+                
+            }
             
-            return 989;
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return -1;
         }
         
         
-        //return -1;
+        return -1;
     }
     
     
