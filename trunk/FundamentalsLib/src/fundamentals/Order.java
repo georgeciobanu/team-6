@@ -27,9 +27,11 @@ public class Order {
     int basis;
     
     
+    
+    
     /** Creates a new instance of Order */
     public Order(int userID) {
-        m_userID = userID;
+        m_userID = userID;        
     }
     
     public int getType() {
@@ -89,5 +91,9 @@ public class Order {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void setExpiryDate(Timestamp expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }
