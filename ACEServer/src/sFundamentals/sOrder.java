@@ -18,22 +18,14 @@ import fundamentals.*;
  * @author GLL
  */
 public class sOrder extends Order{
-    int m_userID = -1;
-    sExchangeRate m_currencyPair;
-    double m_amount;
-    boolean m_isPending;
-    Timestamp expiryDate = null;
-    Timestamp timestamp = null;
-    int type;
-    int basis;
-    String currencyPair = null;
+  
     
     /**
      * Creates a new instance of sOrder
      */
-    sOrder(int userID) {
-        //super (userID);
-        m_userID = userID;
+    public sOrder(int userID) {
+        super (userID);
+        setUserID(userID);
     }        
  
 }
