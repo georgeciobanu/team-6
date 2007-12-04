@@ -10,6 +10,7 @@ package database;
 import java.sql.*;
 import java.util.Vector;
 
+
 /**
  *
  * @author GLL
@@ -220,6 +221,35 @@ public class DBConnection {
             }
         }
         
+        return -1;
+    }
+    
+    
+        public int addMarketOrder(int i) {/*
+        if (username.length() > 0 && password.length() > 0) {
+            try{
+                String queryString =
+                        "INSERT  INTO users (username, password, type, " +
+                        "contactInfo, email, transactionFee, interestRate, leverageRatio) " +
+                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "' ," + String.valueOf(type) + " , '" + contactInfo + "' ," +
+                        "'" + email + "'" + ", " +
+                        String.valueOf(transactionFee)  + "," +
+                        String.valueOf(interestRate) + "," +
+                        String.valueOf(leverageRatio) +
+                        ")" ;
+                
+                ResultSet rs = query(queryString);
+                
+                int id = getUserID(username, password);
+                
+                // rs.close();
+                return id;
+            } catch (Exception ex){ //TODO: treat exceptions nice
+                ex.printStackTrace();
+                return -1;
+            }
+        }
+        */
         return -1;
     }
     

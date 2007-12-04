@@ -20,6 +20,10 @@ public class TrailingStopOrder extends Order {
         return false;
     }
     
+    public TrailingStopOrder(int userid)
+    {
+        super(userid);
+    }
     // Edit a market order
     public boolean edit() {
         return false;
