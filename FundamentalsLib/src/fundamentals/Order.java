@@ -28,7 +28,7 @@ public class Order {
     String currencyPair = null;
     
     /** Creates a new instance of Order */
-    Order(int userID) {
+    public Order(int userID) {
         m_userID = userID;
     }
     
