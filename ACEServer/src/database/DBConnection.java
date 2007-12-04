@@ -8,7 +8,10 @@
 package database;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Vector;
+import sFundamentals.sMarketOrder;
 
 
 /**
@@ -98,18 +101,18 @@ public class DBConnection {
         return false;
     }
     
-    public String[] getCurrencyPairs() {                
+    public String[] getCurrencyPairs() {
         try{
             String queryString =
                     "SELECT baseCurrency, relativeCurrency " +
                     "FROM currencyPairs ";
             
             ResultSet rs = query(queryString);
-                                    
+            
             Vector<String> list = new Vector();
             
-            while (rs.next() ) { //all went o                                
-                list.add(rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") );                
+            while (rs.next() ) { //all went o
+                list.add(rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") );
             }
             rs.close();
             
@@ -134,7 +137,7 @@ public class DBConnection {
             
             Vector<String> list = new Vector();
             
-            while (rs.next() ) { //all went o                                
+            while (rs.next() ) { //all went o
                 list.add(rs.getString("symbol"));
             }
             rs.close();
@@ -225,81 +228,90 @@ public class DBConnection {
     }
     
     
-        public int addMarketOrder(int i) {/*
-        if (username.length() > 0 && password.length() > 0) {
-            try{
-                String queryString =
-                        "INSERT  INTO users (username, password, type, " +
-                        "contactInfo, email, transactionFee, interestRate, leverageRatio) " +
-                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "' ," + String.valueOf(type) + " , '" + contactInfo + "' ," +
-                        "'" + email + "'" + ", " +
-                        String.valueOf(transactionFee)  + "," +
-                        String.valueOf(interestRate) + "," +
-                        String.valueOf(leverageRatio) +
+    public int addMarketOrder(sMarketOrder order) {
+        //if (username.length() > 0 && password.length() > 0) {
+        try{
+            String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+            
+            
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+                String now =  sdf.format(cal.getTime());
+                order.setUserID(999);
+                
+                
+                
+                
+                String queryString = //note: check what the timestamp is
+                        "INSERT  INTO marketOrders (userID, placed, amount, type, expiry, basis, currencyPair " + ")" +
+                        "VALUES (" + String.valueOf(order.getuserID()) + ", #" + now + "#, " +
+                        String.valueOf(order.getAmount()) + ", " + String.valueOf(order.getType()) + ", #" +
+                        now + "#, " + String.valueOf(order.getBasis()) + ", " +
+                        "'USD/CAD'" + //TODO: to change to actual value
                         ")" ;
                 
                 ResultSet rs = query(queryString);
                 
-                int id = getUserID(username, password);
+                //int id = getMarketOrder last
                 
-                // rs.close();
-                return id;
+                
+                return 989;
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
                 return -1;
             }
-        }
-        */
-        return -1;
-    }
-    
-    //
-    
-    
-    public USERSTATUS getUserType(int userID) {
-        if (userID > 0) {
-            try{
-                String queryString =
-                        "SELECT type " +
-                        "FROM users " +
-                        "WHERE userid =" + String.valueOf(userID) + " ";
-                
-                ResultSet rs = query(queryString);
-                
-                if (rs.next()) {
-                    int userType = rs.getInt("type");
-                    rs.close();
-                    switch (userType) {
-                        case 1:
-                        {
-                            return USERSTATUS.ENDUSER;
-                        }
-                        case 0:
-                        {
-                            return USERSTATUS.ADMINISTRATOR;
-                        }
-                        default:
-                        {
-                            return USERSTATUS.NOTAUTHENTICATED;
-                        }
-                        
-                    }
-                }
-                rs.close();
-            } catch (Exception ex){//TODO: treat exceptions nice
-                ex.printStackTrace();
-                return USERSTATUS.NOTAUTHENTICATED;
-            }
+            
+            
+            //return -1;
         }
         
-        return USERSTATUS.NOTAUTHENTICATED;
-    }
-    
-    public void disconnect() {
-        try {
-            con.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        //
+        
+        
+        public USERSTATUS getUserType(int userID) {
+            if (userID > 0) {
+                try{
+                    String queryString =
+                            "SELECT type " +
+                            "FROM users " +
+                            "WHERE userid =" + String.valueOf(userID) + " ";
+                    
+                    ResultSet rs = query(queryString);
+                    
+                    if (rs.next()) {
+                        int userType = rs.getInt("type");
+                        rs.close();
+                        switch (userType) {
+                            case 1:
+                            {
+                                return USERSTATUS.ENDUSER;
+                            }
+                            case 0:
+                            {
+                                return USERSTATUS.ADMINISTRATOR;
+                            }
+                            default:
+                            {
+                                return USERSTATUS.NOTAUTHENTICATED;
+                            }
+                            
+                        }
+                    }
+                    rs.close();
+                } catch (Exception ex){//TODO: treat exceptions nice
+                    ex.printStackTrace();
+                    return USERSTATUS.NOTAUTHENTICATED;
+                }
+            }
+            
+            return USERSTATUS.NOTAUTHENTICATED;
+        }
+        
+        public void disconnect() {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
-}
