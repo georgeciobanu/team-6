@@ -85,6 +85,9 @@ public class UserMenu extends javax.swing.JPanel {
         String[] expiry = {"24 hours"};
         
         FillChoice(choMarketOrderExpiry, expiry);
+        FillChoice(choLimitOrderExpiry, expiry);
+        FillChoice(choStopLossExpiry, expiry);
+        FillChoice(choTrailingStopExpiry, expiry);
     }
 
     /** This method is called from within the constructor to
@@ -105,14 +108,14 @@ public class UserMenu extends javax.swing.JPanel {
         choMarketOrderExpiry = new java.awt.Choice();
         choMarketOrderCurrencyPair = new java.awt.Choice();
         jPanel2 = new javax.swing.JPanel();
-        jTextField14 = new javax.swing.JTextField();
-        jTextField15 = new javax.swing.JTextField();
-        jButton9 = new javax.swing.JButton();
-        jButton10 = new javax.swing.JButton();
+        txtLimitOrderAmount = new javax.swing.JTextField();
+        txtLimitOrderLimit = new javax.swing.JTextField();
+        btnLimitOrderBuy = new javax.swing.JButton();
+        btnLimitOrderSell = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        expiry = new java.awt.Choice();
+        choLimitOrderExpiry = new java.awt.Choice();
         choLimitOrderCurrencyPair = new java.awt.Choice();
         jLabel20 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -123,7 +126,7 @@ public class UserMenu extends javax.swing.JPanel {
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        choice6 = new java.awt.Choice();
+        choStopLossExpiry = new java.awt.Choice();
         choStopLossCurrencyPair = new java.awt.Choice();
         jLabel18 = new javax.swing.JLabel();
         TrailingStop = new javax.swing.JPanel();
@@ -137,6 +140,8 @@ public class UserMenu extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         choTrailingStopCurrencyPair = new java.awt.Choice();
+        jLabel13 = new javax.swing.JLabel();
+        choTrailingStopExpiry = new java.awt.Choice();
         btnLogout = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         UserInfo = new javax.swing.JButton();
@@ -176,19 +181,18 @@ public class UserMenu extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnMarketOrderSell))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel19))
+                        .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                            .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))))
-                .addGap(10, 10, 10))
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel5))
+                        .addGap(38, 38, 38)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                            .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))))
+                .addGap(29, 29, 29))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,24 +202,37 @@ public class UserMenu extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnMarketOrderSell)
+                            .addComponent(btnMarketOrderBuy)))
                     .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel19))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnMarketOrderSell)
-                    .addComponent(btnMarketOrderBuy))
-                .addContainerGap(207, Short.MAX_VALUE))
+                .addContainerGap(186, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("Market Order", jPanel3);
 
-        jButton9.setText("Buy");
+        txtLimitOrderAmount.setText("100000");
 
-        jButton10.setText("Sell");
+        btnLimitOrderBuy.setText("Buy");
+        btnLimitOrderBuy.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLimitOrderBuyMouseClicked(evt);
+            }
+        });
+
+        btnLimitOrderSell.setText("Sell");
+        btnLimitOrderSell.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnLimitOrderSellMouseClicked(evt);
+            }
+        });
 
         jLabel14.setText("Amount:");
 
@@ -233,9 +250,9 @@ public class UserMenu extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jButton9)
+                        .addComponent(btnLimitOrderBuy)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton10))
+                        .addComponent(btnLimitOrderSell))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -244,10 +261,10 @@ public class UserMenu extends javax.swing.JPanel {
                             .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField15, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addComponent(expiry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addComponent(jTextField14, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addComponent(choLimitOrderCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE))))
+                            .addComponent(txtLimitOrderLimit, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                            .addComponent(choLimitOrderExpiry, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                            .addComponent(txtLimitOrderAmount, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                            .addComponent(choLimitOrderCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -260,33 +277,43 @@ public class UserMenu extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14)
-                    .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtLimitOrderAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtLimitOrderLimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(expiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(choLimitOrderExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton9)
-                            .addComponent(jButton10)))
+                            .addComponent(btnLimitOrderBuy)
+                            .addComponent(btnLimitOrderSell)))
                     .addComponent(jLabel12))
-                .addContainerGap(177, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("Limit Order", jPanel2);
 
+        jTextField3.setEnabled(false);
+
         jLabel3.setText("Amount:");
+
+        jTextField4.setEnabled(false);
 
         jLabel4.setText("Stop Loss:");
 
         jButton3.setText("Buy");
+        jButton3.setEnabled(false);
 
         jButton4.setText("Sell");
+        jButton4.setEnabled(false);
 
         jLabel1.setText("Expiry:");
+
+        choStopLossExpiry.setEnabled(false);
+
+        choStopLossCurrencyPair.setEnabled(false);
 
         jLabel18.setText("Currency Pair:");
 
@@ -305,14 +332,14 @@ public class UserMenu extends javax.swing.JPanel {
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-                            .addComponent(choice6, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
+                            .addComponent(choStopLossExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                             .addComponent(jTextField4, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(choStopLossCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                                .addComponent(choStopLossCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 421, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton4)))
@@ -336,55 +363,69 @@ public class UserMenu extends javax.swing.JPanel {
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(choice6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(choStopLossExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
-                .addContainerGap(177, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("Stop Loss", jPanel1);
 
         jButton7.setText("Buy");
+        jButton7.setEnabled(false);
 
         jButton8.setText("Sell");
+        jButton8.setEnabled(false);
 
         jLabel10.setText("Amount:");
 
         jLabel11.setText("Trailing Points:");
 
+        jTextField1.setEditable(false);
+
+        jTextField2.setEditable(false);
+
         jLabel16.setText("Currency Pair:");
+
+        choTrailingStopCurrencyPair.setEnabled(false);
+
+        jLabel13.setText("Expiry:");
+
+        choTrailingStopExpiry.setEnabled(false);
 
         javax.swing.GroupLayout TrailingStopLayout = new javax.swing.GroupLayout(TrailingStop);
         TrailingStop.setLayout(TrailingStopLayout);
         TrailingStopLayout.setHorizontalGroup(
             TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(TrailingStopLayout.createSequentialGroup()
-                .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TrailingStopLayout.createSequentialGroup()
-                        .addGap(427, 427, 427)
-                        .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField11, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
-                            .addComponent(jTextField10, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE))
-                        .addGap(51, 51, 51)
-                        .addComponent(jButton7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton8))
+                .addContainerGap()
+                .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(TrailingStopLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel11)
-                            .addComponent(jLabel16)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, TrailingStopLayout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel16)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, TrailingStopLayout.createSequentialGroup()
+                                    .addGap(1, 1, 1)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
-                            .addComponent(choTrailingStopCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE))))
-                .addContainerGap())
+                            .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                            .addComponent(choTrailingStopCurrencyPair, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
+                            .addComponent(choTrailingStopExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)))
+                    .addGroup(TrailingStopLayout.createSequentialGroup()
+                        .addComponent(jButton7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton8)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jTextField11, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE)
+                    .addComponent(jTextField10, javax.swing.GroupLayout.Alignment.TRAILING, 0, 0, Short.MAX_VALUE))
+                .addGap(5, 5, 5))
         );
         TrailingStopLayout.setVerticalGroup(
             TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -395,24 +436,26 @@ public class UserMenu extends javax.swing.JPanel {
                     .addComponent(choTrailingStopCurrencyPair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
                     .addGroup(TrailingStopLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(TrailingStopLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jButton7)
-                            .addComponent(jButton8))))
-                .addContainerGap(173, Short.MAX_VALUE))
+                        .addGap(6, 6, 6)
+                        .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(choTrailingStopExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(TrailingStopLayout.createSequentialGroup()
+                                .addComponent(jTextField10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(TrailingStopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jTextField11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jButton8)
+                                    .addComponent(jButton7))))))
+                .addContainerGap(165, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("Trailing Stop", TrailingStop);
 
@@ -424,6 +467,7 @@ public class UserMenu extends javax.swing.JPanel {
         });
 
         jButton2.setText("Liquidate");
+        jButton2.setEnabled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -451,10 +495,10 @@ public class UserMenu extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnLogout)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
                         .addComponent(UserInfo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
@@ -466,7 +510,7 @@ public class UserMenu extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLogout)
@@ -477,18 +521,54 @@ public class UserMenu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnLimitOrderSellMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLimitOrderSellMouseClicked
+        String message;
+        String args[];
+        try {
+            m_cni.SendMessage("placelimitorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem().replace(" ",""));
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+            
+            args = message.split(" ");
+            if(args.length >= 1 && args[0].equals("ok")) {
+                JOptionPane.showMessageDialog(new JFrame(), "Your limit order has been placed.");
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "The limit order could not be commited by the server.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnLimitOrderSellMouseClicked
+
+    private void btnLimitOrderBuyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLimitOrderBuyMouseClicked
+        String message;
+        String args[];
+        try {
+            m_cni.SendMessage("placelimitorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem().replace(" ",""));
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+            
+            args = message.split(" ");
+            if(args.length >= 1 && args[0].equals("ok")) {
+                JOptionPane.showMessageDialog(new JFrame(), "Your limit order has been placed.");
+            } else {
+                JOptionPane.showMessageDialog(new JFrame(), "The limit order could not be commited by the server.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnLimitOrderBuyMouseClicked
+
     private void btnMarketOrderSellMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMarketOrderSellMouseClicked
         String message;
         String args[];
         try {
-            m_cni.SendMessage("placemarketorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem());
+            m_cni.SendMessage("placemarketorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem().replace(" ",""));
             while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
             
             args = message.split(" ");
             if(args.length >= 1 && args[0].equals("ok")) {
                 JOptionPane.showMessageDialog(new JFrame(), "Your market order has been placed.");
             } else {
-                JOptionPane.showMessageDialog(new JFrame(), "The Market Order could not be commited by the server.");
+                JOptionPane.showMessageDialog(new JFrame(), "The market order could not be commited by the server.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -499,14 +579,14 @@ public class UserMenu extends javax.swing.JPanel {
         String message;
         String args[];
         try {
-            m_cni.SendMessage("placemarketorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem());
+            m_cni.SendMessage("placemarketorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + choMarketOrderExpiry.getSelectedItem().replace(" ",""));
             while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
             
             args = message.split(" ");
             if(args.length >= 1 && args[0].equals("ok")) {
                 JOptionPane.showMessageDialog(new JFrame(), "Your market order has been placed.");
             } else {
-                JOptionPane.showMessageDialog(new JFrame(), "The Market Order could not be commited by the server.");
+                JOptionPane.showMessageDialog(new JFrame(), "The market order could not be commited by the server.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -553,27 +633,29 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JButton Orders;
     private javax.swing.JPanel TrailingStop;
     private javax.swing.JButton UserInfo;
+    private javax.swing.JButton btnLimitOrderBuy;
+    private javax.swing.JButton btnLimitOrderSell;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnMarketOrderBuy;
     private javax.swing.JButton btnMarketOrderSell;
     private java.awt.Choice choLimitOrderCurrencyPair;
+    private java.awt.Choice choLimitOrderExpiry;
     private java.awt.Choice choMarketOrderCurrencyPair;
     private java.awt.Choice choMarketOrderExpiry;
     private java.awt.Choice choStopLossCurrencyPair;
+    private java.awt.Choice choStopLossExpiry;
     private java.awt.Choice choTrailingStopCurrencyPair;
-    private java.awt.Choice choice6;
-    private java.awt.Choice expiry;
-    private javax.swing.JButton jButton10;
+    private java.awt.Choice choTrailingStopExpiry;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -591,11 +673,11 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField10;
     private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField15;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField txtLimitOrderAmount;
+    private javax.swing.JTextField txtLimitOrderLimit;
     private javax.swing.JTextField txtMarketOrderAmount;
     // End of variables declaration//GEN-END:variables
     
