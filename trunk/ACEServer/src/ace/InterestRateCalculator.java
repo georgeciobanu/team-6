@@ -27,6 +27,8 @@ public class InterestRateCalculator implements Runnable {
     public void run() {
         m_currentThread = Thread.currentThread();
         
+        DBConnection.BUYSELL buy = DBConnection.BUYSELL.BUY;
+        
         while(!m_stop) {
             // For all non-null balance accounts
                 // Get user ID of that balance account
@@ -35,7 +37,14 @@ public class InterestRateCalculator implements Runnable {
                     // Multiply amount * annualized interest rate (in function of last time charged)
                     // Add this to billing account
                 // Update time of last billing charged
+            
                 System.out.println("Calculating interest rate...");
+                if(m_db != null)
+                {
+                    System.out.println(m_db.getUserID("Gabriel", "who"));
+                    System.out.println(m_db.getUserID2("Gabriel", "who"));
+                }
+
                 
             // Wait for a bit
             try {
