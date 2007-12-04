@@ -55,7 +55,7 @@ public class EndUser {
         return null;
     }
     
-    // 
+    //
     public int createAccount(String username, String password) {
         m_userID = m_db.createAccount(username, password);
         return m_userID;
@@ -114,7 +114,7 @@ public class EndUser {
     public boolean setCustomizedTransactionFee(double fee) {
         return false;
     }
-
+    
     public double getInterestRate() {
         return 0.0;
     }
@@ -126,7 +126,7 @@ public class EndUser {
     public double getLeverageRate() {
         return 0.0;
     }
-
+    
     // This function won't be implemented
     public Order[] getOrderHistory() {
         return null;
@@ -143,4 +143,6 @@ public class EndUser {
     public boolean deleteAccount() {
         return false;
     }
+  
+    
 }
