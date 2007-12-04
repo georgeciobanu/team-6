@@ -38,6 +38,7 @@ public class Main extends javax.swing.JFrame {
         lblErrorMessage = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("ACE Administrator Client Application");
         jLabel1.setText("username");
 
         jLabel2.setText("password");

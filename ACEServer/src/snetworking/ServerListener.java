@@ -22,6 +22,7 @@ import java.util.*;
 public class ServerListener implements Runnable {
     DBConnection m_db;
     int m_port = -1;
+    boolean m_stop = false;
     
     /** Creates a new instance of ServerListener */
     public ServerListener(DBConnection db, int port) {
@@ -37,7 +38,7 @@ public class ServerListener implements Runnable {
           ServerSocket socket1 = new ServerSocket(m_port);
           
           System.out.println("Server started listening...");
-          while (true) {
+          while(!m_stop) {
               connection = socket1.accept();
               Runnable runnable = new ClientConnection(m_db, connection, ++count);
               Thread thread = new Thread(runnable);
@@ -59,5 +60,7 @@ public class ServerListener implements Runnable {
           } catch (IOException e){}
       }
     }
-    
+    public void stopMe() {
+        m_stop = true;
+    }
 }
