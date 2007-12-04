@@ -249,7 +249,7 @@ public class DBConnection {
                     "INSERT  INTO marketOrders (userID, placed, amount, type, expiry, basis, currencyPair " + ")" +
                     "VALUES (" + String.valueOf(order.getuserID()) + ", #" + now + "#, " +
                     String.valueOf(order.getAmount()) + ", " + String.valueOf(order.getType()) + ", #" +
-                    order.getExpiryDate().toString() + "#, " + String.valueOf(order.getBasis()) + ", " +
+                    order.getExpiryDate().toString().replaceFirst("\\.[0-9]{2,9}", "") + "#, " + String.valueOf(order.getBasis()) + ", " +
                     "'USD/CAD'" + //TODO: to change to actual value
                     ")" ;
             
@@ -258,7 +258,7 @@ public class DBConnection {
             queryString =
                     "SELECT id " +
                     "FROM marketOrders " +
-                    "WHERE userid =" + order.getuserID() + " AND  = placed=#" +
+                    "WHERE userid =" + order.getuserID() + " AND placed=#" +
                     now + "# ";
             
             rs = query(queryString);
