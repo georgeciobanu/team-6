@@ -11,6 +11,8 @@ package snetworking;
 import sFundamentals.*;
 import database.*;
 import transactionEngine.*;
+import java.util.*;
+import java.text.*;
 
 /**
  *
@@ -53,7 +55,48 @@ public class EndUserParser {
             user = new sEndUser(m_db, m_userID);
             user.setPassword(args[1]);
             return "ok changepassword";
-        } else if(args[0].equals("placemarketorder")) {
+        } else if(args[0].equals("getmarketprice") && args.length == 3) {
+            double ret;
+            if(args[1].equals("buy")) {
+                ret = m_db.getMarketPrice(1, args[2]);
+                return "ok getmarketprice " + Double.toString(ret);
+            } else if(args[1].equals("sell")) {
+                ret = m_db.getMarketPrice(2, args[2]);
+                return "ok getmarketprice " + Double.toString(ret);
+            }
+            
+        } else if(args[0].equals("placemarketorder") && args.length == 5) {
+            if(args[1].equals("buy")) {
+                sMarketOrder o = new sMarketOrder(m_userID);
+
+                sExchangeRate er = new ExchangeRate(args[2]);
+                
+                o.setCurrencyPair(er);
+                
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                o.setExpiryDate(sdf);
+                
+                placed, amount, type, expiry, basis, currencyPair 
+                
+                m_cni.SendMessage("placemarketorder " +
+                        "sell "
+                        choMarketOrderCurrencyPair.getSelectedItem()
+                        txtMarketOrderAmount.getText()
+                        choMarketOrderExpiry.getSelectedItem()
+                
+                
+                //java.util.Date date = sdf.parse("2004-07-24 09:45:52.189");
+                //java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+                
+                java.sql.Timestamp timestamp = new java.sql.Timestamp(date.getTime());
+                
+                timestamp.
+                
+                o.setAmount();
+                o.setExpiryDate();
+                
+                m_db.addMarketOrder(o);
+            }
             
         } else if(args[0].equals("editmarketorder")) {
             
@@ -71,7 +114,7 @@ public class EndUserParser {
             
         } else if(args[0].equals("pricehistory")) {
             
-        } else if(args[0].equals("pendingorder")) {
+        } else if(args[0].equals("pendingorder") && args.length == 2) {
             
         } else if(args[0].equals("marketprice")) {
             
