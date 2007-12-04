@@ -23,6 +23,9 @@ public class ServerListener implements Runnable {
     DBConnection m_db;
     int m_port = -1;
     boolean m_stop = false;
+    Thread [] clients;
+    
+    
     
     /** Creates a new instance of ServerListener */
     public ServerListener(DBConnection db, int port) {
@@ -40,8 +43,9 @@ public class ServerListener implements Runnable {
           System.out.println("Server started listening...");
           while(!m_stop) {
               connection = socket1.accept();
-              Runnable runnable = new ClientConnection(m_db, connection, ++count);
+              Runnable runnable = new ClientConnection(m_db, connection, ++count);              
               Thread thread = new Thread(runnable);
+              clients[count] = thread;
               thread.start();
               
               //need to wait 10 seconds to pretend that we're processing something

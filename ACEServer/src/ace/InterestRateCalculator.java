@@ -41,8 +41,7 @@ public class InterestRateCalculator implements Runnable {
                 System.out.println("Calculating interest rate...");
                 if(m_db != null)
                 {
-                    System.out.println(m_db.getUserID("Gabriel", "who"));
-                    System.out.println(m_db.getUserID2("Gabriel", "who"));
+                    System.out.println(m_db.getUserID("Gabriel", "who"));                    
                 }
 
                 
