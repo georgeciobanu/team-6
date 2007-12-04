@@ -9,6 +9,9 @@
 
 package fundamentals;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 /**
  *
  * @author GLL
@@ -18,17 +21,22 @@ public class Order {
     ExchangeRate m_currencyPair;
     double m_amount;
     boolean m_isPending;
+    Timestamp expiryDate = null;
+    Timestamp timestamp = null;
+    int type;
+    int basis;
+    String currencyPair = null;
     
     /** Creates a new instance of Order */
-    //Order(int userID) {
-    //    m_userID = userID;
-    //}
+    Order(int userID) {
+        m_userID = userID;
+    }
     
     public void setUserID(int id) {
         m_userID = id;
     }
     
-    public int getIserID() {
+    public int getuserID() {
         return m_userID;
     }
     
