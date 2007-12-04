@@ -107,6 +107,10 @@ public class UserMenu extends javax.swing.JPanel {
         txtMarketOrderAmount = new javax.swing.JTextField();
         choMarketOrderExpiry = new java.awt.Choice();
         choMarketOrderCurrencyPair = new java.awt.Choice();
+        jLabel2 = new javax.swing.JLabel();
+        lblCurrentMarketPriceBuy = new javax.swing.JLabel();
+        lblCurrentMarketPriceSell = new javax.swing.JLabel();
+        btnUpdatePrice = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         txtLimitOrderAmount = new javax.swing.JTextField();
         txtLimitOrderLimit = new javax.swing.JTextField();
@@ -169,35 +173,61 @@ public class UserMenu extends javax.swing.JPanel {
 
         txtMarketOrderAmount.setText("100000");
 
+        jLabel2.setText("Current Market Price:");
+
+        btnUpdatePrice.setText("Update Prices");
+        btnUpdatePrice.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnUpdatePriceMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(btnMarketOrderBuy)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnMarketOrderSell))
+                        .addComponent(jLabel2)
+                        .addGap(41, 41, 41)
+                        .addComponent(lblCurrentMarketPriceBuy)
+                        .addGap(50, 50, 50)
+                        .addComponent(lblCurrentMarketPriceSell)
+                        .addGap(48, 48, 48)
+                        .addComponent(btnUpdatePrice)
+                        .addContainerGap())
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel19)
-                            .addComponent(jLabel5))
-                        .addGap(38, 38, 38)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
-                            .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))))
-                .addGap(29, 29, 29))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btnMarketOrderBuy)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnMarketOrderSell))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel19)
+                                    .addComponent(jLabel5))
+                                .addGap(38, 38, 38)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(choMarketOrderExpiry, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                                    .addComponent(txtMarketOrderAmount, javax.swing.GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE))))
+                        .addGap(29, 29, 29))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(11, 11, 11)
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(lblCurrentMarketPriceBuy)
+                    .addComponent(btnUpdatePrice)
+                    .addComponent(lblCurrentMarketPriceSell))
+                .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
                     .addComponent(choMarketOrderCurrencyPair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -214,7 +244,7 @@ public class UserMenu extends javax.swing.JPanel {
                             .addComponent(btnMarketOrderSell)
                             .addComponent(btnMarketOrderBuy)))
                     .addComponent(jLabel5))
-                .addContainerGap(186, Short.MAX_VALUE))
+                .addContainerGap(148, Short.MAX_VALUE))
         );
         jTabbedPane1.addTab("Market Order", jPanel3);
 
@@ -521,6 +551,35 @@ public class UserMenu extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnUpdatePriceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUpdatePriceMouseClicked
+        String message;
+        String args[];
+        try {
+            m_cni.SendMessage("getmarketprice buy " + choMarketOrderCurrencyPair.getSelectedItem());
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+            
+            args = message.split(" ");
+            if(args.length > 2 && args[0].equals("ok")) {
+                lblCurrentMarketPriceBuy.setText(args[2]);
+            } else {
+                lblCurrentMarketPriceBuy.setText("");
+            }
+            
+            m_cni.SendMessage("getmarketprice sell " + choMarketOrderCurrencyPair.getSelectedItem());
+            while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+
+            args = message.split(" ");
+            if(args.length > 2 && args[0].equals("ok")) {
+                lblCurrentMarketPriceSell.setText(args[2]);
+            } else {
+                lblCurrentMarketPriceSell.setText("");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_btnUpdatePriceMouseClicked
+
     private void btnLimitOrderSellMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnLimitOrderSellMouseClicked
         String message;
         String args[];
@@ -638,6 +697,7 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnMarketOrderBuy;
     private javax.swing.JButton btnMarketOrderSell;
+    private javax.swing.JButton btnUpdatePrice;
     private java.awt.Choice choLimitOrderCurrencyPair;
     private java.awt.Choice choLimitOrderExpiry;
     private java.awt.Choice choMarketOrderCurrencyPair;
@@ -661,6 +721,7 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -676,6 +737,8 @@ public class UserMenu extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblCurrentMarketPriceBuy;
+    private javax.swing.JLabel lblCurrentMarketPriceSell;
     private javax.swing.JTextField txtLimitOrderAmount;
     private javax.swing.JTextField txtLimitOrderLimit;
     private javax.swing.JTextField txtMarketOrderAmount;
