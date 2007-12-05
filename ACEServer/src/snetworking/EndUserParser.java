@@ -71,8 +71,7 @@ public class EndUserParser {
                 sMarketOrder o = new sMarketOrder(m_userID);
 
                 o.setCurrencyPairS(args[2]);
-                o.setAmount(6);
-                
+                o.setAmount(Double.valueOf(args[3]));
                 Calendar cal = Calendar.getInstance();
                 o.setExpiryDate(new Timestamp(cal.getTimeInMillis() + 86400000));
                 
