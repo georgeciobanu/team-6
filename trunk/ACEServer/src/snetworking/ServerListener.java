@@ -45,7 +45,7 @@ public class ServerListener implements Runnable {
               connection = socket1.accept();
               Runnable runnable = new ClientConnection(m_db, connection, ++count);              
               Thread thread = new Thread(runnable);
-              clients[count] = thread;
+              //clients[count] = thread;
               thread.start();
               
               //need to wait 10 seconds to pretend that we're processing something
