@@ -38,8 +38,6 @@ public class InterestRateCalculator implements Runnable {
                     // Add this to billing account
                 // Update time of last billing charged            
                 System.out.println("Calculating interest rate...");
-                
-                System.out.println(m_db.getPendingOrders(1));
 
             // Wait for a bit
             try {
