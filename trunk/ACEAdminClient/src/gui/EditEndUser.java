@@ -11,14 +11,27 @@ package gui;
  */
 
 import javax.swing.*;
+import clientnetworking.*;
 public class EditEndUser extends javax.swing.JPanel {
      JFrame owner;
      JPanel admin;
+     String m_username;
+     ClientNetworkInterface m_cni;
+     
+     int m_userid;
+     
     /** Creates new form EditEndUser */
-    public EditEndUser(JFrame owner, JPanel admin, String username) {
+    public EditEndUser(JFrame owner, JPanel admin, ClientNetworkInterface cni, String username) {
         this.admin=admin;
         this.owner=owner;
+        
+        m_cni = cni;
+        
+        m_username = username;
+        
         initComponents();
+        
+        lblUsername.setText("Editing End-User: " + m_username);
     }
     
     /** This method is called from within the constructor to
@@ -35,10 +48,11 @@ public class EditEndUser extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        btnModifyFunds = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        lblUsername = new javax.swing.JLabel();
 
         btnSubmit.setText("Submit");
 
@@ -48,16 +62,16 @@ public class EditEndUser extends javax.swing.JPanel {
 
         jLabel4.setText("Leverage Ratio:");
 
-        jButton2.setText("modifyFunds");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnModifyFunds.setText("Modify Funds");
+        btnModifyFunds.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnModifyFundsActionPerformed(evt);
             }
         });
 
-        jButton3.setText("EnableAccount");
+        jButton3.setText("Enable Account");
 
-        jButton4.setText("DisableAccount");
+        jButton4.setText("Disable Account");
 
         btnCancel.setText("Cancel");
         btnCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -66,40 +80,44 @@ public class EditEndUser extends javax.swing.JPanel {
             }
         });
 
+        lblUsername.setText("Editing End-User: ");
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
+                .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel4)
                             .add(jLabel3)
                             .add(jLabel2))
                         .add(14, 14, 14)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jTextField4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                            .add(jTextField3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                            .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)))
+                            .add(jTextField4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                            .add(jTextField3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
+                            .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)))
                     .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(133, Short.MAX_VALUE)
-                        .add(jButton2)
+                        .add(btnModifyFunds)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(btnCancel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(jButton3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .add(jButton3))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, btnSubmit, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jButton4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jButton4)))
+                    .add(lblUsername))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
+                .add(lblUsername)
+                .add(23, 23, 23)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
                     .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
@@ -115,17 +133,17 @@ public class EditEndUser extends javax.swing.JPanel {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jButton4)
                     .add(jButton3)
-                    .add(jButton2))
+                    .add(btnModifyFunds))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btnSubmit)
                     .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
- owner.remove(this);
+      owner.remove(this);
       //this.setVisible(false);
       admin.setVisible(true);
       owner.setContentPane(admin);
@@ -134,20 +152,18 @@ public class EditEndUser extends javax.swing.JPanel {
 
     }//GEN-LAST:event_btnCancelActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-      ModifyFunds fund=new ModifyFunds(this,owner);
+    private void btnModifyFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyFundsActionPerformed
+      ModifyFunds fund=new ModifyFunds(this,owner,m_cni, m_username);
       this.setVisible(false);
       fund.setVisible(true);
       owner.setContentPane(fund);
-      
-
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnModifyFundsActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnModifyFunds;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel2;
@@ -156,6 +172,7 @@ public class EditEndUser extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JLabel lblUsername;
     // End of variables declaration//GEN-END:variables
     
 }

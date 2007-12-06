@@ -11,17 +11,61 @@ package gui;
  */
 
 import javax.swing.*;
+import clientnetworking.*;
 public class ModifyFunds extends javax.swing.JPanel {
       JFrame owner;
       JPanel enduser;
+      ClientNetworkInterface m_cni;
+      String m_username;
+      String[] m_currenciesList;
+      
     /** Creates new form ModifyFunds */
-    public ModifyFunds(JPanel enduser, JFrame owner) {
+    public ModifyFunds(JPanel enduser, JFrame owner, ClientNetworkInterface cni, String username) {
         this.enduser=enduser;
         this.owner=owner;
+        m_cni = cni;
+        m_username = username;
+        
         initComponents();
-        choice1.addItem("Deposit");
-        choice1.addItem("Withdraw");
+        choAction.addItem("Deposit");
+        choAction.addItem("Withdraw");
 
+        lblUsername.setText("Editing End-User: " + m_username);
+        
+        getCurrencies();
+        
+        FillChoice(choCurrencies, m_currenciesList);
+    }
+    
+    private void FillChoice(java.awt.Choice cho, String[] items) {
+        for(int i = 0; i < items.length; i++) {
+            cho.addItem(items[i]);
+        }
+    }
+    
+    // Get the available traiding currencies from the ACE system
+    private void getCurrencies() {
+        String message;
+        String args[];
+        m_cni.SendMessage("getcurrencies");
+        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+        args = message.split(" ");
+        
+        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getcurrencies")) {
+            m_currenciesList = new String[args.length - 2];
+            for(int i = 0; i < args.length - 2; i++) {
+                m_currenciesList[i] = args[i + 2];
+            }
+        } else {
+//            // Failed to login
+//            m_cni.SendMessage("logout");
+//            m_cni.disconnect();
+//            
+//            // Go back to LoginPanel
+//            this.setVisible(false);
+//            Login.setVisible(true);
+//            owner.setContentPane(Login);
+        }
     }
     
     /** This method is called from within the constructor to
@@ -35,14 +79,13 @@ public class ModifyFunds extends javax.swing.JPanel {
         jMenu1 = new javax.swing.JMenu();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        choice1 = new java.awt.Choice();
+        txtAmount = new javax.swing.JTextField();
+        choAction = new java.awt.Choice();
         jLabel3 = new javax.swing.JLabel();
         btnSubmit = new javax.swing.JButton();
         choCurrencies = new java.awt.Choice();
         btnCancel = new javax.swing.JButton();
+        lblUsername = new javax.swing.JLabel();
 
         jMenu1.setText("Menu");
         jMenuBar1.add(jMenu1);
@@ -50,19 +93,6 @@ public class ModifyFunds extends javax.swing.JPanel {
         jLabel1.setText("Currency:");
 
         jLabel2.setText("Amount:");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
 
         jLabel3.setText("Action:");
 
@@ -74,60 +104,68 @@ public class ModifyFunds extends javax.swing.JPanel {
         });
 
         btnCancel.setText("Cancel");
+        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelMouseClicked(evt);
+            }
+        });
+
+        lblUsername.setText("Editing End-User: ");
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
-                        .add(107, 107, 107)
+                        .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btnSubmit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 119, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel1)
+                            .add(jLabel3)
                             .add(jLabel2))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                            .add(choCurrencies, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE))
-                        .add(41, 41, 41)
-                        .add(jLabel3)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 107, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                        .add(layout.createSequentialGroup()
-                            .addContainerGap()
-                            .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 113, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                            .add(btnSubmit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 119, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                            .add(132, 132, 132)
-                            .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 360, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(267, 267, 267))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(choAction, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                            .add(txtAmount, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                            .add(choCurrencies, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)))
+                    .add(lblUsername))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(148, 148, 148)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .add(lblUsername)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 32, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
                     .add(jLabel1)
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                        .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .add(jLabel3))
                     .add(choCurrencies, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel3)
+                    .add(choAction, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
-                    .add(jTextField2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(11, 11, 11)
+                    .add(txtAmount, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .add(37, 37, 37)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btnSubmit, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(btnCancel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .add(21, 21, 21)
-                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 94, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
+      this.setVisible(false);
+      enduser.setVisible(true);
+      owner.setContentPane(enduser);
+    }//GEN-LAST:event_btnCancelMouseClicked
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
@@ -142,16 +180,15 @@ public class ModifyFunds extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnSubmit;
+    private java.awt.Choice choAction;
     private java.awt.Choice choCurrencies;
-    private java.awt.Choice choice1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JTextField txtAmount;
     // End of variables declaration//GEN-END:variables
     
 }

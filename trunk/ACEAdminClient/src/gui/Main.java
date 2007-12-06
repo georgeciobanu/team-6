@@ -68,10 +68,10 @@ public class Main extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                            .addComponent(lblErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                             .addGroup(LoginLayout.createSequentialGroup()
-                                .addComponent(pswPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                                .addComponent(pswPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))))
                 .addContainerGap())
         );
@@ -90,7 +90,7 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btnLogin)
                 .addGap(34, 34, 34)
                 .addComponent(lblErrorMessage)
-                .addContainerGap(117, Short.MAX_VALUE))
+                .addContainerGap(212, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

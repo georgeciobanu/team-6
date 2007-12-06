@@ -53,10 +53,10 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="lblErrorMessage" alignment="0" pref="268" max="32767" attributes="0"/>
-                              <Component id="txtUsername" alignment="0" pref="268" max="32767" attributes="1"/>
+                              <Component id="lblErrorMessage" alignment="0" pref="538" max="32767" attributes="0"/>
+                              <Component id="txtUsername" alignment="0" pref="538" max="32767" attributes="1"/>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="pswPassword" pref="268" max="32767" attributes="1"/>
+                                  <Component id="pswPassword" pref="538" max="32767" attributes="1"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -83,7 +83,7 @@
                   <Component id="btnLogin" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Component id="lblErrorMessage" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="117" max="32767" attributes="0"/>
+                  <EmptySpace pref="212" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
