@@ -9,8 +9,13 @@
 
 package transactionEngine;
 
+import java.sql.Timestamp;
+import java.sql.Date;
 import sFundamentals.*;
+import fundamentals.*;
 import database.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  *
@@ -24,15 +29,38 @@ public class Market {
         m_db = db;
     }
     
-    public boolean placeOrder(sOrder order) {
-        return false;
+    public int placeOrder(Order order) {
+        DateTime dt;
+        
+        // Commit the order only if the order is pending
+        if(order.getStatus() == Order.STATUS.PENDING) {
+            // Ensure that the placed date is NOW!
+            dt = new DateTime();
+            order.setPlacedDate(dt.getTimestamp());
+            
+            if(order.getType() == Order.TYPE.MARKET) {
+                order.setLimit(-1);
+                order.setStopLoss(-1);
+                order.setTrailingPoints(-1);                
+            } else if(order.getType() == Order.TYPE.LIMIT) {
+                // Set the limit
+                order.setStopLoss(-1);
+                order.setTrailingPoints(-1);
+            } else if(order.getType() == Order.TYPE.STOPLOSS) {
+                
+            } else if(order.getType() == Order.TYPE.TRAILINGSTOP) {
+                
+            }
+
+            // Commit the order to the market
+            int orderID = m_db.placeOrder(order);
+            return orderID;
+        } else {
+            return -1;
+        }
     }
     
-    public boolean editOrder(sOrder order) {
-        return false;
-    }
-    
-    public boolean cancelOrder(int orderID) {
+    public boolean editOrder(Order order) {
         return false;
     }
     
@@ -40,12 +68,23 @@ public class Market {
         return false;
     }
     
-    public double getBuyPrice(String currencyName) {
-        return 0.0;
-    }
-    
-    public double getSellPrice() {
-        return 0.0;
+    public double getMarketPrice(Order.OPERATION operation, CurrencyPair currencypair) {
+        double ret = -1;
+        
+        // Validate currencies
+        Currency currencyFrom = currencypair.getCurrencyFrom();
+        Currency currencyTo = currencypair.getCurrencyTo();
+        
+        if(currencyFrom.getID() == -1) {
+            currencyFrom.setID(m_db.getCurrencyID(currencyFrom.getName()));
+        }
+        if(currencyTo.getID() == -1) {
+            currencyTo.setID(m_db.getCurrencyID(currencyTo.getName()));
+        }
+        
+        ret = m_db.getMarketPrice(operation, currencypair);
+        
+        return ret;
     }
     
     public sOrder[] getPendingOrders() {
