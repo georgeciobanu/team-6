@@ -140,7 +140,7 @@ public class ClientNetworkInterface {
                 /** Close the socket connection. */
                 m_connection.close();
                 m_connected = false;
-                System.out.println("The client is now disconnected.");
+                System.out.println("You are now disconnected.");
         } catch (IOException f) {
             System.out.println("IOException: " + f);
             m_connected = false;
