@@ -15,8 +15,6 @@ package fundamentals;
  */
 
 public class LimitOrder extends Order {
-    double m_limit;
-    double stopLoss;
     
     public LimitOrder(int userid)
     {
