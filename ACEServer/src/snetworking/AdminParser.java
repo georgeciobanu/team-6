@@ -19,8 +19,8 @@ import java.util.Enumeration;
  * @author GLL
  */
 public class AdminParser {
-    DBConnection m_db;
-    int m_userID;
+    private DBConnection m_db;
+    private int m_userID;
     
     /** Creates a new instance of AdminParser */
     public AdminParser(DBConnection db, int userID) {
@@ -89,7 +89,7 @@ public class AdminParser {
                 try {
                     userID = m_db.getUserID(args[1]);
                 } catch(Exception f) {
-                    return "error depositfunds 3";
+                    return "error depositfunds";
                 }
                 
                 currency = new Currency(args[2]);
@@ -103,9 +103,9 @@ public class AdminParser {
                     return "ok depositfunds";
                 }
                 
-                return "error depositfunds 1";
+                return "error depositfunds";
             } catch(Exception e) {
-                return "error depositfunds 2";
+                return "error depositfunds";
             }
         } else if(args[0].equals("")) {
             
