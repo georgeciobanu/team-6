@@ -32,7 +32,6 @@ public class UserMenu extends javax.swing.JPanel {
             m_currenciesList = new String[args.length - 2];
             for(int i = 0; i < args.length - 2; i++) {
                 m_currenciesList[i] = args[i + 2];
-                System.out.println(m_currenciesList[i]);
             }
         } else {
             // Failed to login
@@ -591,7 +590,7 @@ public class UserMenu extends javax.swing.JPanel {
         String args[];
         try {
             // Example: placelimitorder [buy/sell] [currencypair] [amount] [price] [number of hours before expires] [limit (pts)]
-            m_cni.SendMessage("placelimitorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + lblCurrentMarketPriceSell.getText() + " " + choLimitOrderExpiry.getSelectedItem().split(" ")[0] + " " + txtLimitOrderLimit.getText());
+            m_cni.SendMessage("placelimitorder sell " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtLimitOrderAmount.getText() + " " + lblCurrentMarketPriceSell.getText() + " " + choLimitOrderExpiry.getSelectedItem().split(" ")[0] + " " + txtLimitOrderLimit.getText());
             while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
             
             args = message.split(" ");
@@ -610,7 +609,7 @@ public class UserMenu extends javax.swing.JPanel {
         String args[];
         try {
             // Example: placelimitorder [buy/sell] [currencypair] [amount] [price] [number of hours before expires] [limit (pts)]
-            m_cni.SendMessage("placelimitorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtMarketOrderAmount.getText() + " " + lblCurrentMarketPriceSell.getText() + " " + choLimitOrderExpiry.getSelectedItem().split(" ")[0] + " " + txtLimitOrderLimit.getText());
+            m_cni.SendMessage("placelimitorder buy " + choMarketOrderCurrencyPair.getSelectedItem() + " " + txtLimitOrderAmount.getText() + " " + lblCurrentMarketPriceSell.getText() + " " + choLimitOrderExpiry.getSelectedItem().split(" ")[0] + " " + txtLimitOrderLimit.getText());
             while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
             
             args = message.split(" ");

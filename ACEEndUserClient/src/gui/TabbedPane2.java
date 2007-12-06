@@ -240,6 +240,7 @@ public class TabbedPane2 extends javax.swing.JPanel {
     private void getPendingOrdersID() {
         String message;
         String args[];
+        int orderid = -1;
         
         for(; m_tableModel.getRowCount() > 0;) {
             m_tableModel.removeRowAt(0);
@@ -261,13 +262,24 @@ public class TabbedPane2 extends javax.swing.JPanel {
                     // Append a row
                     Vector w = new Vector();
 
-                    w.add((Integer)e.nextElement());
-                    w.add("test");
-                    w.add("test");
-                    w.add("test");
-                    w.add("test");
-                    w.add("test");
-                    m_tableModel.addRow(w);
+                    orderid = (Integer)e.nextElement();
+                    
+                    m_cni.SendMessage("getorder " + String.valueOf(orderid));
+                    while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+                    
+                    if(message.startsWith("ok getorder ")) {
+                        message = message.substring("ok getorder ".length());
+                        
+                        Order o = new Order(message);
+                        
+                        w.add(orderid);
+                        w.add(o.getTypeStringExplicit());
+                        w.add(o.getCurrencyPair().toString());
+                        w.add(o.getOperationStringExplicit());
+                        w.add(o.getAmount());
+                        w.add(o.getDuration());
+                        m_tableModel.addRow(w);
+                    }
                 }
             }
         }
