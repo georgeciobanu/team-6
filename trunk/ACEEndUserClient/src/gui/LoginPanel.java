@@ -42,6 +42,10 @@ public class LoginPanel extends javax.swing.JFrame {
 
         jLabel2.setText("Password:");
 
+        txtUsername.setText("gabriel");
+
+        pwdPassword.setText("who");
+
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -63,9 +67,9 @@ public class LoginPanel extends javax.swing.JFrame {
                             .addComponent(jLabel2))
                         .addGap(12, 12, 12)
                         .addGroup(LoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                            .addComponent(pwdPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE))))
+                            .addComponent(lblErrorMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                            .addComponent(pwdPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
+                            .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         LoginLayout.setVerticalGroup(
@@ -83,7 +87,7 @@ public class LoginPanel extends javax.swing.JFrame {
                 .addComponent(btnLogin)
                 .addGap(26, 26, 26)
                 .addComponent(lblErrorMessage)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
