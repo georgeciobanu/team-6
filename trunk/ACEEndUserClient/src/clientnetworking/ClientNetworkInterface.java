@@ -78,6 +78,7 @@ public class ClientNetworkInterface {
         if(m_connected) {
             /** Write across the socket connection and flush the buffer */
             try {
+                System.out.println("  Sending: " + message);
                 m_osw.write(message + (char)13);
                 m_osw.flush();
             } catch (IOException f) {
@@ -95,23 +96,18 @@ public class ClientNetworkInterface {
     public String ReceiveMessage() {
         String returnMessage = "";
         try {
-            System.out.println("1:");
             if(m_connected) {
                 int c;
-                System.out.println("2:");
                 while(((c = m_isr.read()) != 13) && (c != -1)) {
                     instr.append((char) c);
                 }
                 if(c == -1) return "";
                 
-                System.out.println("3:");
-                System.out.println(instr);
+                System.out.println("Receiving: " + instr);
                 
-                System.out.println("4:");
                 returnMessage = instr.toString();
                 
                 // Clear buffer
-                System.out.println("5:");
                 instr.delete(0,instr.length());
             }
             return returnMessage;
@@ -120,16 +116,11 @@ public class ClientNetworkInterface {
             disconnect();
             return "";
         } catch (Exception g) {
-            System.out.println("here:");
             System.out.println("Exception: " + g);
             disconnect();
             return returnMessage;
         }
     }
-    
-    /*public boolean newReceivedMessage() {
-        return false;
-    }*/
     
     public boolean isConnected() {
         try {
