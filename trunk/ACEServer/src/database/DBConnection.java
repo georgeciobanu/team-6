@@ -29,12 +29,6 @@ public class DBConnection {
         ENDUSER
     }
     
-    public static enum BUYSELL {
-        INVALID,
-        BUY,
-        SELL
-    }
-    
     public DBConnection() { //this needs to be called on startup        
         connected = false;
     }

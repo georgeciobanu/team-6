@@ -27,8 +27,6 @@ public class InterestRateCalculator implements Runnable {
     public void run() {
         m_currentThread = Thread.currentThread();
         
-        DBConnection.BUYSELL buy = DBConnection.BUYSELL.BUY;
-        
         while(!m_stop) {
             // For all non-null balance accounts
                 // Get user ID of that balance account
@@ -41,7 +39,7 @@ public class InterestRateCalculator implements Runnable {
 
             // Wait for a bit
             try {
-                m_currentThread.sleep(10000);
+                m_currentThread.sleep(100000);
             } catch(Exception e) {}
         }
     }
