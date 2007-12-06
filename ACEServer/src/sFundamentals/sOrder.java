@@ -12,6 +12,7 @@ package sFundamentals;
 import java.sql.Date;
 import java.sql.Timestamp;
 import fundamentals.*;
+import database.*;
 
 /**
  *
@@ -26,6 +27,11 @@ public class sOrder extends Order{
     public sOrder(int userID) {
         super (userID);
         setUserID(userID);
+    }
+    
+    public boolean get(int orderID) {
+        //Order o = m_db.getOrder(orderID);
+        return false;
     }
     
     public void setCurrencyPair(sExchangeRate er) {
