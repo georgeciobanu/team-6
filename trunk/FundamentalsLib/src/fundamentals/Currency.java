@@ -13,25 +13,29 @@ package fundamentals;
  */
 public class Currency {
     
-    int m_currencyID = 0;
+    int m_currencyID = -1;
     String m_name = "";
     
     public Currency() {
     }
     
-    String getName() {
-        return m_name;
-    }
-    
-    void setName(String name) {
+    public Currency(String name) {
         m_name = name;
     }
     
-    int getID() {
+    public int getID() {
         return m_currencyID;
     }
     
-    void setID(int id) {
+    public void setID(int id) {
         m_currencyID = id;
+    }
+    
+    public String getName() {
+        return m_name;
+    }
+    
+    public void setName(String name) {
+        m_name = name;
     }
 }

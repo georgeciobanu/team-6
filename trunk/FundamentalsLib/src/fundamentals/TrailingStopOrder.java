@@ -13,17 +13,16 @@ package fundamentals;
  */
 
 public class TrailingStopOrder extends Order {
-    double m_trailingPoins;
     
+    public TrailingStopOrder(int userid) {
+        super(userid);
+    }
+
     // Place a market order
     public boolean place() {
         return false;
     }
     
-    public TrailingStopOrder(int userid)
-    {
-        super(userid);
-    }
     // Edit a market order
     public boolean edit() {
         return false;
