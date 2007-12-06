@@ -100,6 +100,9 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtUsername">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Michael"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btnLogin">
           <Properties>
@@ -110,6 +113,9 @@
           </Events>
         </Component>
         <Component class="javax.swing.JPasswordField" name="pswPassword">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="who"/>
+          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblErrorMessage">
         </Component>

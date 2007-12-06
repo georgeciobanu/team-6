@@ -10,13 +10,21 @@ package gui;
  * @author  icioba1
  */
 
+import fundamentals.*;
 import javax.swing.*;
 import clientnetworking.*;
+import java.util.*;
+import javax.swing.table.*;
 
 public class AdminMenu extends javax.swing.JPanel {
     ClientNetworkInterface m_cni;
     String[] m_currenciesList;
     String[] m_currencyPairsList;
+    
+    private JScrollPane m_spUsernames;
+    private JTable m_table;
+    private MyTableModel m_tableModel;
+    
     JFrame owner;
     JPanel Login;
     
@@ -32,7 +40,6 @@ public class AdminMenu extends javax.swing.JPanel {
             m_currenciesList = new String[args.length - 2];
             for(int i = 0; i < args.length - 2; i++) {
                 m_currenciesList[i] = args[i + 2];
-                System.out.println(m_currenciesList[i]);
             }
         } else {
             // Failed to login
@@ -58,6 +65,40 @@ public class AdminMenu extends javax.swing.JPanel {
         return temp.trim().split(" ");
     }
     
+    private void getUsernames() {
+        String message;
+        String args[];
+        int orderid = -1;
+        
+        for(; m_tableModel.getRowCount() > 0;) {
+            m_tableModel.removeRowAt(0);
+        }
+        
+        String type = "";
+        
+        if(choUsertype.getSelectedItem().equals("End-User")) {
+            type = "0";
+        } else if(choUsertype.getSelectedItem().equals("Administrator")) {
+            type = "1";
+        } else {
+            return;
+        }
+        
+        m_cni.SendMessage("getusernames " + type);
+        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+        args = message.split(" ");
+        
+        if(args.length >= 3 && args[0].equals("ok") && args[1].equals("getusernames")) {
+            for(int i = 2; i < args.length; i++) {
+                Vector v = new Vector();
+                v.add(args[i]);
+                if(v != null) {
+                    m_tableModel.addRow(v);
+                }
+            }
+        }
+    }
+    
     private void FillChoice(java.awt.Choice cho, String[] items) {
         for(int i = 0; i < items.length; i++) {
             cho.addItem(items[i]);
@@ -75,14 +116,39 @@ public class AdminMenu extends javax.swing.JPanel {
         // Download the available currencies
         getCurrencies();
         
+        initUsernamesTable();
+        
         // Build up the list of currency pairs available
         m_currencyPairsList = getCurrencyPairs();
         
         FillChoice(choCurrencyManagement, m_currenciesList);
         
-        choice1.addItem("End-User");
-        choice1.addItem("Administrator");
+        choUsertype.addItem("End-User");
+        choUsertype.addItem("Administrator");
         
+        getUsernames();
+        
+    }
+    
+    private void initUsernamesTable() {
+        //the code for the table was taken from http://forum.java.sun.com/thread.jspa?threadID=5242581&tstart=1
+        m_spUsernames = new JScrollPane();
+        
+        panAccountManagement.add(m_spUsernames);
+        
+        {
+            m_table = new JTable();
+            //m_spUsernames.setViewportView(m_table);
+            jScrollPane1.setViewportView(m_table);
+            m_tableModel = new MyTableModel();
+            
+            // Create a couple of columns
+            Vector colNames = new Vector();
+            colNames.add("Username");
+            m_tableModel.setColumnNames(colNames);
+            
+            m_table.setModel(m_tableModel);
+        }
     }
     
     /** This method is called from within the constructor to
@@ -111,17 +177,17 @@ public class AdminMenu extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
         btnFeeManagementSubmit = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
+        panAccountManagement = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jButton10 = new javax.swing.JButton();
         btnEditAccount = new javax.swing.JButton();
         btnDeleteAccount = new javax.swing.JButton();
         btnCreateAccount = new javax.swing.JButton();
-        choice1 = new java.awt.Choice();
+        choUsertype = new java.awt.Choice();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblUsernamesTemp = new javax.swing.JTable();
         btnLogout = new javax.swing.JButton();
         btnChangePassword = new javax.swing.JButton();
 
@@ -242,6 +308,7 @@ public class AdminMenu extends javax.swing.JPanel {
         btnEditAccount.setText("Edit Account");
 
         btnDeleteAccount.setText("Delete Account");
+        btnDeleteAccount.setEnabled(false);
 
         btnCreateAccount.setText("Create Account");
         btnCreateAccount.addActionListener(new java.awt.event.ActionListener() {
@@ -250,9 +317,15 @@ public class AdminMenu extends javax.swing.JPanel {
             }
         });
 
+        choUsertype.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                choUsertypeItemStateChanged(evt);
+            }
+        });
+
         jLabel7.setText("User Type");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsernamesTemp.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null},
                 {null},
@@ -288,23 +361,23 @@ public class AdminMenu extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblUsernamesTemp.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                tblUsernamesTempMouseClicked(evt);
             }
         });
 
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblUsernamesTemp);
 
-        org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel3Layout.createSequentialGroup()
+        org.jdesktop.layout.GroupLayout panAccountManagementLayout = new org.jdesktop.layout.GroupLayout(panAccountManagement);
+        panAccountManagement.setLayout(panAccountManagementLayout);
+        panAccountManagementLayout.setHorizontalGroup(
+            panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(panAccountManagementLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
-                    .add(jPanel3Layout.createSequentialGroup()
+                    .add(panAccountManagementLayout.createSequentialGroup()
                         .add(jButton10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 94, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(btnEditAccount, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
@@ -312,30 +385,30 @@ public class AdminMenu extends javax.swing.JPanel {
                         .add(btnDeleteAccount, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 138, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(btnCreateAccount, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jPanel3Layout.createSequentialGroup()
-                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(panAccountManagementLayout.createSequentialGroup()
+                        .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(jLabel7, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(jLabel5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                        .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                             .add(jTextField5)
-                            .add(choice1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE))
+                            .add(choUsertype, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 445, Short.MAX_VALUE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
                 .addContainerGap())
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel3Layout.createSequentialGroup()
+        panAccountManagementLayout.setVerticalGroup(
+            panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(panAccountManagementLayout.createSequentialGroup()
                 .addContainerGap()
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel5)
                     .add(jTextField5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel7)
-                    .add(choice1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(choUsertype, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                .add(panAccountManagementLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(btnCreateAccount)
                     .add(jButton10)
                     .add(btnDeleteAccount)
@@ -344,7 +417,7 @@ public class AdminMenu extends javax.swing.JPanel {
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jTabbedPane1.addTab("Account Management", jPanel3);
+        jTabbedPane1.addTab("Account Management", panAccountManagement);
 
         jTabbedPane1.getAccessibleContext().setAccessibleName("AccountManagement");
 
@@ -388,15 +461,19 @@ public class AdminMenu extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void choUsertypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_choUsertypeItemStateChanged
+        getUsernames();
+    }//GEN-LAST:event_choUsertypeItemStateChanged
     
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        jTable1.getSelectedRow();
-        String username = (String)jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+    private void tblUsernamesTempMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsernamesTempMouseClicked
+        m_table.getSelectedRow();
+        String username = (String)m_table.getValueAt(m_table.getSelectedRow(), 0);
         this.setVisible(false);
         EditEndUser edit=new EditEndUser(owner, this, username);
         owner.setContentPane(edit);
         edit.setVisible(true);
-    }//GEN-LAST:event_jTable1MouseClicked
+    }//GEN-LAST:event_tblUsernamesTempMouseClicked
 
     private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
         AdminChangePassword change = new AdminChangePassword(owner, this, m_cni);
@@ -434,7 +511,7 @@ public class AdminMenu extends javax.swing.JPanel {
     private javax.swing.JButton btnFeeManagementSubmit;
     private javax.swing.JButton btnLogout;
     private java.awt.Choice choCurrencyManagement;
-    private java.awt.Choice choice1;
+    private java.awt.Choice choUsertype;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -450,15 +527,15 @@ public class AdminMenu extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
+    private javax.swing.JPanel panAccountManagement;
+    private javax.swing.JTable tblUsernamesTemp;
     // End of variables declaration//GEN-END:variables
     
 }
