@@ -228,18 +228,24 @@ public class DBConnection {
     // Output: an order object containing all order data
     public Order getOrder(int userID, int orderID) {
       try {
+            System.out.println("1");
             String queryString =
-                    "SELECT status, placed, amount, type, operation, expiry, price, currencyfromid, currencytoid, limit, loss, trailingpoints" +                   "FROM orderpool " +
-                    "WHERE userID='" + userID + "' " +
-                    "AND id='" + orderID + "' " +
-                    "ORDER BY placed DESC";
+                    "SELECT status, placed, amount, type, operation, duration, price, currencyfromid, currencytoid, limit, loss, trailingpoints " + 
+                    "FROM orderpool " +
+                    "WHERE userid=" + userID + " " +
+                    "AND id=" + orderID + " "; // + "ORDER BY placed DESC";
             
             ResultSet rs = query(queryString);
 
+            System.out.println("2");
+            
             Order order = new Order(userID);
             
+            System.out.println("3");
             // Fetch a maximum number of 10 pending orders from the database
+            
             if(rs.next()) {
+                System.out.println("3.5");
                 order.setStatus(rs.getInt("status"));
                 order.setPlacedDate(rs.getTimestamp("placed"));
                 order.setAmount(rs.getDouble("amount"));
@@ -252,9 +258,10 @@ public class DBConnection {
                 order.setLimit(rs.getDouble("limit"));
                 order.setStopLoss(rs.getDouble("loss"));
                 order.setTrailingPoints(rs.getDouble("trailingpoints"));
-                
+                System.out.println("4");
                 return order;
             }
+            System.out.println("5");
             return null;
         } catch(Exception e) {
             System.out.println(e.getMessage());
