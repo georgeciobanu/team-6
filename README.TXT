@@ -5,8 +5,6 @@ REQUIREMENTS:
 
 
 
-
-
 HOW TO RUN TEAM 6'S ACE:
 --------------------------------------------------
 1. Open the following three projects in Netbeans
@@ -16,3 +14,19 @@ HOW TO RUN TEAM 6'S ACE:
 
 2. Start the ACEServer
 3. Start one of ACEAdminClient or ACEEndUserClient
+
+
+
+SVN repository:
+--------------------------------------------------
+URL: https://team-6.googlecode.com/svn/trunk/
+Username: geo.ciobanu
+Password: g8f5k7n9
+
+
+
+Wiki:
+--------------------------------------------------
+URL: http://www.ecse321.com/
+Username: ecse
+Password: tavares321
