@@ -156,7 +156,7 @@ public class ClientNetworkInterface {
                 //m_isr.close();
                 m_bis.close();
                 m_connection.close();
-                System.out.println("The client is now disconnected.=" + isConnected());
+                System.out.println("You are now disconnected.");
             }
             m_connected = false;
         } catch (IOException f) {
