@@ -43,12 +43,16 @@ public class Main extends javax.swing.JFrame {
 
         jLabel2.setText("password");
 
+        txtUsername.setText("Michael");
+
         btnLogin.setText("Login");
         btnLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLoginActionPerformed(evt);
             }
         });
+
+        pswPassword.setText("who");
 
         javax.swing.GroupLayout LoginLayout = new javax.swing.GroupLayout(Login);
         Login.setLayout(LoginLayout);
