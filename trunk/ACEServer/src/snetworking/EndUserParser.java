@@ -61,15 +61,15 @@ public class EndUserParser {
         } // If server receives the 'changepassword' command
         else if(args[0].equals("changepassword") && args.length == 2) {
             user = new sEndUser(m_db, m_userID);
-            user.setPassword(args[1]);
-            return "ok changepassword";
+            if(user.setPassword(args[1])) {
+                return "ok changepassword";
+            }
+            return "error changepassword";
             
         } // If server receives the 'getmarketprice' command
         else if(args[0].equals("getmarketprice") && args.length == 3) {
             double ret = -1;
             market = new Market(m_db);
-            
-            System.out.println("test: " + args[2]);
             
             if(args[1].equals("buy")) {
                 ret = market.getMarketPrice(Order.OPERATION.BUY, new CurrencyPair(args[2]));
