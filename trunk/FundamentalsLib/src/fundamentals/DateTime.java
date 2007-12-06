@@ -30,7 +30,15 @@ public class DateTime {
     
     // String in General Date format (MS Access)
     public DateTime(String time) {
-        
+        try {
+            String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
+            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+            java.util.Date dateformat = sdf.parse(time);
+            long longtimeformat = dateformat.getTime();
+            setDateTime(longtimeformat);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public DateTime(Timestamp time) {

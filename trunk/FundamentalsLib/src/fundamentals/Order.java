@@ -64,22 +64,22 @@ public class Order {
     public Order(String content) {
         String[] args = content.split(" ");
         
-        if(args.length >= 9) {
+        if(args.length >= 10) {
             setOrderID(args[0]);
             setStatus(args[1]);
-            setPlacedDate(args[2]);
-            setAmount(args[3]);
-            setType(args[4]);
-            setOperation(args[5]);
-            setDuration(args[6]);
-            setPrice(args[7]);
-            setCurrencyPair(new CurrencyPair(args[8]));
+            setType(args[2]);
+            setPlacedDate(args[3] + " " + args[4]);
+            setAmount(args[5]);
+            setOperation(args[6]);
+            setDuration(args[7]);
+            setPrice(args[8]);
+            setCurrencyPair(new CurrencyPair(args[9]));
             
-            if(getType() == Order.TYPE.LIMIT && args.length == 10) {
-                setLimit(args[9]);
-            } else if(getType() == Order.TYPE.STOPLOSS && args.length == 10) {
-                setStopLoss(args[9]);
-            } else if(getType() == Order.TYPE.TRAILINGSTOP && args.length == 11) {
+            if(getType() == Order.TYPE.LIMIT && args.length == 11) {
+                setLimit(args[10]);
+            } else if(getType() == Order.TYPE.STOPLOSS && args.length == 11) {
+                setStopLoss(args[10]);
+            } else if(getType() == Order.TYPE.TRAILINGSTOP && args.length == 12) {
                 
             }
         }
@@ -120,6 +120,16 @@ public class Order {
             return "1";
         } else {
             return "-1";
+        }
+    }
+    
+    public String getStatusStringExplicit() {
+        if(m_status == STATUS.PENDING) {
+            return "pending";
+        } else if(m_status == STATUS.MATCHED) {
+            return "matched";
+        } else {
+            return "unknown";
         }
     }
     
@@ -199,6 +209,20 @@ public class Order {
         }
     }
     
+    public String getTypeStringExplicit() {
+        if(m_type == TYPE.MARKET) {
+            return "market";
+        } else if(m_type == TYPE.LIMIT) {
+            return "limit";
+        } else if(m_type == TYPE.STOPLOSS) {
+            return "stop loss";
+        } else if(m_type == TYPE.TRAILINGSTOP) {
+            return "trailing stop";
+        } else {
+            return "-1";
+        }
+    }
+    
     public void setType(TYPE type) {
         m_type = type;
     }
@@ -242,6 +266,16 @@ public class Order {
             return "1";
         } else {
             return "2";
+        }
+    }
+    
+    public String getOperationStringExplicit() {
+        if(m_operation == OPERATION.BUY) {
+            return "buy";
+        } else if(m_operation == OPERATION.SELL) {
+            return "sell";
+        } else {
+            return "unknown";
         }
     }
     
@@ -365,18 +399,17 @@ public class Order {
                 getTypeString() + " " + 
                 setPlacedDateString() + " " + 
                 String.valueOf(amount) + " " + 
-                getTypeString() + " " + 
                 getOperationString() + " " + 
                 String.valueOf(duration) + " " + 
                 String.valueOf(price) + " " + 
                 cp.getCurrencyFrom().getName() + "/" + cp.getCurrencyTo().getName();
         
         if(getType() == Order.TYPE.LIMIT) {
-            ret += String.valueOf(limit);
+            ret += " " + String.valueOf(limit);
         } else if(getType() == Order.TYPE.STOPLOSS) {
-            ret += String.valueOf(stoploss);
+            ret += " " + String.valueOf(stoploss);
         } else if(getType() == Order.TYPE.TRAILINGSTOP) {
-            ret += String.valueOf(trailingpoints);
+            ret += " " + String.valueOf(trailingpoints);
         }
         
         return ret;
