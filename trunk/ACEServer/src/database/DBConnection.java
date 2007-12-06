@@ -9,8 +9,8 @@ package database;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Vector;
+import java.util.*;
+import fundamentals.*;
 import sFundamentals.sMarketOrder;
 import sFundamentals.sOrder;
 
@@ -35,18 +35,13 @@ public class DBConnection {
         SELL
     }
     
-    public DBConnection() { //this needs to be called on startup
-        
+    public DBConnection() { //this needs to be called on startup        
         connected = false;
     }
-    
-    
-    
+
     public boolean connect(String ODBCname, int port) {
         if (! connected) {
             try {
-                //Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
-                
                 //we need this to be a class member
                 con = DriverManager.getConnection("jdbc:odbc:acedb", "admin","admin");
                 connected = true;
@@ -74,6 +69,7 @@ public class DBConnection {
                 //stm.close();
             }
         }catch (Exception ex){
+            System.out.println(message);
             ex.printStackTrace();
         }
         return rs;
@@ -84,7 +80,7 @@ public class DBConnection {
             try{
                 String queryString =
                         "UPDATE users " +
-                        "SET password = '" + newPassword + "' " +
+                        "SET password='" + newPassword + "' " +
                         "WHERE userid=" + String.valueOf(userid);
                 
                 ResultSet rs = query(queryString);
@@ -93,7 +89,7 @@ public class DBConnection {
                 queryString =
                         "SELECT password " +
                         "FROM users " +
-                        "WHERE userid =" + String.valueOf(userid);
+                        "WHERE userid=" + String.valueOf(userid);
                 rs = query(queryString);
                 String setPassword;
                 if (rs.next() && (newPassword.equals(rs.getString("password"))) ) { //all went ok
@@ -109,23 +105,24 @@ public class DBConnection {
         return false;
     }
     
-    public String[] getCurrencyPairs() {
+    public String[] getCurrencies() {
+        String c = "";
+        
         try{
             String queryString =
-                    "SELECT baseCurrency, relativeCurrency " +
-                    "FROM currencyPairs ";
+                    "SELECT name " +
+                    "FROM currencies";
             
             ResultSet rs = query(queryString);
             
             Vector<String> list = new Vector();
             
             while (rs.next() ) { //all went o
-                list.add(rs.getString("baseCurrency") + "/" + rs.getString("relativeCurrency") );
+                list.add(rs.getString("name"));
             }
             rs.close();
             
             String s [] = list.toArray(new String[0]);
-            
             return s;
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
@@ -133,28 +130,27 @@ public class DBConnection {
         }
     }
     
-    public String[] getCurrencies() {
-        String c = "";
-        
+    // Takes a currency name and returns its ID
+    public int getCurrencyID(String name) {
+        int id = -1;
         try{
-            String queryString =
-                    "SELECT symbol " +
-                    "FROM currencies ";
-            
-            ResultSet rs = query(queryString);
-            
-            Vector<String> list = new Vector();
-            
-            while (rs.next() ) { //all went o
-                list.add(rs.getString("symbol"));
+            if (name.length() > 0) {
+                String queryString =
+                        "SELECT id " +
+                        "FROM currencies " +
+                        "WHERE name='" + name + "'";
+                
+                ResultSet rs = query(queryString);
+                if (rs.next()) {
+                    id = rs.getInt("id");
+                    rs.close();
+                }
+                //rs.close();
             }
-            rs.close();
-            
-            String s [] = list.toArray(new String[0]);
-            return s;
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
-            return null;
+        } finally {
+            return id;
         }
     }
     
@@ -164,7 +160,7 @@ public class DBConnection {
                 String queryString =
                         "SELECT userid " +
                         "FROM users " +
-                        "WHERE username ='" + username + "' AND password = '" + password+ "' ";
+                        "WHERE username='" + username + "' AND password='" + password+ "' ";
                 
                 ResultSet rs = query(queryString);
                 if (rs.next()) {
@@ -189,7 +185,7 @@ public class DBConnection {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
-                        "INSERT  INTO users (username, password) " +
+                        "INSERT INTO users (username, password) " +
                         " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "')" ;
                 
                 ResultSet rs = query(queryString);
@@ -211,20 +207,18 @@ public class DBConnection {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
-                        "INSERT  INTO users (username, password, type, " +
+                        "INSERT INTO users (username, password, type, " +
                         "contactInfo, email, transactionFee, interestRate, leverageRatio) " +
-                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "' ," + String.valueOf(type) + " , '" + contactInfo + "' ," +
-                        "'" + email + "'" + ", " +
-                        String.valueOf(transactionFee)  + "," +
-                        String.valueOf(interestRate) + "," +
-                        String.valueOf(leverageRatio) +
-                        ")" ;
+                        " VALUES ('" + username + "', '" + password + "', " + String.valueOf(type) + ", '" + contactInfo + "', '" +
+                        email + "', " +
+                        String.valueOf(transactionFee) + ", " +
+                        String.valueOf(interestRate) + ", " +
+                        String.valueOf(leverageRatio) + ")" ;
                 
                 ResultSet rs = query(queryString);
                 
                 int id = getUserID(username, password);
                 
-                // rs.close();
                 return id;
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
@@ -235,50 +229,133 @@ public class DBConnection {
         return -1;
     }
     
+    // Get an order's information given its ID
+    // Input: the user ID and the order ID
+    // Output: an order object containing all order data
+    public Order getOrder(int userID, int orderID) {
+      try {
+            String queryString =
+                    "SELECT status, placed, amount, type, operation, expiry, price, currencyfromid, currencytoid, limit, loss, trailingpoints" +                   "FROM orderpool " +
+                    "WHERE userID='" + userID + "' " +
+                    "AND id='" + orderID + "' " +
+                    "ORDER BY placed DESC";
+            
+            ResultSet rs = query(queryString);
+
+            Order order = new Order(userID);
+            
+            // Fetch a maximum number of 10 pending orders from the database
+            if(rs.next()) {
+                order.setStatus(rs.getInt("status"));
+                order.setPlacedDate(rs.getTimestamp("placed"));
+                order.setAmount(rs.getDouble("amount"));
+                order.setType(rs.getInt("type"));
+                order.setOperation(rs.getInt("operation"));
+                order.setDuration(rs.getInt("duration"));
+                //order.setExpiry(new Timestamp(rs.getDate("expiry").getTime()));
+                order.setPrice(rs.getDouble("price"));
+                order.setCurrencyPair(new CurrencyPair(rs.getString("currencyfromid"), rs.getString("currencytoid")));
+                order.setLimit(rs.getDouble("limit"));
+                order.setStopLoss(rs.getDouble("loss"));
+                order.setTrailingPoints(rs.getDouble("trailingpoints"));
+                
+                return order;
+            }
+            return null;
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
     
-    public int addMarketOrder(sMarketOrder order) {
-        //if (username.length() > 0 && password.length() > 0) {
-        try{
-            String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-            
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-            String now =  sdf.format(cal.getTime());
-            
-            
-            String queryString = //note: check what the timestamp is
-                    "INSERT  INTO marketOrders (userID, placed, amount, type, expiry, basis, currencyPair " + ")" +
-                    "VALUES (" + String.valueOf(order.getuserID()) + ", #" + now + "#, " +
-                    String.valueOf(order.getAmount()) + ", " + String.valueOf(order.getType()) + ", #" +
-                    order.getExpiryDate().toString().replaceFirst("\\.[0-9]{2,9}", "") + "#, " + String.valueOf(order.getBasis()) + ", " +
-                    "'USD/CAD'" + //TODO: to change to actual value
-                    ")" ;
+    // Get the list of a user's orders ID
+    public Vector<Integer> getPendingOrderIDList(int userID) {
+      try {
+            Vector<Integer> list = new Vector<Integer>(100);
+            SQLFormatter sql = new SQLFormatter();
+          
+            String queryString =
+                    "SELECT id FROM orderpool " +
+                    "WHERE userid=" + userID + " " +
+                    "AND status=" + sql.getString(Order.STATUS.PENDING) + " "; // +
+                    //"ORDER BY placed DESC";
             
             ResultSet rs = query(queryString);
             
-            queryString =
-                    "SELECT id " +
-                    "FROM marketOrders " +
-                    "WHERE userid =" + order.getuserID() + " AND placed=#" +
-                    now + "# ";
+            // Make this more than 100
+            int i = 0;
+            while(rs.next() && i < 99) {
+                list.add(new Integer(rs.getInt(1)));
+                i++;
+            }
+            return list;
             
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public int placeOrder(Order order) {
+        try{
+            DateTime placed = new DateTime(order.getPlacedDate());
+            
+            // Commit the order to the database
+            SQLFormatter sql = new SQLFormatter();
+            ResultSet rs = query(sql.InsertOrder(order));
+            
+            // Get the ID of the order we just placed
+            String queryString =
+                    "SELECT id " +
+                    "FROM orderpool " +
+                    "WHERE userid=" + order.getUserID() + " " +
+                    //"AND placed='" + sql.Time(order.getPlacedDate()) + "'";
+                    //"AND placed='01/01/2007 2:30:00 AM'";
+                    "AND placed=#" + placed.getSQL() + "#";
             rs = query(queryString);
             if (rs.next()) {
-                int marketOrderid = rs.getInt("id");
+                int orderID = rs.getInt("id");
                 rs.close();
-                return marketOrderid; //generated by the db
+                return orderID; //generated by the db
             }
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return -1;
         }
         return -1;
-    }
-    
+    }    
     
     // Get market price
+    public double getMarketPrice(Order.OPERATION operation, CurrencyPair currencyPair) {
+        try{
+            SQLFormatter sql = new SQLFormatter();
+            
+            String queryString = //note: check what the timestamp is
+                    "SELECT price " +
+                    "FROM orderpool " +
+                    "WHERE status=" + sql.getString(Order.STATUS.PENDING) + " " +
+                    "AND operation=" + sql.getString(operation) + " " +
+                    "AND currencyfromid=" + currencyPair.getCurrencyFrom().getID() + " " +
+                    "AND currencytoid=" + currencyPair.getCurrencyTo().getID(); //+
+                    //"SORTED BY placed DESC";
+            
+            ResultSet rs = query(queryString);
+            
+            if (rs.next()) {
+                return rs.getDouble("price");
+            }
+            
+        } catch (Exception ex) { //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return -1;
+        }
+        
+        return -1;
+    }
     
-    public double getMarketPrice(int buysell, String currencyPair) {
+    /*public double getMarketPrice(int buysell, String currencyPair) {
         try{
             String queryString = //note: check what the timestamp is
                     "SELECT max(price) " +
@@ -300,8 +377,9 @@ public class DBConnection {
         }
         
         return -1;
-    }
+    }*/
     
+    /*
     public sMarketOrder[] getPendingOrders(int userID) {
         try {
                         
@@ -336,14 +414,14 @@ public class DBConnection {
             return null;
         }
     }
-    
+    */
     public USERSTATUS getUserType(int userID) {
         if (userID > 0) {
             try{
                 String queryString =
                         "SELECT type " +
                         "FROM users " +
-                        "WHERE userid =" + String.valueOf(userID) + " ";
+                        "WHERE userid=" + String.valueOf(userID);
                 
                 ResultSet rs = query(queryString);
                 
