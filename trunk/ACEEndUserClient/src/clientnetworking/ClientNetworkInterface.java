@@ -78,6 +78,7 @@ public class ClientNetworkInterface {
         if(m_connected) {
             /** Write across the socket connection and flush the buffer */
             try {
+                message = message.trim();
                 System.out.println("  Sending: " + message);
                 m_osw.write(message + (char)13);
                 m_osw.flush();
