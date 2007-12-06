@@ -97,9 +97,9 @@ public class ModifyFunds extends javax.swing.JPanel {
         jLabel3.setText("Action:");
 
         btnSubmit.setText("Submit");
-        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSubmitActionPerformed(evt);
+        btnSubmit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseClicked(evt);
             }
         });
 
@@ -161,20 +161,33 @@ public class ModifyFunds extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSubmitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseClicked
+        String message;
+        String args[];
+        
+        String currencyName = choCurrencies.getSelectedItem();
+        String amount = txtAmount.getText();
+        
+        m_cni.SendMessage("depositfunds " + m_username + " " + currencyName + " " + amount);
+        while((message = m_cni.ReceiveMessage()).equals("") && m_cni.isConnected());
+        args = message.split(" ");
+        
+        if(args.length == 2 && args[0].equals("ok") && args[1].equals("depositfunds")) {
+            JOptionPane.showMessageDialog(new JFrame(), "The funds have been deposited successfully.");
+        } else {
+            JOptionPane.showMessageDialog(new JFrame(), "The funds have NOT been deposited.");
+        }
+
+        this.setVisible(false);
+        enduser.setVisible(true);
+        owner.setContentPane(enduser);
+    }//GEN-LAST:event_btnSubmitMouseClicked
+
     private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
       this.setVisible(false);
       enduser.setVisible(true);
       owner.setContentPane(enduser);
     }//GEN-LAST:event_btnCancelMouseClicked
-
-    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
-
-     
-      this.setVisible(false);
-      enduser.setVisible(true);
-      owner.setContentPane(enduser);
-             
-    }//GEN-LAST:event_btnSubmitActionPerformed
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
