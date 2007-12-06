@@ -8,6 +8,7 @@
 package snetworking;
 
 import sFundamentals.*;
+import fundamentals.*;
 import database.*;
 import transactionEngine.*;
 import java.util.Vector;
@@ -69,7 +70,7 @@ public class AdminParser {
             } else if(args[1].equals("1")) {
                 v = m_db.getUsernames(DBConnection.USERSTATUS.ADMINISTRATOR);
             } else {
-                return "error getusernames 1";
+                return "error getusernames";
             }
             
             if(v != null) {
@@ -78,10 +79,34 @@ public class AdminParser {
                 }
                 return "ok getusernames " + ret;
             } else {
-                return "error getusernames 2";
+                return "error getusernames";
             }
-        } else if(args[0].equals("")) {
-            
+        } else if(args[0].equals("depositfunds") && args.length == 4) {
+            boolean ret = false;
+            Currency currency;
+            try {
+                int userID;
+                try {
+                    userID = m_db.getUserID(args[1]);
+                } catch(Exception f) {
+                    return "error depositfunds 3";
+                }
+                
+                currency = new Currency(args[2]);
+                if(currency.getID() == -1) {
+                    currency.setID(m_db.getCurrencyID(currency.getName()));
+                }
+                
+                double amount = Integer.valueOf(args[3]);
+                
+                if(m_db.depositFunds(userID, currency, amount)) {
+                    return "ok depositfunds";
+                }
+                
+                return "error depositfunds 1";
+            } catch(Exception e) {
+                return "error depositfunds 2";
+            }
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {

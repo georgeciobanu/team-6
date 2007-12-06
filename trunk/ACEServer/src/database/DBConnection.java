@@ -11,6 +11,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import fundamentals.*;
+import fundamentals.Currency;
 import sFundamentals.sMarketOrder;
 import sFundamentals.sOrder;
 
@@ -148,6 +149,80 @@ public class DBConnection {
         }
     }
     
+    // Takes a currency name and returns its ID
+    public boolean depositFunds(int userID, Currency currency, double amount) {
+        int id = -1;
+        double leverage;
+        ResultSet rs = null;
+        
+        if(amount <= 0) return false;
+        
+        try{
+            String queryString =
+                    "SELECT id, leverage " +
+                    "FROM leverageaccounts " +
+                    "WHERE userid=" + userID + " " +
+                    "AND currencyid=" + currency.getID() + " ";
+            
+            try {
+                rs = query(queryString);
+                if (rs.next()) {
+                    id = rs.getInt(1);
+                }
+                
+                if(id >= 0) {
+                    leverage = rs.getDouble("leverage");
+                    leverage += amount;
+                    
+                    // Save deposit to DB
+                    queryString =
+                            "UPDATE leverageaccounts " +
+                            "SET leverage=" + String.valueOf(leverage) + " " +
+                            "WHERE userid=" + userID + " " +
+                            "AND currencyid=" + String.valueOf(currency.getID());
+                    
+                    // Try to update the new leverage amount
+                    try {
+                        rs = query(queryString);
+                        return true;
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                } else {
+                    rs.close();
+                    queryString =
+                            "INSERT INTO leverageaccounts (userid, currencyid, leverage) " +
+                            "VALUES (" + userID + "," + currency.getID() + "," + amount + ")";
+                    try {
+                        rs = query(queryString);
+                        rs.close();
+                        return true;
+                    } catch(Exception f) {
+                        f.printStackTrace();
+                        return false;
+                    }
+                }
+            } // If there not yet an account for this currency, we add it
+            catch(Exception e) {
+                queryString =
+                        "INSERT INTO leverageaccounts (userid, currencyid, leverage) " +
+                        "VALUES (" + userID + "," + currency.getID() + "," + amount + ")";
+                try {
+                    rs = query(queryString);
+                    return true;
+                } catch(Exception f) {
+                    f.printStackTrace();
+                    return false;
+                }
+            }
+
+        } catch (Exception g){ //TODO: treat exceptions nice
+            g.printStackTrace();
+            return false;
+        }
+    }
+    
     // Get the list of all users
     // Input: NONE
     // Output: the list of all users (separated with space)
@@ -193,6 +268,31 @@ public class DBConnection {
                         "SELECT userid " +
                         "FROM users " +
                         "WHERE username='" + username + "' AND password='" + password+ "' ";
+                
+                ResultSet rs = query(queryString);
+                if (rs.next()) {
+                    int userid = rs.getInt("userid");
+                    rs.close();
+                    return userid;
+                }
+                rs.close();
+            } catch (Exception ex){ //TODO: treat exceptions nice
+                ex.printStackTrace();
+                return -1;
+            }
+        }
+        
+        return -1;
+    }
+    
+    // This function should only be used by the administrators
+    public int getUserID(String username) {
+        if (username.length() > 0) {
+            try{
+                String queryString =
+                        "SELECT userid " +
+                        "FROM users " +
+                        "WHERE username='" + username + "'";
                 
                 ResultSet rs = query(queryString);
                 if (rs.next()) {
