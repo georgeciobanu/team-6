@@ -10,6 +10,8 @@ package snetworking;
 import sFundamentals.*;
 import database.*;
 import transactionEngine.*;
+import java.util.Vector;
+import java.util.Enumeration;
 
 /**
  *
@@ -58,8 +60,26 @@ public class AdminParser {
                 return "ok createaccount " + args[1];
             }
             return "error createaccount " + args[1];
-        } else if(args[0].equals("")) {
+        } else if(args[0].equals("getusernames") && args.length == 2) {
+            String ret = "";
+            Vector<String> v = null;
             
+            if(args[1].equals("0")) {
+                v = m_db.getUsernames(DBConnection.USERSTATUS.ENDUSER);
+            } else if(args[1].equals("1")) {
+                v = m_db.getUsernames(DBConnection.USERSTATUS.ADMINISTRATOR);
+            } else {
+                return "error getusernames 1";
+            }
+            
+            if(v != null) {
+                for (Enumeration e = v.elements(); e.hasMoreElements(); ) {
+                    ret += (String)e.nextElement() + " ";
+                }
+                return "ok getusernames " + ret;
+            } else {
+                return "error getusernames 2";
+            }
         } else if(args[0].equals("")) {
             
         } else if(args[0].equals("")) {

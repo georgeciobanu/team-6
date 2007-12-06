@@ -148,6 +148,44 @@ public class DBConnection {
         }
     }
     
+    // Get the list of all users
+    // Input: NONE
+    // Output: the list of all users (separated with space)
+    public Vector<String> getUsernames(USERSTATUS ut) {
+      try {
+            Vector<String> list = new Vector<String>(100);
+            SQLFormatter sql = new SQLFormatter();
+          
+            String s = "";
+
+            if(ut == USERSTATUS.ENDUSER) {
+                s = "0";
+            } else if(ut == USERSTATUS.ADMINISTRATOR) {
+                s = "1";
+            } else {
+                return null;
+            }
+                
+            String queryString =
+                    "SELECT username FROM users WHERE type=" + s;
+            
+            ResultSet rs = query(queryString);
+            
+            // TODO: Make this more than 100
+            int i = 0;
+            while(rs.next() && i < 99) {
+                list.add(rs.getString("username"));
+                i++;
+            }
+            return list;
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     public int getUserID(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
@@ -271,6 +309,8 @@ public class DBConnection {
     }
     
     // Get the list of a user's orders ID
+    // Input: the user ID
+    // Output: the list of his orders' ID
     public Vector<Integer> getPendingOrderIDList(int userID) {
       try {
             Vector<Integer> list = new Vector<Integer>(100);
