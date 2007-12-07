@@ -147,9 +147,6 @@ public class EditEndUser extends javax.swing.JPanel {
       //this.setVisible(false);
       admin.setVisible(true);
       owner.setContentPane(admin);
-     
-
-
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnModifyFundsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModifyFundsActionPerformed
