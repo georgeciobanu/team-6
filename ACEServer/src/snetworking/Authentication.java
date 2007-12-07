@@ -14,14 +14,11 @@ import database.*;
  * @author GLL
  */
 public class Authentication {
-
-    
-    DBConnection m_db;
-    int m_userID = -1;
-    
-    DBConnection.USERSTATUS m_userstatus;
-    EndUserParser eup;
-    AdminParser ap;
+    private DBConnection m_db;
+    private int m_userID = -1;
+    private DBConnection.USERSTATUS m_userstatus;
+    private EndUserParser eup;
+    private AdminParser ap;
     
     /** Creates a new instance of Authentication */
     public Authentication(DBConnection db) {

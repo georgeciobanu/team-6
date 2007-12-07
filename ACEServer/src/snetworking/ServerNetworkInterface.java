@@ -15,10 +15,10 @@ package snetworking;
 import database.*;
 
 public class ServerNetworkInterface {
-    int m_port = -1;
-    int m_numberOfClientConnections = 0;
-    Thread m_thread;
-    DBConnection m_db;
+    private int m_port = -1;
+    private int m_numberOfClientConnections = 0;
+    private Thread m_thread;
+    private DBConnection m_db;
     
     /** Creates a new instance of ServerNetworkInterface */
     public ServerNetworkInterface(DBConnection db) {

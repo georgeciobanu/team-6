@@ -7,30 +7,31 @@
  * and open the template in the editor.
  */
 
-package sFundamentals;
+package transactionEngine;
 
 import database.*;
+import fundamentals.*;
 
 /**
  *
  * @author GLL
  */
-public class sEndUser {
+public class EndUser {
     int m_userID;
     DBConnection m_db;
-    sLeverageAccount[] m_leverageAccounts;
-    sBalanceAccount[] m_balanceAccounts;
-    sOrder[] m_pendingOrders;
-    sOrder[] m_orderHistory;
+    LeverageAccount[] m_leverageAccounts;
+    BalanceAccount[] m_balanceAccounts;
+    Order[] m_pendingOrders;
+    Order[] m_orderHistory;
     
     // Creates a new instance of sEndUser
-    public sEndUser(DBConnection db, int userID) {
+    public EndUser(DBConnection db, int userID) {
         m_db = db;
         m_userID = userID;
     }
     
     // Creates a new instance of sEndUser
-    public sEndUser(DBConnection db, String username, String password) {
+    public EndUser(DBConnection db, String username, String password) {
         try {
             m_db = db;
             
@@ -62,12 +63,12 @@ public class sEndUser {
     }
     
     //Place an order
-    public boolean placeOrder(sOrder order) {
+    public boolean placeOrder(Order order) {
         return false;
     }
     
     // This function won't be implemented
-    public boolean editOrder(sOrder order) {
+    public boolean editOrder(Order order) {
         return false;
     }
     
@@ -77,7 +78,7 @@ public class sEndUser {
     }
     
     // Get a list of pending orders
-    public sOrder[] getPendingOrders() {
+    public Order[] getPendingOrders() {
         return null;
     }
     
@@ -128,7 +129,7 @@ public class sEndUser {
     }
     
     // This function won't be implemented
-    public sOrder[] getOrderHistory() {
+    public Order[] getOrderHistory() {
         return null;
     }
     

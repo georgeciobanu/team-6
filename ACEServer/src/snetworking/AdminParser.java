@@ -7,12 +7,12 @@
 
 package snetworking;
 
-import sFundamentals.*;
 import fundamentals.*;
 import database.*;
 import transactionEngine.*;
 import java.util.Vector;
 import java.util.Enumeration;
+import transactionEngine.EndUser;
 
 /**
  *
@@ -31,7 +31,7 @@ public class AdminParser {
     // Parse a string command sent by an admin user
     public String parseCommand(String command) {
         String[] args;
-        sEndUser user;
+        EndUser user;
         Market market;
         
         args = command.split(" ");
@@ -52,11 +52,11 @@ public class AdminParser {
             }
             return "ok getcurrencies " + ret.trim();
         } else if(args[0].equals("changepassword") && args.length == 2) {
-            user = new sEndUser(m_db, m_userID);
+            user = new EndUser(m_db, m_userID);
             user.setPassword(args[1]);
             return "ok changepassword";
         } else if(args[0].equals("createaccount") && args.length == 3) {
-            user = new sEndUser(m_db, -1);
+            user = new EndUser(m_db, -1);
             if(user.createAccount(args[1], args[2]) != -1) {
                 return "ok createaccount " + args[1];
             }
