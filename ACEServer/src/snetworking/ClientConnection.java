@@ -27,7 +27,8 @@ public class ClientConnection implements Runnable {
   
   public void run() {
       try {
-          System.out.println("New client connection started on threadid=" + String.valueOf(ID));
+          System.out.println("ThreadID=" + String.valueOf(ID) + "  Accepting new connection.");
+          
           // Instanciate the client output stream
           BufferedInputStream is = new BufferedInputStream(connection.getInputStream());
           InputStreamReader isr = new InputStreamReader(is);
@@ -53,7 +54,7 @@ public class ClientConnection implements Runnable {
               }
               
               // Log the command (print it out to the console)
-              System.out.println("User on threadid=" + String.valueOf(ID) + " requested command: " + process);
+              System.out.println("ThreadID=" + String.valueOf(ID) + "  Receiving: " + process);
               
               // Preparse command
               // TODO: Remove all ending return carriage, not just one
@@ -70,10 +71,11 @@ public class ClientConnection implements Runnable {
               
               if(!returnMessage.equals("logout")) {
                   // Output the message back to the client application
+                  System.out.println("ThreadID=" + String.valueOf(ID) + "    Sending: " + returnMessage);
                   osw.write(returnMessage + (char) 13);
                   osw.flush();
               } else {
-                  System.out.println("The user requested to logout.");
+                  System.out.println("ThreadID=" + String.valueOf(ID) + "  Closing connection.");
                   os.close();
                   is.close();
                   connection.close();
@@ -84,7 +86,7 @@ public class ClientConnection implements Runnable {
       } catch (Exception e) {
           e.printStackTrace();
       } finally {
-          System.out.println("threadid=" + String.valueOf(ID) + " is now ended.");
+          System.out.println("thread ID=" + String.valueOf(ID) + " is now ended.");
       }
   }
 }

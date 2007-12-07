@@ -22,10 +22,12 @@ import java.util.Calendar;
  */
 public class Market {
     private DBConnection m_db;
+    private OrderPool pool;
     
     /** Creates a new instance of Market */
     public Market(DBConnection db) {
         m_db = db;
+        pool = new OrderPool(m_db);
     }
     
     public int placeOrder(Order order) {

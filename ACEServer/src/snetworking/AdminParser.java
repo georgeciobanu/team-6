@@ -53,8 +53,12 @@ public class AdminParser {
             return "ok getcurrencies " + ret.trim();
         } else if(args[0].equals("changepassword") && args.length == 2) {
             user = new EndUser(m_db, m_userID);
-            user.setPassword(args[1]);
-            return "ok changepassword";
+            if(user.setPassword(args[1])) {
+                return "ok changepassword";
+            } else {
+                return "error changepassword";
+            }
+            
         } else if(args[0].equals("createaccount") && args.length == 3) {
             user = new EndUser(m_db, -1);
             if(user.createAccount(args[1], args[2]) != -1) {

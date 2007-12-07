@@ -16,7 +16,7 @@ import fundamentals.Currency;
 
 /**
  *
- * @author GLL
+ * @author George
  */
 public class DBConnection {
     private boolean connected;
@@ -26,6 +26,57 @@ public class DBConnection {
         NOTAUTHENTICATED,
         ADMINISTRATOR,
         ENDUSER
+    }
+    
+    
+    
+    // TODO: THESE FUNCTIONS ARE REQUIRED BY THE REST OF THE SYSTEM
+    
+    // Get all pending orders that matches the currency pair and the operation
+    // Input: A currency pair and an operation (sell/buy)
+    // Output: a vector of all pending orders that match the currency pair and the operation (THE RETURNED LIST SHOULD BE LISTED IN DESCENDING ORDER OF PLACED DATE)
+    public Vector<Order> getAllPendingOrders(CurrencyPair currencypair, Order.OPERATION operation) {
+        return null;
+    }
+    
+    // Fill a currency object with both name and id, given that at least one of these attributes are set
+    // Input: The currency object to be filled
+    // Output: The filled currency object OR 'null' if none of the attributes are set.
+    public Currency FillCurrency(Currency currency) {
+        return null;
+    }
+    
+    // Update an order's content to the database
+    // Input: An order that has its ID set to the proper value in the DB
+    // Output: Returns true if the order has been updated and false otherwise
+    public boolean updateOrder(Order order) {
+        return true;
+    }
+    
+    // Check if the user has sufficient leverage (collaterals)
+    // Input: The user ID
+    // Output: true if has sufficient collaterals and false otherwise
+    public boolean hasSufficientLeverage(int userID) {
+        return true;
+    }
+    
+    // Disable the user account
+    // Input: The user ID
+    // Output: true if the operation was committed to the DB and false otherwise
+    public boolean disableAccount(int userID) {
+        return true;
+    }
+    
+    // Update the balance account of a user
+    // Input: The user ID, the currency of the account to be modified, the positive or negative difference to apply to the account
+    // Output: 
+    public boolean updateBalance(int userID, Currency currency, double deltaAmount) {
+        return true;
+    }
+    
+    // Check whether a user has his account disabled
+    public boolean isAccountEnabled(int userID) {
+        return false;
     }
     
     public DBConnection() { //this needs to be called on startup        
@@ -314,16 +365,21 @@ public class DBConnection {
     public int createAccount(String username, String password) {
         if (username.length() > 0 && password.length() > 0) {
             try{
-                String queryString =
-                        "INSERT INTO users (username, password) " +
-                        " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "')" ;
-                
-                ResultSet rs = query(queryString);
-                
-                int id = getUserID(username, password);
-                
-                //rs.close();
-                return id;
+                // Check if the username already exists
+                if(getUserID(username) == -1) {
+                    String queryString =
+                            "INSERT INTO users (username, password, type) " +
+                            " VALUES (" + "'" + username+ "'" + ", " + "'" + password + "',1)" ;
+                    
+                    ResultSet rs = query(queryString);
+                    
+                    int id = getUserID(username, password);
+                    
+                    //rs.close();
+                    return id;
+                } else {
+                    return -1;
+                }
             } catch (Exception ex){ //TODO: treat exceptions nice
                 ex.printStackTrace();
                 return -1;
@@ -333,7 +389,7 @@ public class DBConnection {
     }
     
     public int createAccount(String username, String password, int type, String contactInfo,
-            String email, float transactionFee, float interestRate, float leverageRatio) {
+            String email, double transactionFee, double interestRate, double leverageRatio) {
         if (username.length() > 0 && password.length() > 0) {
             try{
                 String queryString =
@@ -364,7 +420,6 @@ public class DBConnection {
     // Output: an order object containing all order data
     public Order getOrder(int userID, int orderID) {
       try {
-            System.out.println("1");
             String queryString =
                     "SELECT status, placed, amount, type, operation, duration, price, currencyfromid, currencytoid, limit, loss, trailingpoints " + 
                     "FROM orderpool " +
@@ -372,16 +427,10 @@ public class DBConnection {
                     "AND id=" + orderID + " "; // + "ORDER BY placed DESC";
             
             ResultSet rs = query(queryString);
-
-            System.out.println("2");
             
             Order order = new Order(userID);
             
-            System.out.println("3");
-            // Fetch a maximum number of 10 pending orders from the database
-            
             if(rs.next()) {
-                System.out.println("3.5");
                 order.setStatus(rs.getInt("status"));
                 order.setPlacedDate(rs.getTimestamp("placed"));
                 order.setAmount(rs.getDouble("amount"));
@@ -394,10 +443,8 @@ public class DBConnection {
                 order.setLimit(rs.getDouble("limit"));
                 order.setStopLoss(rs.getDouble("loss"));
                 order.setTrailingPoints(rs.getDouble("trailingpoints"));
-                System.out.println("4");
                 return order;
             }
-            System.out.println("5");
             return null;
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -450,8 +497,6 @@ public class DBConnection {
                     "SELECT id " +
                     "FROM orderpool " +
                     "WHERE userid=" + order.getUserID() + " " +
-                    //"AND placed='" + sql.Time(order.getPlacedDate()) + "'";
-                    //"AND placed='01/01/2007 2:30:00 AM'";
                     "AND placed=#" + placed.getSQL() + "#";
             rs = query(queryString);
             if (rs.next()) {
@@ -467,6 +512,8 @@ public class DBConnection {
     }    
     
     // Get market price
+    // The buy price is set to the highest limit someone is willing to pay (set by limit and trailing stop orders)
+    // The sell price is the lowest stoploss someone is willing to pay (only set by limit orders)
     public double getMarketPrice(Order.OPERATION operation, CurrencyPair currencyPair) {
         try{
             SQLFormatter sql = new SQLFormatter();
@@ -494,66 +541,7 @@ public class DBConnection {
         return -1;
     }
     
-    /*public double getMarketPrice(int buysell, String currencyPair) {
-        try{
-            String queryString = //note: check what the timestamp is
-                    "SELECT max(price) " +
-                    "FROM orderpool " +
-                    "WHERE orderstatus=1 AND buysell =" + String.valueOf(buysell) + " AND  currencypair ='" + currencyPair + "' "; //orderstatus=1 ==> pending order
-            
-            
-            ResultSet rs = query(queryString);
-            
-            //int id = getMarketOrder last
-            if (rs.next()) {
-                double price = rs.getDouble(1);
-                return price;                
-            }
-            
-        } catch (Exception ex){ //TODO: treat exceptions nice
-            ex.printStackTrace();
-            return -1;
-        }
-        
-        return -1;
-    }*/
-    
-    /*
-    public sMarketOrder[] getPendingOrders(int userID) {
-        try {
-                        
-            String queryString =
-                    "SELECT placed, amount, type, expiry, basis, currencyPair " +
-                    "FROM marketOrders " +
-                    "WHERE userID=" + userID + " " +
-                    "ORDER BY placed";
-            
-            ResultSet rs = query(queryString);
-            
-            int i = 0;
-            Vector<sMarketOrder> orderV = new Vector();
-            sMarketOrder order = new sMarketOrder(userID);
-            
-            // Fetch a maximum number of 10 pending orders from the database
-            while( rs.next() && i < 10) {
-                order.setAmount(rs.getDouble("amount"));
-                order.setExpiryDate( new Timestamp (rs.getDate("expiry").getTime()));
-                order.setCurrencyPairS(rs.getString("currencypair"));                
-                order.setType(rs.getInt("type"));                
-                
-                orderV.add(order);
-                i++;
-            }
-            sMarketOrder[] tmp = new sMarketOrder[1];
-            return orderV.toArray( tmp );
-            
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
-    }
-    */
+
     public USERSTATUS getUserType(int userID) {
         if (userID > 0) {
             try{
