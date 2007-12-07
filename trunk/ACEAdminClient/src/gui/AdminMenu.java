@@ -77,9 +77,9 @@ public class AdminMenu extends javax.swing.JPanel {
         String type = "";
         
         if(choUsertype.getSelectedItem().equals("End-User")) {
-            type = "0";
-        } else if(choUsertype.getSelectedItem().equals("Administrator")) {
             type = "1";
+        } else if(choUsertype.getSelectedItem().equals("Administrator")) {
+            type = "0";
         } else {
             return;
         }
@@ -158,12 +158,22 @@ public class AdminMenu extends javax.swing.JPanel {
     }
     
     public void m_tableMouseClicked(java.awt.event.MouseEvent evt) {
-        m_table.getSelectedRow();
+        
         String username = (String)m_table.getValueAt(m_table.getSelectedRow(), 0);
-        this.setVisible(false);
-        EditEndUser edit=new EditEndUser(owner, this, m_cni, username);
-        owner.setContentPane(edit);
-        edit.setVisible(true);
+        
+        if(choUsertype.getSelectedItem().equals("End-User")) {
+            this.setVisible(false);
+            EditEndUser edit = new EditEndUser(owner, this, m_cni, username);
+            owner.setContentPane(edit);
+            edit.setVisible(true);
+        } else if(choUsertype.getSelectedItem().equals("Administrator")) {
+            this.setVisible(false);
+            EditAdmin edit = new EditAdmin(owner, this, m_cni, username);
+            owner.setContentPane(edit);
+            edit.setVisible(true);
+        } else {
+            return;
+        }
     }
 
     /** This method is called from within the constructor to

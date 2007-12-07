@@ -9,11 +9,27 @@ package gui;
  *
  * @author  icioba1
  */
+
+import javax.swing.*;
+import clientnetworking.*;
+
 public class EditAdmin extends javax.swing.JPanel {
-    
+    JFrame owner;
+    JPanel admin;
+    String m_username;
+    ClientNetworkInterface m_cni;
+
     /** Creates new form EditAdmin */
-    public EditAdmin() {
+    public EditAdmin(JFrame owner, JPanel admin, ClientNetworkInterface cni, String username) {
+        this.admin=admin;
+        this.owner=owner;
+        
+        m_cni = cni;
+        m_username = username;
+        
         initComponents();
+        
+        lblUsername.setText("Editing End-User: " + m_username);
     }
     
     /** This method is called from within the constructor to
@@ -24,12 +40,28 @@ public class EditAdmin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN:initComponents
     private void initComponents() {
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        txtPassword = new javax.swing.JTextField();
+        btnSubmit = new javax.swing.JButton();
+        lblUsername = new javax.swing.JLabel();
+        btnCancel = new javax.swing.JButton();
 
         jLabel1.setText("Password:");
 
-        jButton1.setText("submit");
+        btnSubmit.setText("Submit");
+        btnSubmit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSubmitMouseClicked(evt);
+            }
+        });
+
+        lblUsername.setText("Editing End-User: ");
+
+        btnCancel.setText("Cancel");
+        btnCancel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnCancelMouseClicked(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -37,33 +69,53 @@ public class EditAdmin extends javax.swing.JPanel {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(jButton1)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(lblUsername)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                        .add(btnCancel)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(btnSubmit))
+                    .add(layout.createSequentialGroup()
                         .add(jLabel1)
                         .add(13, 13, 13)
-                        .add(jTextField1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)))
+                        .add(txtPassword, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
+                .add(lblUsername)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
-                    .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(txtPassword, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(jButton1)
-                .addContainerGap(44, Short.MAX_VALUE))
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btnSubmit)
+                    .add(btnCancel))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCancelMouseClicked
+      owner.remove(this);
+      //this.setVisible(false);
+      admin.setVisible(true);
+      owner.setContentPane(admin);
+    }//GEN-LAST:event_btnCancelMouseClicked
+
+    private void btnSubmitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSubmitMouseClicked
+        
+    }//GEN-LAST:event_btnSubmitMouseClicked
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnSubmit;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JTextField txtPassword;
     // End of variables declaration//GEN-END:variables
     
 }
