@@ -29,10 +29,14 @@ public class ServerNetworkInterface {
     public boolean startListening(int port) {
             m_port = port;
             
-            Runnable listener = new ServerListener(m_db, port);
-            m_thread = new Thread(listener);
-            m_thread.start();
-            return true;
+            try {
+                Runnable listener = new ServerListener(m_db, port);
+                m_thread = new Thread(listener);
+                m_thread.start();
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
     }
     
     public boolean closeAllClientConnections() {
