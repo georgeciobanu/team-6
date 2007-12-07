@@ -20,10 +20,10 @@ import java.util.*;
  * @author GLL
  */
 public class ServerListener implements Runnable {
-    DBConnection m_db;
-    int m_port = -1;
-    boolean m_stop = false;
-    Thread [] clients;
+    private DBConnection m_db;
+    private int m_port = -1;
+    private boolean m_stop = false;
+    private Thread [] clients;
     
     
     

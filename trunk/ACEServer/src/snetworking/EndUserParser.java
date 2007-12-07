@@ -9,21 +9,21 @@
 
 package snetworking;
 import fundamentals.*;
-import sFundamentals.*;
 import database.*;
 import transactionEngine.*;
 import java.util.*;
 import java.text.*;
 import java.sql.*;
 import fundamentals.Currency;
+import transactionEngine.EndUser;
 
 /**
  *
  * @author GLL
  */
 public class EndUserParser {
-    DBConnection m_db;
-    int m_userID;
+    private DBConnection m_db;
+    private int m_userID;
     
     /** Creates a new instance of EndUserParser */
     public EndUserParser(DBConnection db, int userID) {
@@ -34,7 +34,7 @@ public class EndUserParser {
     // Parse a string command sent by an end-user
     public String parseCommand(String command) {
         String[] args;
-        sEndUser user;
+        EndUser user;
         Market market;
         
         args = command.split(" ");
@@ -60,7 +60,7 @@ public class EndUserParser {
             
         } // If server receives the 'changepassword' command
         else if(args[0].equals("changepassword") && args.length == 2) {
-            user = new sEndUser(m_db, m_userID);
+            user = new EndUser(m_db, m_userID);
             if(user.setPassword(args[1])) {
                 return "ok changepassword";
             }
@@ -120,12 +120,6 @@ public class EndUserParser {
 
         } // If server receives the 'editmarketorder' command
         else if(args[0].equals("editmarketorder") && args.length == 6) {
-            sMarketOrder o = new sMarketOrder(m_userID);
-            
-            String orderID = args[1];
-            String currencyPair = args[2];
-            String amount = args[3];
-            
             return "error editmarketorder";
             
         } // If server receives the 'placelimitorder' command

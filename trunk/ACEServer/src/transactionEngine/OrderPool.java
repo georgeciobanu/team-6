@@ -9,15 +9,13 @@
 
 package transactionEngine;
 
-import sFundamentals.*;
-
 /**
  *
  * @author GLL
  */
 public class OrderPool {
-    int numberOfOrders;
-    int numberOfOrdersPending;
+    private int numberOfOrders;
+    private int numberOfOrdersPending;
     
     /** Creates a new instance of OrderPool */
     public OrderPool() {

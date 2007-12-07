@@ -14,7 +14,6 @@ import java.io.*;
 import java.util.*;
 
 public class ClientConnection implements Runnable {
-
   private Socket connection;
   private String TimeStamp;
   private int ID;

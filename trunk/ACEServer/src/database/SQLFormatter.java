@@ -29,64 +29,10 @@ public class SQLFormatter {
     
     public String Now() {
         DateTime dt = new DateTime();
-        
-        /*String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
-        
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-        String now = sdf.format(cal.getTime());*/
-        
         return dt.getSQL();
     }
     
-    /*public String InsertOrder(Order order) {
-        String userid = String.valueOf(order.getUserID());
-        String placed = Now(); //Time(order.getPlacedDate());
-        //String amount = String.valueOf(order.getAmount());
-        
-        String query =
-                "INSERT  INTO orderpool (userid, placed) " +
-                //"VALUES (" + userid + ", #01/01/2007 2:30:00 AM#)";
-                //"VALUES (" + userid + ", #2007-01-01 02:30:00#)";
-                "VALUES (" + userid + ", #2007-01-01 02:30:00#)";
-        
-        return query;
-    }*/
-    
-    /*public String InsertOrder(Order order) {
-        String userid = String.valueOf(order.getUserID());
-        String placed = Now(); //Time(order.getPlacedDate());
-        String amount = String.valueOf(order.getAmount());
-        
-        String query =
-                "INSERT  INTO orderpool (userid, placed, amount) " +
-                "VALUES (" + userid + ", #" + placed + "#, " + amount + ")";
-        
-        return query;
-    }*/
-    
-/*
- 
-            String queryString = //note: check what the timestamp is
-                    "INSERT  INTO marketOrders (userID, placed, amount, type, expiry, basis, currencyPair " + ")" +
-                    "VALUES (" + String.valueOf(order.getuserID()) + ", #" + now + "#, " +
-                    String.valueOf(order.getAmount()) + ", " + String.valueOf(order.getType()) + ", #" +
-                    order.getExpiryDate().toString().replaceFirst("\\.[0-9]{2,9}", "") + "#, " + String.valueOf(order.getBasis()) + ", " +
-                    "'USD/CAD'" + //TODO: to change to actual value
-                    ")" ;
-            
-            ResultSet rs = query(queryString);
-            
-            queryString =
-                    "SELECT id " +
-                    "FROM marketOrders " +
-                    "WHERE userid =" + order.getuserID() + " AND placed=#" +
-                    now + "# ";
- 
- */
-    
     public String InsertOrder(Order order) {
-        
         String DATE_FORMAT_NOW = "yyyy-MM-dd HH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         String date = sdf.format(order.getPlacedDate());

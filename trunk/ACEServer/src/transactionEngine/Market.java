@@ -11,7 +11,6 @@ package transactionEngine;
 
 import java.sql.Timestamp;
 import java.sql.Date;
-import sFundamentals.*;
 import fundamentals.*;
 import database.*;
 import java.text.SimpleDateFormat;
@@ -22,7 +21,7 @@ import java.util.Calendar;
  * @author GLL
  */
 public class Market {
-    DBConnection m_db;
+    private DBConnection m_db;
     
     /** Creates a new instance of Market */
     public Market(DBConnection db) {
@@ -87,7 +86,7 @@ public class Market {
         return ret;
     }
     
-    public sOrder[] getPendingOrders() {
+    public Order[] getPendingOrders() {
         return null;
     }
     
@@ -95,7 +94,7 @@ public class Market {
         return null;
     }
     
-    public sOrder[] getOrderHistory() {
+    public Order[] getOrderHistory() {
         return null;
     }
     
@@ -110,11 +109,11 @@ public class Market {
         }
     }
     
-    public boolean addCurrency(sCurrency currency) {
+    public boolean addCurrency(Currency currency) {
         return false;
     }
     
-    public boolean editCurrency(sCurrency currency) {
+    public boolean editCurrency(Currency currency) {
         return false;
     }
     

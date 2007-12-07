@@ -53,7 +53,7 @@ public class DBConnection {
     
     private ResultSet query(String message){
         ResultSet rs = null;
-        try{
+        try {
             if (connected) {
                 
                 Statement stm = con.createStatement();
@@ -63,7 +63,7 @@ public class DBConnection {
                 
                 //stm.close();
             }
-        }catch (Exception ex){
+        } catch (Exception ex){
             System.out.println(message);
             ex.printStackTrace();
         }
