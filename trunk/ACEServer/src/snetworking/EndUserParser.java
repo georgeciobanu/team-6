@@ -99,12 +99,11 @@ public class EndUserParser {
             Currency currencyFrom = currencypair.getCurrencyFrom();
             Currency currencyTo = currencypair.getCurrencyTo();
             
-            if(currencyFrom.getID() == -1) {
-                currencyFrom.setID(m_db.getCurrencyID(currencyFrom.getName()));
-            }
-            if(currencyTo.getID() == -1) {
-                currencyTo.setID(m_db.getCurrencyID(currencyTo.getName()));
-            }
+            currencyFrom = m_db.FillCurrency(currencyFrom);
+            currencyTo = m_db.FillCurrency(currencyTo);
+            
+            currencypair.setCurrencyFrom(currencyFrom);
+            currencypair.setCurrencyTo(currencyTo);
             
             o.setCurrencyPair(currencypair);
             o.setAmount(Double.valueOf(args[3]));
