@@ -22,36 +22,96 @@ public class DBConnection {
     private boolean connected;
     private Connection con;
     
+    public static enum ACCOUNTSTATUS {
+        ENABLED,
+        DISABLED,
+        UNKNOWN
+    }
+    
     public static enum USERSTATUS {
         NOTAUTHENTICATED,
         ADMINISTRATOR,
         ENDUSER
     }
     
-    
-    
-    // TODO: THESE FUNCTIONS ARE REQUIRED BY THE REST OF THE SYSTEM
-    
     // Get all pending orders that matches the currency pair and the operation
     // Input: A currency pair and an operation (sell/buy)
     // Output: a vector of all pending orders that match the currency pair and the operation (THE RETURNED LIST SHOULD BE LISTED IN DESCENDING ORDER OF PLACED DATE)
     public Vector<Order> getAllPendingOrders(CurrencyPair currencypair, Order.OPERATION operation) {
-        return null;
+      try {
+            Order o;
+            Vector<Order> list = new Vector<Order>(1000);
+            SQLFormatter sql = new SQLFormatter();
+          
+            Currency from = currencypair.getCurrencyFrom();
+            Currency to = currencypair.getCurrencyTo();
+            
+            from = FillCurrency(from);
+            to = FillCurrency(to);
+            
+            String queryString =
+                    "SELECT id FROM orderpool " +
+                    "WHERE currencyfromid=" + from.getID() + " " +
+                    "AND currencytoid=" + to.getID() + " " +
+                    "AND status=" + sql.getString(Order.STATUS.PENDING) + " " +
+                    "AND operation=" + sql.getString(operation); // +
+                    //"ORDER BY placed DESC";
+            
+            ResultSet rs = query(queryString);
+            
+            // Make this more than 1000
+            int i = 0;
+            while(rs.next() && i < 999) {
+                list.add(o = (Order)getOrder(rs.getInt(1)));
+                o.setCurrencyPair(currencypair);
+                i++;
+            }
+            return list;
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
     
     // Fill a currency object with both name and id, given that at least one of these attributes are set
     // Input: The currency object to be filled
     // Output: The filled currency object OR 'null' if none of the attributes are set.
     public Currency FillCurrency(Currency currency) {
-        return null;
+        int id = currency.getID();
+        String name = currency.getName();
+        
+        if(id == -1 && name.length() < 1) {
+            return null;
+        } else if(id != -1 && name.length() < 1) {
+            currency.setName(getCurrencyName(id));
+        } else if(id == -1 && name.length() >= 1) {
+            currency.setID(getCurrencyID(name));
+        } else {
+            
+        }
+        return currency;
     }
     
     // Update an order's content to the database
     // Input: An order that has its ID set to the proper value in the DB
     // Output: Returns true if the order has been updated and false otherwise
-    public boolean updateOrder(Order order) {
-        return true;
+    public boolean setOrder(Order order) {
+        try {
+            DateTime placed = new DateTime(order.getPlacedDate());
+            
+            // Commit the order to the database
+            SQLFormatter sql = new SQLFormatter();
+            ResultSet rs = query(sql.UpdateOrder(order));
+            
+            return true;
+        } catch (Exception ex) { //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return false;
+        }
     }
+
     
     // Check if the user has sufficient leverage (collaterals)
     // Input: The user ID
@@ -64,7 +124,32 @@ public class DBConnection {
     // Input: The user ID
     // Output: true if the operation was committed to the DB and false otherwise
     public boolean disableAccount(int userID) {
-        return true;
+        SQLFormatter sql = new SQLFormatter();
+        
+        try{
+            String queryString =
+                    "UPDATE users " +
+                    "SET status=" + sql.getString(ACCOUNTSTATUS.DISABLED) + " " +
+                    "WHERE userid=" + String.valueOf(userID);
+            
+            ResultSet rs = query(queryString);
+            
+            //check if the value was saved
+            queryString =
+                    "SELECT status " +
+                    "FROM users " +
+                    "WHERE userid=" + String.valueOf(userID);
+            rs = query(queryString);
+
+            if (rs.next() && (rs.getInt("status") == Integer.valueOf(sql.getString(ACCOUNTSTATUS.DISABLED)))) { //all went ok
+                rs.close();
+                return true;
+            }
+            return false;
+        } catch (Exception ex){ //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return false;
+        }
     }
     
     // Update the balance account of a user
@@ -171,6 +256,30 @@ public class DBConnection {
         } catch (Exception ex){ //TODO: treat exceptions nice
             ex.printStackTrace();
             return null;
+        }
+    }
+    
+    // Takes a currency name and returns its ID
+    public String getCurrencyName(int currencyID) {
+        String name = "";
+        try{
+            if (currencyID != -1) {
+                String queryString =
+                        "SELECT name " +
+                        "FROM currencies " +
+                        "WHERE id=" + currencyID + "";
+                
+                ResultSet rs = query(queryString);
+                
+                if (rs.next()) {
+                    name = rs.getString("name");
+                    rs.close();
+                }
+            }
+            return name;
+        } catch (Exception ex){ //TODO: treat exceptions nice
+            ex.printStackTrace();
+            return name;
         }
     }
     
@@ -431,6 +540,45 @@ public class DBConnection {
             Order order = new Order(userID);
             
             if(rs.next()) {
+                order.setStatus(rs.getInt("status"));
+                order.setPlacedDate(rs.getTimestamp("placed"));
+                order.setAmount(rs.getDouble("amount"));
+                order.setType(rs.getInt("type"));
+                order.setOperation(rs.getInt("operation"));
+                order.setDuration(rs.getInt("duration"));
+                //order.setExpiry(new Timestamp(rs.getDate("expiry").getTime()));
+                order.setPrice(rs.getDouble("price"));
+                order.setCurrencyPair(new CurrencyPair(rs.getString("currencyfromid"), rs.getString("currencytoid")));
+                order.setLimit(rs.getDouble("limit"));
+                order.setStopLoss(rs.getDouble("loss"));
+                order.setTrailingPoints(rs.getDouble("trailingpoints"));
+                return order;
+            }
+            return null;
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    // Get an order's information given its ID
+    // Input: the user ID and the order ID
+    // Output: an order object containing all order data
+    public Order getOrder(int orderID) {
+      try {
+            String queryString =
+                    "SELECT userid, status, placed, amount, type, operation, duration, price, currencyfromid, currencytoid, limit, loss, trailingpoints " + 
+                    "FROM orderpool " +
+                    "WHERE id=" + orderID + " "; // + "ORDER BY placed DESC";
+            
+            ResultSet rs = query(queryString);
+            
+            Order order = new Order();
+            
+            if(rs.next()) {
+                order.setUserID(rs.getInt("userid"));
+                order.setOrderID(orderID);
                 order.setStatus(rs.getInt("status"));
                 order.setPlacedDate(rs.getTimestamp("placed"));
                 order.setAmount(rs.getDouble("amount"));

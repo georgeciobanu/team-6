@@ -56,6 +56,9 @@ public class Order {
     double m_trailingPoints;
 
     /** Creates a new instance of Order */
+    public Order() {
+    }
+    
     public Order(int userID) {
         m_userID = userID;
     }
@@ -82,6 +85,74 @@ public class Order {
             } else if(getType() == Order.TYPE.TRAILINGSTOP && args.length == 12) {
                 
             }
+        }
+    }
+    
+    // Input: operation is the operation performed on 'this' order, marketprice is the market price for this operation
+    public boolean matches(Order order, double marketBuyPrice, double marketSellPrice) {
+        Order buyingOrder = null;
+        Order soldOrder = null;
+        
+        if(marketBuyPrice < 0 || marketBuyPrice < 0) return false;
+        
+        // Standardize the currency pair and operation to match them easily
+        if(this.getCurrencyPair().equals(order.getCurrencyPair())) {
+            order.setCurrencyPair(order.getCurrencyPair().switchPair());
+            order.switchOperation();
+        }
+        
+        // If currency pairs are the oposite of eachother and so is the operation (buy/sell)
+        if(this.getCurrencyPair().matches(order.getCurrencyPair()) && getOperation() == order.getOperation()) {
+            switch(getOperation()) {
+                case BUY:
+                    soldOrder = this;
+                    buyingOrder = order;
+                    break;
+                case SELL:
+                    soldOrder = order;
+                    buyingOrder = this;
+                    break;
+                default:
+                    return false;
+            }
+        }
+        
+        switch(buyingOrder.getType()) {
+            case MARKET:
+                switch(soldOrder.getType()) {
+                    case MARKET: // Market buys Market
+                        return true;
+                    case LIMIT: // Market buys Limit
+                        return (soldOrder.getLimit() >= marketBuyPrice);
+                    case TRAILINGSTOP: // Market buys Trailing Stop
+                        return (marketSellPrice <= soldOrder.getLimit());
+                    default: // Error
+                        return false;
+                }
+            case LIMIT:
+                switch(soldOrder.getType()) {
+                    case MARKET: // Limit buys Market
+                        return (marketBuyPrice < buyingOrder.getLimit());
+                    case LIMIT: // Limit buys Limit
+                        return (marketBuyPrice < buyingOrder.getLimit()) && (marketSellPrice >= soldOrder.getStopLoss());
+                    case TRAILINGSTOP: // Limit buys Trailing Stop
+                        return (marketBuyPrice < buyingOrder.getLimit()) && (marketSellPrice <= soldOrder.getLimit());
+                    default: // Error
+                        return false;
+                }
+            case TRAILINGSTOP:
+                switch(soldOrder.getType()) {
+                    case MARKET: // Trailing Stop buys Market Order
+                        return (marketBuyPrice < buyingOrder.getLimit());
+                    case LIMIT: // Trailing Stop buys Limit Order
+                        return (marketBuyPrice < buyingOrder.getLimit()) && (marketSellPrice >= soldOrder.getStopLoss());
+                    case TRAILINGSTOP: // Trailing Stop buys Trailing Stop
+                        return (marketBuyPrice < buyingOrder.getLimit()) && (marketSellPrice < soldOrder.getLimit());
+                    default: // Error
+                        return false;
+                }
+            default:
+                return false;
         }
     }
     
@@ -300,6 +371,14 @@ public class Order {
             m_operation = OPERATION.SELL;
         } else {
             m_operation = OPERATION.UNKNOWN;
+        }
+    }
+    
+    public void switchOperation() {
+        if(m_operation == OPERATION.BUY) {
+            m_operation = OPERATION.SELL;
+        } else if(m_operation == OPERATION.SELL) {
+            m_operation = OPERATION.BUY;
         }
     }
     

@@ -22,12 +22,12 @@ import java.util.Calendar;
  */
 public class Market {
     private DBConnection m_db;
-    private OrderPool pool;
+    private OrderPool m_pool;
     
     /** Creates a new instance of Market */
     public Market(DBConnection db) {
         m_db = db;
-        pool = new OrderPool(m_db);
+        m_pool = new OrderPool(m_db);
     }
     
     public int placeOrder(Order order) {
@@ -44,17 +44,17 @@ public class Market {
                 order.setStopLoss(-1);
                 order.setTrailingPoints(-1);                
             } else if(order.getType() == Order.TYPE.LIMIT) {
-                // Set the limit
-                order.setStopLoss(-1);
                 order.setTrailingPoints(-1);
             } else if(order.getType() == Order.TYPE.STOPLOSS) {
-                
+                order.setTrailingPoints(-1);
             } else if(order.getType() == Order.TYPE.TRAILINGSTOP) {
-                
+                // Set the limit
+                order.setLimit(getMarketPrice(order.getOperation(),order.getCurrencyPair()) - order.getTrailingPoints());
+                order.setStopLoss(-1);
             }
 
             // Commit the order to the market
-            int orderID = m_db.placeOrder(order);
+            int orderID = m_pool.placeOrder(order);
             return orderID;
         } else {
             return -1;
@@ -70,22 +70,7 @@ public class Market {
     }
     
     public double getMarketPrice(Order.OPERATION operation, CurrencyPair currencypair) {
-        double ret = -1;
-        
-        // Validate currencies
-        Currency currencyFrom = currencypair.getCurrencyFrom();
-        Currency currencyTo = currencypair.getCurrencyTo();
-        
-        if(currencyFrom.getID() == -1) {
-            currencyFrom.setID(m_db.getCurrencyID(currencyFrom.getName()));
-        }
-        if(currencyTo.getID() == -1) {
-            currencyTo.setID(m_db.getCurrencyID(currencyTo.getName()));
-        }
-        
-        ret = m_db.getMarketPrice(operation, currencypair);
-        
-        return ret;
+        return m_pool.getMarketPrice(operation, currencypair);
     }
     
     public Order[] getPendingOrders() {

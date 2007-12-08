@@ -57,6 +57,23 @@ public class CurrencyPair {
         m_toCurrency = to;
     }
     
+    public boolean matches(CurrencyPair cp) {
+        return ((cp.getCurrencyFrom() == this.getCurrencyTo()) && (cp.getCurrencyTo() == this.getCurrencyFrom()));
+    }
+    
+    public boolean equals(CurrencyPair cp) {
+        return (this.toString().equals(cp.toString()));
+    }
+    
+    public CurrencyPair switchPair() {
+        CurrencyPair ret = new CurrencyPair();
+        
+        ret.setCurrencyFrom(this.getCurrencyTo());
+        ret.setCurrencyTo(this.getCurrencyFrom());
+        
+        return ret;
+    }
+    
     public String toString() {
         return m_fromCurrency.getName() + "/" + m_toCurrency.getName();
     }

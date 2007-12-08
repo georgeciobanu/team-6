@@ -28,140 +28,125 @@ public class OrderPool {
         m_db = db;
     }
     
-    public boolean matchOrder(Order order) {
-        if(order != null && order.isPending()) {
-            try {
-                
-                Order.TYPE type = order.getType();
-                
-                switch(type) {
-                    case MARKET:
-                        return matchMarketOrder(order);
-                    case LIMIT:
-                        return matchLimitOrder(order);
-                    case STOPLOSS:
-                        return matchStopLossOrder(order);
-                    case TRAILINGSTOP:
-                        return matchTrailingStopOrder(order);
-                    default:
-                        return false;
-                }
-            } catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-    
-    
-    
-    private boolean matchMarketOrder(Order newOrder) {
+    // Returns the order ID
+    public int placeOrder(Order newOrder) {
         Order pooledOrder;
-        Order.OPERATION operation;
+        Order.OPERATION operation = newOrder.getOperation();
         
-        try {
-            // Invert the operation so that we can look for matching pending orders
-            switch(newOrder.getOperation()) {
-                case BUY:
-                    operation = Order.OPERATION.SELL;
-                    break;
-                case SELL:
-                    operation = Order.OPERATION.BUY;
-                default:
-                    return false;
-            }
-            
-            // Get all current pooled orders
-            Vector<Order> v = m_db.getAllPendingOrders(newOrder.getCurrencyPair(),operation);
-            
-            // Try to match the 'newOrder' with the currently pooled orders
-            if(v != null) {
-                for (Enumeration e = v.elements(); e.hasMoreElements(); ) {
-                    pooledOrder = (Order)e.nextElement();
-                    if(newOrder.getAmount() > pooledOrder.getAmount()) {
-                        // Set 'pooledOrder' as matched
-                        pooledOrder.setStatus(Order.STATUS.MATCHED);
-                        
-                        // Update the new amount for 'newOrder'
-                        newOrder.setAmount(newOrder.getAmount() - pooledOrder.getAmount());
-                        pooledOrder.setAmount(0);
-                        
-                        // Commit changes to the DB
-                        m_db.updateOrder(newOrder);
-                        m_db.updateOrder(pooledOrder);
-                        
-                        // Check if both users has sufficient funds and disable user accounts is needed
-                        
-                    } else if(newOrder.getAmount() < pooledOrder.getAmount()) {
-                        // Set 'newOrder' as matched
-                        newOrder.setStatus(Order.STATUS.MATCHED);
-                        
-                        // Update the new amount for 'pooledOrder'
-                        pooledOrder.setAmount(pooledOrder.getAmount() - newOrder.getAmount());
-                        newOrder.setAmount(0);
-                        // Commit changes to the DB
-                        m_db.updateOrder(newOrder);
-                        m_db.updateOrder(pooledOrder);
-                        
-                        // Check if both users has sufficient funds and disable user accounts is needed
-                        
-                    } else {
-                        // Set both 'newOrder' and 'pooledOrder' as matched
-                        newOrder.setStatus(Order.STATUS.MATCHED);
-                        pooledOrder.setStatus(Order.STATUS.MATCHED);
-                        
-                        // Update the new amount for both 'newOrder' and 'pooledOrder'
-                        newOrder.setAmount(0);
-                        pooledOrder.setAmount(0);
-                        
-                        // Do the transaction
-                        doTransaction(newOrder, pooledOrder);
-                        
-                        // Check if both users has sufficient funds and disable user accounts is needed
-                        updateAccountStatus(pooledOrder.getUserID());
-                        if(!updateAccountStatus(newOrder.getUserID())) {
-                            return true;
+        if(newOrder != null && newOrder.isPending()) {
+            try {
+                Order.TYPE type = newOrder.getType();
+                
+                // Get all current pooled orders
+                Vector<Order> v = m_db.getAllPendingOrders(newOrder.getCurrencyPair().switchPair(), operation);
+                
+                double buyPrice = getMarketPrice(Order.OPERATION.BUY, newOrder.getCurrencyPair());
+                double sellPrice = getMarketPrice(Order.OPERATION.SELL, newOrder.getCurrencyPair());
+                
+                if(v != null) {
+                    for (Enumeration e = v.elements(); e.hasMoreElements(); ) {
+                        pooledOrder = (Order)e.nextElement();
+                        if(newOrder.matches(pooledOrder, buyPrice, sellPrice)) {
+                            // Commit the transaction to DB
+                            makeTransaction(newOrder, pooledOrder, buyPrice, sellPrice);
+                            
+                            if(newOrder.getAmount() == 0) {
+                                return newOrder.getOrderID();
+                            }
+                            
+                            // Check if both users has sufficient funds and disable user accounts is needed
+                            updateAccountStatus(pooledOrder.getUserID());
+                            updateAccountStatus(newOrder.getUserID());
                         }
                     }
+                    newOrder.setStatus(Order.STATUS.PENDING);
+                    
+                    updateTrailingStops();
+                    
+                    return m_db.placeOrder(newOrder);
                 }
                 
-                return true;
-            } else {
-                return false;
+                return -1;
+
+            } catch(Exception e) {
+                e.printStackTrace();
+                return -1;
             }
-        } catch(Exception e) {
-            e.printStackTrace();
-            return false;
+        } else {
+            return -1;
         }
     }
     
     // 
-    public boolean doTransaction(Order newOrder, Order pooledOrder) {
+    public boolean makeTransaction(Order newOrder, Order pooledOrder, double buyPrice, double sellPrice) {
         try {
-            // Commit changes to the DB
-            m_db.updateOrder(newOrder);
-            m_db.updateOrder(pooledOrder);
+            Order buyingOrder;
+            Order soldOrder;
             
-            // Update the balance accounts of both users
-            if(newOrder.getOperation() == Order.OPERATION.BUY) {
-                m_db.updateBalance(newOrder.getUserID(), newOrder.getCurrencyPair().getCurrencyFrom(), newOrder.getAmount());
-                m_db.updateBalance(newOrder.getUserID(), newOrder.getCurrencyPair().getCurrencyTo(), -newOrder.getAmount());
-                
-                m_db.updateBalance(pooledOrder.getUserID(), pooledOrder.getCurrencyPair().getCurrencyFrom(), -pooledOrder.getAmount());
-                m_db.updateBalance(pooledOrder.getUserID(), pooledOrder.getCurrencyPair().getCurrencyTo(), pooledOrder.getAmount());
-            } else if(newOrder.getOperation() == Order.OPERATION.SELL) {
-                m_db.updateBalance(newOrder.getUserID(), newOrder.getCurrencyPair().getCurrencyFrom(), -newOrder.getAmount());
-                m_db.updateBalance(newOrder.getUserID(), newOrder.getCurrencyPair().getCurrencyTo(), newOrder.getAmount());
-                
-                m_db.updateBalance(pooledOrder.getUserID(), pooledOrder.getCurrencyPair().getCurrencyFrom(), pooledOrder.getAmount());
-                m_db.updateBalance(pooledOrder.getUserID(), pooledOrder.getCurrencyPair().getCurrencyTo(), -pooledOrder.getAmount());
-            } else {
-                /// HUGE BUG IF GET HERE! It should not happen though.
-                Exception f = new Exception("Orders were committed but operation was undefined.");
-                throw f;
+            switch(newOrder.getOperation()) {
+                case BUY:
+                    buyingOrder = newOrder;
+                    soldOrder = pooledOrder;
+                    break;
+                case SELL:
+                    buyingOrder = newOrder;
+                    soldOrder = pooledOrder;
+                    break;
+                default:
+                    return false;
             }
+
+            if(buyingOrder.getAmount() > soldOrder.getAmount() * buyPrice) {
+                // Set 'soldOrder' as matched
+                soldOrder.setStatus(Order.STATUS.MATCHED);
+                
+                // Update the balance account
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyFrom(), soldOrder.getAmount() / buyPrice);
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyTo(), -soldOrder.getAmount() * buyPrice);
+                
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyFrom(), -buyingOrder.getAmount() * sellPrice);
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyTo(), buyingOrder.getAmount() / sellPrice);
+                
+                // Update the new amount for 'newOrder'
+                buyingOrder.setAmount(buyingOrder.getAmount() - soldOrder.getAmount() * buyPrice);
+                soldOrder.setAmount(0);
+                
+            } else if(buyingOrder.getAmount() < soldOrder.getAmount() * buyPrice) {
+                // Set 'soldOrder' as matched
+                buyingOrder.setStatus(Order.STATUS.MATCHED);
+                
+                // Update the balance account
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyFrom(), soldOrder.getAmount() / buyPrice);
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyTo(), -soldOrder.getAmount() * buyPrice);
+                
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyFrom(), -buyingOrder.getAmount() * sellPrice);
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyTo(), buyingOrder.getAmount() / sellPrice);
+                
+                // Update the new amount for 'newOrder'
+                soldOrder.setAmount(soldOrder.getAmount() - buyingOrder.getAmount() * sellPrice);
+                buyingOrder.setAmount(0);
+                
+            } else {
+                // Set both 'newOrder' and 'pooledOrder' as matched
+                newOrder.setStatus(Order.STATUS.MATCHED);
+                pooledOrder.setStatus(Order.STATUS.MATCHED);
+                
+                // Update the balance account
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyFrom(), soldOrder.getAmount() / buyPrice);
+                m_db.updateBalance(buyingOrder.getUserID(), buyingOrder.getCurrencyPair().getCurrencyTo(), -soldOrder.getAmount() * buyPrice);
+                
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyFrom(), -buyingOrder.getAmount() * sellPrice);
+                m_db.updateBalance(soldOrder.getUserID(), soldOrder.getCurrencyPair().getCurrencyTo(), buyingOrder.getAmount() / sellPrice);
+                
+                // Update the new amount for both 'newOrder' and 'pooledOrder'
+                buyingOrder.setAmount(0);
+                soldOrder.setAmount(0);
+            }
+            
+            // Commit changes to the DB
+            m_db.setOrder(newOrder);
+            m_db.setOrder(pooledOrder);
+            
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,16 +164,23 @@ public class OrderPool {
         }
     }
     
-    private boolean matchLimitOrder(Order order) {
-        return false;
-    }
-    
-    private boolean matchStopLossOrder(Order order) {
-        return false;
-    }
-    
-    private boolean matchTrailingStopOrder(Order order) {
-        return false;
+    public double getMarketPrice(Order.OPERATION operation, CurrencyPair currencypair) {
+        double ret = -1;
+        
+        // Validate currencies
+        Currency currencyFrom = currencypair.getCurrencyFrom();
+        Currency currencyTo = currencypair.getCurrencyTo();
+        
+        if(currencyFrom.getID() == -1) {
+            currencyFrom.setID(m_db.getCurrencyID(currencyFrom.getName()));
+        }
+        if(currencyTo.getID() == -1) {
+            currencyTo.setID(m_db.getCurrencyID(currencyTo.getName()));
+        }
+        
+        ret = m_db.getMarketPrice(operation, currencypair);
+        
+        return ret;
     }
     
     // Update the price of trailing stop order
